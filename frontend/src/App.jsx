@@ -1,14 +1,14 @@
+
 import './App.css'
-import Landing from './pages/landing-page/Landing'
+import Landing from '../src/User/pages/Landing/Landing'
+import {Routes,Route,createBrowserRouter,
+  createRoutesFromElements,} from 'react-router-dom'
 
 function App() {
-
-
   return (
-    <>
-      <Landing/>
-    </>
+    <Routes>
+      <Route path='/' element={<Landing/>}/>
+    </Routes>    
   )
 }
-
 export default App
