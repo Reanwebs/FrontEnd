@@ -7,7 +7,9 @@ import {Routes,Route,createBrowserRouter,
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Landing/>}/>
+      <Route path='/' element={<Landing/>}>
+         
+      </Route>
     </Routes>    
   )
 }
