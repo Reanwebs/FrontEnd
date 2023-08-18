@@ -12,7 +12,7 @@ export const userApliSlice = apiSlice.injectEndpoints({
       }),
       register: builder.mutation({
         query:(data)=>({
-            url:`${USERS_URL}/register`,
+            url:`${USERS_URL}/signup`,
             method:'POST',
             body:data
         })
@@ -23,8 +23,15 @@ export const userApliSlice = apiSlice.injectEndpoints({
             method:'POST',
             body:data
         })
+      }),
+      validUserName:builder.mutation({
+        query:(data)=>({
+          url:`${USERS_URL}/valid-name`,
+          method:'POST',
+          body:data
+        })
       })
     })
 })
 
-export const {useLoginMutation,useRegisterMutation,useRequestOtpMutation} = userApliSlice
+export const {useLoginMutation,useRegisterMutation,useRequestOtpMutation,useValidUserNameMutation} = userApliSlice

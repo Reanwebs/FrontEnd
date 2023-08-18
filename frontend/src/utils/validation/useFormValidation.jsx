@@ -21,3 +21,8 @@ export const useCPasswordValidation = (password,cPassword)=>{
     else if (password !== cPassword) return "invalid"
 }
 
+export const useOtpValidation = (otp)=>{
+    if(otp === "") return "invalid"
+    else if(otp.length < 4 || otp.length > 4) return "invalid"
+}
+

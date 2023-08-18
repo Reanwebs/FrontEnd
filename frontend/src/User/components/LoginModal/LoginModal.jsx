@@ -1,6 +1,12 @@
 import React,{useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
 import { useEmailValidation,usePasswordValidation } from "../../../utils/validation/useFormValidation";
+import { useLoginMutation } from "../../../slices/api_slices/usersApiSlice";
+import {toast} from "react-toastify"
+import { useDispatch,useSelector } from "react-redux";
+import { setCredentials } from "../../../slices/reducers/user_reducers/authSlice";
+import { useNavigate } from "react-router-dom";
+
 
 export default function LoginModal() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -8,8 +14,26 @@ export default function LoginModal() {
     email:'',
     password:''
   })
+  const dispatch = useDispatch()
+  const [login,{isLoading}] = useLoginMutation();
   const emailValidation = useEmailValidation(user.email)
   const passwordValidation = usePasswordValidation(user.password)
+  const navigate = useNavigate();
+
+  async function authUser(){
+    const validation = [emailValidation,passwordValidation];
+    if(validation.includes("invalid")) return  toast.error('Please clear all errors');
+    else{
+      try {
+        const res = await login(user).unwrap()
+        dispatch(setCredentials({ ...res }));
+        toast.success("loggedin successfully")
+        navigate('/home')
+      } catch (err) {
+        toast.error(err?.data?.message || err.error)
+      }
+    }
+ }
 
   return (
     <>
@@ -78,7 +102,7 @@ export default function LoginModal() {
                 </div>
               </ModalBody>
               <ModalFooter className="justify-center">
-                <Button color="primary" onPress={onClose}  variant="flat">
+                <Button color="primary" onPress={authUser} isLoading={isLoading} variant="flat">
                   Sign in
                 </Button>
               </ModalFooter>
