@@ -11,13 +11,13 @@ import store from './store/store.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <React.StrictMode>
+    <React.StrictMode>       
         <BrowserRouter>
-      <main className=" dark text-foreground bg-background">
+        <main className=" dark text-foreground bg-background">
           <App />
           <ToastContainer/>
         </main>
         </BrowserRouter>
     </React.StrictMode>
-    </Provider>
+  </Provider>
 )
