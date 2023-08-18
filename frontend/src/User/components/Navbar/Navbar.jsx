@@ -1,7 +1,7 @@
 import React from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button,useDisclosure} from "@nextui-org/react";
-import LoginModal from "../LoginModal/LoginModal";
-import SignupModal from "../SignupModal/SignupModal";
+import LoginModal from "../../pages/LoginModal/LoginModal";
+import SignupModal from "../../pages/SignupModal/SignupModal";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 export default function Header(){

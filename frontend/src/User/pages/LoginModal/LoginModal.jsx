@@ -3,7 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import { useEmailValidation,usePasswordValidation } from "../../../utils/validation/useFormValidation";
 import { useLoginMutation } from "../../../slices/api_slices/usersApiSlice";
 import {toast} from "react-toastify"
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCredentials } from "../../../slices/reducers/user_reducers/authSlice";
 import { useNavigate } from "react-router-dom";
 
