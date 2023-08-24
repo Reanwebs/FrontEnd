@@ -1,14 +1,13 @@
-import React,{useState,useEffect} from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
-import { useEmailValidation, useUserNameValidation,useNumberValidation,usePasswordValidation,useCPasswordValidation ,useOtpValidation} from "../../../utils/validation/useFormValidation";
+import React,{useState} from "react";
+import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
+import {  numberValidation, emailValidation, passwordValidation, otpValidation,cPasswordValidation} from "../../../utils/validation/useFormValidation";
 import {toast} from 'react-toastify'
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation} from "../../../slices/api_slices/usersApiSlice";
-import { setCredentials } from "../../../slices/reducers/user_reducers/authSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function SignupModal() {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
   const [show,setShow] = useState(false)
   const [disabled,setDisabled] = useState(false)
   const[signup,setSignup] = useState(false)
@@ -34,21 +33,9 @@ export default function SignupModal() {
   const [success,setSuccess] = useState({
     nameSuccess:'',
   })
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate()
-  
-
   const [validUserName] = useValidUserNameMutation()
-  const [requestOtp,{isError,isSuccess,isLoading}] = useRequestOtpMutation();
-  const [register] = useRegisterMutation()
-
-      const emailValidation = useEmailValidation(user.email)
-      const nameValidation = useUserNameValidation(user.userName)
-      const numberValidation = useNumberValidation(user.number)
-      const passwordValidation = usePasswordValidation(user.password)
-      const cPasswordValidation = useCPasswordValidation(user.password,user.cPassword)  
-      const otpValidation = useOtpValidation(user.otp)
+  const [requestOtp,{isLoading:otpLoading}] = useRequestOtpMutation();
+  const [register,{isLoading:registerLoading}] = useRegisterMutation()
 
 async function checkUserName(){
 
@@ -69,10 +56,12 @@ async function checkUserName(){
       nameSuccess:res.message
     })   
   } catch (err) { 
+    
     setError({
       ...error,
-      nameError:err?.data?.message || err.message
-    })
+      nameError:err?.data?.message ||  err.message 
+
+     })
     
   }
 }
@@ -92,11 +81,17 @@ function continueSignUp(){
 }
 
 async function otpRequest(){
-  const validationState = [emailValidation,nameValidation,numberValidation,passwordValidation,cPasswordValidation]
-  if(validationState.includes("invalid")) return  toast.error('Please clear all errors');
+  if(!user.email || !user.email || !user.number || !user.password || !user.cPassword ) return toast.error('please fill all fields')
+  if(error.emailError || error.numberError || error.passwordError || error.cPasswordError ) return  toast.error('Please clear all errors');
   else{
     try {
-      const res = await requestOtp(user).unwrap()
+      const data = {
+        phoneNumber:user.number,
+        userName:user.userName,
+        email:user.email,
+        password:user.password
+      }
+      const res = await requestOtp(data).unwrap()
       toast.success("otp sent succcessfully")
       setSignup(true)
     } catch (err) {
@@ -106,14 +101,23 @@ async function otpRequest(){
 }
 
 async function signupHandler(){
-  const validationState = [emailValidation,nameValidation,numberValidation,passwordValidation,cPasswordValidation,otpValidation]
-  if(validationState.includes("invalid")) return  toast.error('Please clear all errors');
+  if(!user.email || !user.email || !user.number || !user.password || !user.cPassword || !user.otp) return toast.error('please fill all fields')
+  if(error.emailError || error.numberError || error.passwordError || error.cPasswordError || error.otpError )  return  toast.error('Please clear all errors');
   else{
-    try {
-      const res = await register(user).unwrap()
-      dispatch(setCredentials({ ...res }));
+    try {      
+      const data={
+        email:user.email,
+        password:user.password,   
+        cPassword:user.cPassword, 
+        phoneNumber:user.number,
+        userName:user.userName,    
+        referral:user.referral,  
+        otp :user.otp  
+      }
+      const res = await register(data).unwrap()
       toast.success("account created successfully")
-      navigate('/home')
+      toast.success("please login to continue")
+      onClose()
     } catch (err) {
       toast.error(err?.data?.message || err.error)
     }
@@ -173,65 +177,93 @@ async function signupHandler(){
                 <>
                     <Input
                       size="sm"
+                      isDisabled={signup ? true : false}
                       label="Contact Number"
                       placeholder="Enter your contact number"
                       variant="bordered"
-                      color={numberValidation === "invalid" ? "danger" : "success"}
-                      errorMessage={numberValidation === "invalid" && "Please enter a valid number"}
-                      validationState={numberValidation}
+                      color={error.numberError ? "danger" : "success"}
+                      errorMessage={error.numberError}
+                      validationState={error.numberError? "inavlid" : "valid"}
                       value={user.number}
                       onChange={(e)=>{setUser({
                         ...user,
                         number:e.target.value
                       })}}
+                      onKeyUp={(e)=>{
+                        setError({
+                          ...error,
+                          numberError:numberValidation(e.target.value)
+                        })
+                      }}
                     />
                     <Input
                       size="sm"
+                      isDisabled={signup ? true : false}
                       label="Email"
                       placeholder="Enter your email"
                       variant="bordered"
-                      color={emailValidation === "invalid" ? "danger" : "success"}
-                      errorMessage={emailValidation === "invalid" && "Please enter a valid email"}
-                      validationState={emailValidation}
+                      color={error.emailError ? "danger" : "success"}
+                      errorMessage={error.emailError}
+                      validationState={error.emailError? "inavlid" : "valid"}
                       value={user.email}
                       onChange={(e)=>{ 
                         setUser({
                         ...user,
                         email:e.target.value
                       })
-                    }}
+                      }}
+                      onKeyUp={(e)=>{
+                        setError({
+                          ...error,
+                          emailError:emailValidation(e.target.value)
+                        })
+                      }}
                     />
                     <Input
                       size="sm"
+                      isDisabled={signup ? true : false}
                       label="Password"
                       placeholder="Enter your password"
                       type="password"
                       variant="bordered"
-                      color={passwordValidation === "invalid" ? "danger" : "success"}
-                      errorMessage={passwordValidation === "invalid" && "Password must be greater than 6 charactors"}
-                      validationState={passwordValidation}
+                      color={error.passwordError ? "danger" : "success"}
+                      errorMessage={error.passwordError}
+                      validationState={error.passwordError? "inavlid" : "valid"}
                       value={user.password}
                       onChange={(e)=>{setUser({
                         ...user,
                         password:e.target.value
                       })}}
+                      onKeyUp={(e)=>{
+                        setError({
+                          ...error,
+                          passwordError:passwordValidation(e.target.value)
+                        })
+                      }}
                     />
                     <Input
                       size="sm"
+                      isDisabled={signup ? true : false}
                       label="Confirm Password"
                       placeholder="Confirm your password"
                       type="password"
                       variant="bordered"
-                      color={cPasswordValidation === "invalid" ? "danger" : "success"}
-                      errorMessage={cPasswordValidation === "invalid" && "Password didn't match"}
-                      validationState={cPasswordValidation}
+                      color={error.cPasswordError ? "danger" : "success"}
+                      errorMessage={error.cPasswordError}
+                      validationState={error.cPasswordErrorr? "inavlid" : "valid"}
                       value={user.cPassword}
                       onChange={(e)=>{setUser({
                         ...user,
                         cPassword:e.target.value
                       })}}
+                      onKeyUp={(e)=>{
+                        setError({
+                          ...error,
+                          cPasswordError:cPasswordValidation(user.password,e.target.value)
+                        })
+                      }}
                     />
-                    <Button color="primary" onClick={otpRequest} isLoading={isLoading} variant="flat" className={signup ? "hidden" : "block"}>
+                    <Button color="primary" onClick={otpRequest} isLoading={otpLoading} variant="flat" className={signup ? "hidden" : "block"}>
                       Request OTP
                     </Button>
                   {signup &&
@@ -239,20 +271,28 @@ async function signupHandler(){
                    
                     <Input
                       size="sm"
-                      label="OTP"
+                      label="OTP" 
                       placeholder="Enter your otp"
                       type="text"
                       variant="bordered"
-                      color={otpValidation === "invalid" ? "danger" : "success"}
-                      errorMessage={otpValidation === "invalid" && "Please enter a valid otp"}
-                      validationState={otpValidation}
+                      color={error.otpError ? "danger" : "success"}
+                      errorMessage={error.otpError}
+                      validationState={error.otpError? "inavlid" : "valid"}
                       value={user.otp}
                       onChange={(e)=>{setUser({
                         ...user,
                         otp:e.target.value
                       })}}
+                      onKeyUp={(e)=>{
+                        setError({
+                          ...error,
+                          otpError:otpValidation(e.target.value)
+                        })
+                      }}
                     />
-
+                   <Button color="primary" onClick={otpRequest} isLoading={otpLoading} variant="flat" className={signup ? "hidden" : "block"}>
+                      Resend otp
+                    </Button>
                     <Input
                       size="sm"
                       label="Referral code"
@@ -266,8 +306,8 @@ async function signupHandler(){
                       })}}
                     />
                     
-                    <Button  type='submit' color="primary" onPress={signupHandler} >
-                      Sign in
+                    <Button  type='submit' color="primary" isLoading={registerLoading} onPress={signupHandler} >
+                      Sign up
                     </Button>
                   </>
                   }

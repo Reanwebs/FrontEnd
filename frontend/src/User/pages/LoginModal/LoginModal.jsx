@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
-import { useEmailValidation,usePasswordValidation } from "../../../utils/validation/useFormValidation";
+import { emailValidation,passwordValidation } from "../../../utils/validation/useFormValidation";
 import { useLoginMutation } from "../../../slices/api_slices/usersApiSlice";
 import {toast} from "react-toastify"
 import { useDispatch } from "react-redux";
@@ -14,21 +14,24 @@ export default function LoginModal() {
     email:'',
     password:''
   })
+  const [error,setError] = useState({
+    emailError:"",
+    passwordError:""
+  })
   const dispatch = useDispatch()
   const [login,{isLoading}] = useLoginMutation();
-  const emailValidation = useEmailValidation(user.email)
-  const passwordValidation = usePasswordValidation(user.password)
   const navigate = useNavigate();
 
   async function authUser(){
-    const validation = [emailValidation,passwordValidation];
-    if(validation.includes("invalid")) return  toast.error('Please clear all errors');
+    if(!user.email || !user.password) return toast.error("please fill all fields")
+    if(error.emailError || error.passwordError) return toast.error("please clear all errors")
     else{
       try {
         const res = await login(user).unwrap()
-        dispatch(setCredentials({ ...res }));
+        console.log(res);
+        // dispatch(setCredentials({ ...res }));
         toast.success("loggedin successfully")
-        navigate('/home')
+        // navigate('/home')
       } catch (err) {
         toast.error(err?.data?.message || err.error)
       }
@@ -37,7 +40,7 @@ export default function LoginModal() {
 
   return (
     <>
-     <Button onPress={onOpen}  color="primary"  variant="flat">
+     <Button onPress={onOpen} isLoading={isLoading} color="primary"  variant="flat">
             Sign in
       </Button>
       
@@ -63,30 +66,42 @@ export default function LoginModal() {
                   label="Email"
                   placeholder="Enter your email"
                   variant="bordered"
-                  color={emailValidation === "invalid" ? "danger" : "success"}
-                  errorMessage={emailValidation === "invalid" && "Please enter a valid email"}
-                  validationState={emailValidation}
+                  color={error.emailError ? "danger" : "success"}
+                  errorMessage={error.emailError}
+                  validationState={error.emailError ? "inavlid" : "valid"}
                   value={user.email}
                   onChange={(e)=>{ 
                     setUser({
                     ...user,
                     email:e.target.value
                   })}}
+                  onKeyUp={(e)=>{
+                    setError({
+                      ...error,
+                      emailError:emailValidation(e.target.value)
+                    })
+                  }}
                 />
                 <Input
                   label="Password"
                   placeholder="Enter your password"
                   type="password"
                   variant="bordered"
-                  color={passwordValidation === "invalid" ? "danger" : "success"}
-                  errorMessage={passwordValidation === "invalid" && "Password must be greater than 6 charactors"}
-                  validationState={passwordValidation}
+                  color={error.passwordError ? "danger" : "success"}
+                  errorMessage={error.passwordError}
+                  validationState={error.passwordError ? "inavlid" : "valid"}
                   value={user.password}
                   onChange={(e)=>{                   
                     setUser({
                     ...user,
                     password:e.target.value
                   })}}
+                  onKeyUp={(e)=>{
+                    setError({
+                      ...error,
+                      passwordError:passwordValidation(e.target.value)
+                    })
+                  }}
                 />
                 <div className="flex py-2 px-1 justify-between">
                   <Checkbox
