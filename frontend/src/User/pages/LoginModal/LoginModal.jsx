@@ -28,10 +28,14 @@ export default function LoginModal() {
     else{
       try {
         const res = await login(user).unwrap()
-        console.log(res);
-        // dispatch(setCredentials({ ...res }));
+        const data = {
+          userName:res.username,
+          email:res.email,
+          phoneNumber:res.phoneNumber
+        }
+        dispatch(setCredentials({ ...data }));
         toast.success("loggedin successfully")
-        // navigate('/home')
+        navigate('/home')
       } catch (err) {
         toast.error(err?.data?.message || err.error)
       }
