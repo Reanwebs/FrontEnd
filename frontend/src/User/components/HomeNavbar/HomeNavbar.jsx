@@ -5,6 +5,7 @@ import { SearchIcon } from "../SearchIcon/SearchIcon";
 
 export default function HomeNavbar({userInfo,logoutHandler}) {
   return (
+    <div >
     <Navbar isBordered>
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
@@ -59,5 +60,6 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
         </Dropdown>
       </NavbarContent>
     </Navbar>
+    </div>
   );
 }

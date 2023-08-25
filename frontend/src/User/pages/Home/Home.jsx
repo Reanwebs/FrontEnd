@@ -5,6 +5,7 @@ import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
 import {removeCredentials } from "../../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
+import SideBar from "../../components/SideBar/SideBar";
 
 
 const Home = ()=>{
@@ -28,7 +29,11 @@ const Home = ()=>{
 
 
     return (
-       <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} />
+        <>
+        <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} />
+         <SideBar/>
+        </>
+       
     )
 
 }

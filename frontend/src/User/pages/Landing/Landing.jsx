@@ -1,6 +1,9 @@
 import Header from "../../components/Navbar/Navbar";
 import { Navigate,useNavigate } from "react-router-dom";
 import {useSelector} from "react-redux"
+import Body from "../../components/Body/Body"
+
+
 
 
 const Landing = ()=>{
@@ -9,7 +12,11 @@ const Landing = ()=>{
         <>
         {userInfo 
           ? <Navigate to={'/home'}/>
-          : <Header/>
+          : 
+          <>
+          <Header/>
+          <Body/>
+        </>
         }       
         </>
     )

@@ -6,7 +6,7 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 export default function Header(){
   return (
-    <Navbar>
+      <Navbar>
       <NavbarBrand> 
         <p className="font-bold text-inherit">REAN</p>
       </NavbarBrand>
@@ -21,6 +21,6 @@ export default function Header(){
             <SignupModal/>
         </NavbarItem>
       </NavbarContent>
-    </Navbar>
+    </Navbar>  
   );
 }

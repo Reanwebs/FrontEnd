@@ -1,17 +1,18 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
 import {  numberValidation, emailValidation, passwordValidation, otpValidation,cPasswordValidation} from "../../../utils/validation/useFormValidation";
 import {toast} from 'react-toastify'
-import { useDispatch } from "react-redux";
-import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation} from "../../../slices/api_slices/usersApiSlice";
-import { useNavigate } from "react-router-dom";
+import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation,useResendOtpMutation} from "../../../slices/api_slices/usersApiSlice";
+import { useResendOtp } from "../../../utils/helperFunctions/useResendOtp";
 
 export default function SignupModal() {
   const {isOpen, onOpen, onOpenChange,onClose} = useDisclosure();
   const [show,setShow] = useState(false)
   const [disabled,setDisabled] = useState(false)
   const[signup,setSignup] = useState(false)
-  
+
+  const [startTimer,seconds,timerActive] = useResendOtp()
+
   const [user,setUser] = useState({
     userName:'',
     email:'',
@@ -33,9 +34,13 @@ export default function SignupModal() {
   const [success,setSuccess] = useState({
     nameSuccess:'',
   })
+
+ 
+
   const [validUserName] = useValidUserNameMutation()
   const [requestOtp,{isLoading:otpLoading}] = useRequestOtpMutation();
-  const [register,{isLoading:registerLoading}] = useRegisterMutation()
+  const [register,{isLoading:registerLoading}] = useRegisterMutation();
+  const [resendOtp,{isLoading:resendOtpLoading}] = useResendOtpMutation()
 
 async function checkUserName(){
 
@@ -97,6 +102,19 @@ async function otpRequest(){
     } catch (err) {
       toast.error(err?.data?.message || err.Error)
     }
+  }
+}
+
+async function resendOtpHandler(){
+  try{
+    const data = {
+      phoneNumber:user.number
+    }
+    const res = await resendOtp(data)
+    console.log(res);
+
+  }catch(err){
+
   }
 }
 
@@ -169,10 +187,11 @@ async function signupHandler(){
                     {error.nameError === "" && success.nameSuccess !== "" && (
                     <p className="text-xs text-green-500">{success.nameSuccess}</p>
                     )}
-                    <Button color="primary" className={show ? "hidden" : "block"} onClick={continueSignUp}  variant="flat">
+                     
+
+                    <Button color="primary" className={show ? "hidden" : "block"}  onClick={continueSignUp}  variant="flat">
                       continue
                     </Button>
-
                     {show && 
                 <>
                     <Input
@@ -263,7 +282,10 @@ async function signupHandler(){
                         })
                       }}
                     />
-                    <Button color="primary" onClick={otpRequest} isLoading={otpLoading} variant="flat" className={signup ? "hidden" : "block"}>
+                    <Button color="primary" onClick={()=>{
+                      otpRequest(),
+                      startTimer()
+                      }} isLoading={otpLoading} variant="flat" className={signup ? "hidden" : "block"}>
                       Request OTP
                     </Button>
                   {signup &&
@@ -290,9 +312,12 @@ async function signupHandler(){
                         })
                       }}
                     />
-                   <Button color="primary" onClick={otpRequest} isLoading={otpLoading} variant="flat" className={signup ? "hidden" : "block"}>
-                      Resend otp
-                    </Button>
+                  <Button color="primary" isDisabled={timerActive} onClick={()=>{
+                resendOtpHandler(),
+                startTimer()
+                  }} isLoading={resendOtpLoading}>
+                        {timerActive ? `Resend OTP in ${seconds} seconds` : 'Resend OTP'}
+                      </Button>
                     <Input
                       size="sm"
                       label="Referral code"
