@@ -6,14 +6,11 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 export default function Header(){
   return (
-      <Navbar>
-      <NavbarBrand> 
+      <Navbar >
+      <NavbarBrand > 
         <p className="font-bold text-inherit">REAN</p>
       </NavbarBrand>
-      <NavbarContent justify="end">
-        {/* <NavbarItem >
-           <ThemeSwitch/>
-        </NavbarItem> */}
+      <NavbarContent justify="end" >
         <NavbarItem >
             <LoginModal />
         </NavbarItem>

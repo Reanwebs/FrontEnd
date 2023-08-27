@@ -55,6 +55,7 @@ async function checkUserName(){
   try {
     if(user.userName === "") throw new Error("user name required")
     if(user.userName.length < 5) throw new Error("user name must be more than 4 charactors")
+    if(user.userName.includes(' ')) throw new Error("Username cannot contain spaces")
     const res = await validUserName(user).unwrap()
     setSuccess({
       ...success,
@@ -136,6 +137,15 @@ async function signupHandler(){
       toast.success("account created successfully")
       toast.success("please login to continue")
       onClose()
+      setUser({
+        userName:'',
+        email:'',
+        number:'',
+        password:'',
+        cPassword:'',
+        otp:'',
+        referral:''
+      })
     } catch (err) {
       toast.error(err?.data?.message || err.error)
     }

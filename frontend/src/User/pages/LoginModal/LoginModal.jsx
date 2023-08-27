@@ -34,7 +34,7 @@ export default function LoginModal() {
           phoneNumber:res.phoneNumber
         }
         dispatch(setCredentials({ ...data }));
-        toast.success("loggedin successfully")
+        // toast.success("loggedin successfully")
         navigate('/home')
       } catch (err) {
         toast.error(err?.data?.message || err.error)
@@ -107,7 +107,7 @@ export default function LoginModal() {
                     })
                   }}
                 />
-                <div className="flex py-2 px-1 justify-between">
+                {/* <div className="flex py-2 px-1 justify-between">
                   <Checkbox
                     classNames={{
                       label: "text-small",
@@ -118,7 +118,7 @@ export default function LoginModal() {
                   <Link color="primary" href="#" size="sm">
                     Forgot password?
                   </Link>
-                </div>
+                </div> */}
               </ModalBody>
               <ModalFooter className="justify-center">
                 <Button color="primary" onPress={authUser} isLoading={isLoading} variant="flat">
