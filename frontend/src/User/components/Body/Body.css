@@ -1,0 +1,23 @@
+/* Body.css */
+
+.overlay-container {
+    position: relative;
+  }
+  
+  .text-overlay {
+    position: absolute;
+    top: 45%; 
+    left: 37%; 
+    color: white;
+    transform: translate(-50%, -50%);
+    font-style: normal;
+    font-weight: bolder;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding: 10px; 
+    font-size: 30px; 
+}
+
+h2{
+    color: aliceblue;
+    text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
