@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
 import {  numberValidation, emailValidation, passwordValidation, otpValidation,cPasswordValidation} from "../../../utils/validation/useFormValidation";
 import {toast} from 'react-toastify'
-import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation,useResendOtpMutation} from "../../../slices/api_slices/usersApiSlice";
+import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation,useResendOtpMutation} from "../../slices/api_slices/usersApiSlice";
 import { useResendOtp } from "../../../utils/helperFunctions/useResendOtp";
 
 export default function SignupModal() {

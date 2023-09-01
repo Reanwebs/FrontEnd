@@ -1,10 +1,10 @@
 import React,{useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
 import { emailValidation,passwordValidation } from "../../../utils/validation/useFormValidation";
-import { useLoginMutation } from "../../../slices/api_slices/usersApiSlice";
+import { useLoginMutation } from "../../slices/api_slices/usersApiSlice";
 import {toast} from "react-toastify"
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../../../slices/reducers/user_reducers/authSlice";
+import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import { useNavigate } from "react-router-dom";
 
 
