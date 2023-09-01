@@ -155,7 +155,7 @@ async function signupHandler(){
 
   return (
     <>
-     <Button onPress={onOpen}  color="primary"  variant="flat">
+     <Button onPress={onOpen}  color="#01c8ef"  variant="flat">
             Sign up
       </Button>
       <Modal 

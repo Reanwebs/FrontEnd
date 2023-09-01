@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <React.StrictMode>       
         <BrowserRouter>
-        <main className=" dark text-foreground bg-[#121e33]">
+        <main className=" dark text-foreground bg-[#080219]">
           <App />
           <ToastContainer/>
         </main>

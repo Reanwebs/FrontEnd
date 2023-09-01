@@ -44,7 +44,7 @@ export default function LoginModal() {
 
   return (
     <>
-     <Button onPress={onOpen} isLoading={isLoading} color="primary"  variant="flat">
+     <Button onPress={onOpen} isLoading={isLoading} color="#01c8ef"  variant="flat" style={{ color: "#01c8ef" }}>
             Sign in
       </Button>
       

@@ -9,7 +9,9 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
     <Navbar isBordered>
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
-          <p className="x">REAN</p>
+        <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
+        <img src="/reanicons.png" alt="connect" width="13" height="13" />
+        <p className="font-bold text-inherit" style={{ color: "#e51376" }}>NNECT</p>
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent>
