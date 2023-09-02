@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
 import {  numberValidation, emailValidation, passwordValidation, otpValidation,cPasswordValidation} from "../../../utils/validation/useFormValidation";
 import {toast} from 'react-toastify'
-import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation,useResendOtpMutation} from "../../../slices/api_slices/usersApiSlice";
+import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation,useResendOtpMutation} from "../../slices/api_slices/usersApiSlice";
 import { useResendOtp } from "../../../utils/helperFunctions/useResendOtp";
 
 export default function SignupModal() {
@@ -55,6 +55,7 @@ async function checkUserName(){
   try {
     if(user.userName === "") throw new Error("user name required")
     if(user.userName.length < 5) throw new Error("user name must be more than 4 charactors")
+    if(user.userName.includes(' ')) throw new Error("Username cannot contain spaces")
     const res = await validUserName(user).unwrap()
     setSuccess({
       ...success,
@@ -136,6 +137,15 @@ async function signupHandler(){
       toast.success("account created successfully")
       toast.success("please login to continue")
       onClose()
+      setUser({
+        userName:'',
+        email:'',
+        number:'',
+        password:'',
+        cPassword:'',
+        otp:'',
+        referral:''
+      })
     } catch (err) {
       toast.error(err?.data?.message || err.error)
     }
@@ -145,7 +155,7 @@ async function signupHandler(){
 
   return (
     <>
-     <Button onPress={onOpen}  color="primary"  variant="flat">
+     <Button onPress={onOpen}  color="#01c8ef"  variant="flat">
             Sign up
       </Button>
       <Modal 

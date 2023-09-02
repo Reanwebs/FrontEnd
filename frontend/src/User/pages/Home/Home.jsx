@@ -1,11 +1,12 @@
 import HomeNavbar from "../../components/HomeNavbar/HomeNavbar";
 import { useSelector } from 'react-redux';
-import { useLogoutMutation } from "../../../slices/api_slices/usersApiSlice";
+import { useLogoutMutation } from "../../slices/api_slices/usersApiSlice";
 import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
-import {removeCredentials } from "../../../slices/reducers/user_reducers/authSlice";
+import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
 import SideBar from "../../components/SideBar/SideBar";
+import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 
 
 const Home = ()=>{
@@ -20,12 +21,9 @@ const Home = ()=>{
          toast.success(res.data.message)
           navigate('/')           
         } catch (err) {
-            console.log(err);
             toast.err(err.message)
         }
-        
-
-    }
+}
 
 
     return (

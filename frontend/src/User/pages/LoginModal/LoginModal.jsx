@@ -1,10 +1,10 @@
 import React,{useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
 import { emailValidation,passwordValidation } from "../../../utils/validation/useFormValidation";
-import { useLoginMutation } from "../../../slices/api_slices/usersApiSlice";
+import { useLoginMutation } from "../../slices/api_slices/usersApiSlice";
 import {toast} from "react-toastify"
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../../../slices/reducers/user_reducers/authSlice";
+import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import { useNavigate } from "react-router-dom";
 
 
@@ -34,7 +34,7 @@ export default function LoginModal() {
           phoneNumber:res.phoneNumber
         }
         dispatch(setCredentials({ ...data }));
-        toast.success("loggedin successfully")
+        // toast.success("loggedin successfully")
         navigate('/home')
       } catch (err) {
         toast.error(err?.data?.message || err.error)
@@ -44,7 +44,7 @@ export default function LoginModal() {
 
   return (
     <>
-     <Button onPress={onOpen} isLoading={isLoading} color="primary"  variant="flat">
+     <Button onPress={onOpen} isLoading={isLoading} color="#01c8ef"  variant="flat" style={{ color: "#01c8ef" }}>
             Sign in
       </Button>
       
@@ -107,7 +107,7 @@ export default function LoginModal() {
                     })
                   }}
                 />
-                <div className="flex py-2 px-1 justify-between">
+                {/* <div className="flex py-2 px-1 justify-between">
                   <Checkbox
                     classNames={{
                       label: "text-small",
@@ -118,7 +118,7 @@ export default function LoginModal() {
                   <Link color="primary" href="#" size="sm">
                     Forgot password?
                   </Link>
-                </div>
+                </div> */}
               </ModalBody>
               <ModalFooter className="justify-center">
                 <Button color="primary" onPress={authUser} isLoading={isLoading} variant="flat">

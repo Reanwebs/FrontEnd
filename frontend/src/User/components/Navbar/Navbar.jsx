@@ -6,14 +6,14 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 export default function Header(){
   return (
-      <Navbar>
-      <NavbarBrand> 
-        <p className="font-bold text-inherit">REAN</p>
+      <Navbar >
+      <NavbarBrand > 
+      <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
+      <img src="/reanicons.png" alt="connect" width="13" height="13" />
+      <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>NNECT</p>
+
       </NavbarBrand>
-      <NavbarContent justify="end">
-        {/* <NavbarItem >
-           <ThemeSwitch/>
-        </NavbarItem> */}
+      <NavbarContent justify="end" >
         <NavbarItem >
             <LoginModal />
         </NavbarItem>
