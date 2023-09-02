@@ -6,7 +6,10 @@ h1 {
 	> span {
 		position: relative;
 		display: inline-block;
-		color: white;
+    color: white;
+    font-family: "Geologica", sans-serif;
+    font-weight: bold;
+    font-size: 32px;
 		height: 1.25em;
 		vertical-align: bottom;
 		overflow: hidden;
@@ -33,91 +36,3 @@ h1 {
 	}
 }
 
-body {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100vh;
-	margin: 0;
-	padding: 0;
-	background-color: #1E1C27;
-	color: white;
-	font-family: 'Geologica', sans-serif;
-}
-
-:root {
-    --interval: 0.65s;
-    --duration: calc(var(--interval) * 4);
-  }
-  
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-    position: relative;
-  }
-
-
-.ball {
-    --size: 10vmin;
-    height: var(--size);
-    width: var(--size);
-    position: absolute;
-    bottom: 50%;
-    left: calc(50% - var(--size) / 2);
-  
-    &,
-    * {
-      &,
-      &:before {
-        will-change: transform;
-      }
-    }
-  
-    display: none;
-    &.splitting {
-      display: block;
-    }
-  
-    animation: bounce var(--interval) calc(var(--interval) / -2)
-        cubic-bezier(0, 0, 0, 1) infinite,
-      color var(--duration) calc(var(--interval) / -2) linear infinite;
-  
-    @keyframes bounce {
-      from,
-      to {
-        transform: translateY(-300%);
-        animation-timing-function: cubic-bezier(0, 0, 1, 0), linear;
-      }
-      50% {
-        transform: none;
-      }
-    }
-  
-    @keyframes color {
-      from,
-      to {
-        --color: #2358e6;
-      }
-      25% {
-        --color: #e58d2c;
-      }
-      50% {
-        --color: #27c05f;
-      }
-      75% {
-        --color: #df4b20;
-      }
-    }
-  
-    &:before {
-      content: "";
-      height: 100%;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: var(--color);
-      border-radius: 50%;
-    }
-  }

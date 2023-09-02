@@ -1,0 +1,37 @@
+
+h1 {
+    font-size: 24px;
+    padding-left: 5%;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  
+  .video-container {
+    display: flex;
+    flex-wrap: wrap;
+    height: 30%;
+    padding-left: 3.8%;
+    padding-top: .5%;
+    padding-bottom: .5%;
+    justify-content: flex-start;
+  }
+  
+  .video-frame {
+    width: calc(33.33% - 20px); 
+    height: 300px;
+    margin: 10px;
+    background-color: #101b37; 
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    padding-left: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease; 
+    overflow: hidden;
+  }
+  
+
+  .video-frame:hover {
+    transform: scale(1.05); 
+  }
+  
+  

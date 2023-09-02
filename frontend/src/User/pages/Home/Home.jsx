@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import {removeCredentials } from "../../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
 import SideBar from "../../components/SideBar/SideBar";
+import "./Home.css"
+import Video from "../../components/Video/Video"
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 
 
@@ -29,7 +31,55 @@ const Home = ()=>{
     return (
         <>
         <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} />
-         <SideBar/>
+        <SideBar/>
+
+        <div className="broadcast-section">
+        <h1>Broadcast</h1>
+        <div className="video-container">
+            <div className="video-frame">
+            <img src="/outriders.jpg" alt="" />
+            <video src=""></video>
+            </div>
+            <div className="video-frame">
+            <img src="/broadcast1.jpg" alt="" />
+            </div>
+            <div className="video-frame">
+            <img src="/broadcast2.jpg" alt="" />
+            </div>
+        </div>
+        </div>
+
+        <div className="public-section">
+        <h1>Public Conferences</h1>
+        <div className="video-container">
+            <div className="video-frame">
+            <img src="/public1.jpg" alt="" />
+            </div>
+            <div className="video-frame">
+            <img src="/public2.jpg" alt="" />
+            </div>
+            <div className="video-frame">
+            <img src="/public3.jpg" alt="" />
+            </div>
+        </div>
+        </div>
+
+        <div className="group-section">
+        <h1>Group Conferences</h1>
+        <div className="video-container">
+            <div className="video-frame">
+            <img src="/group1.jpg" alt="" />
+            </div>
+            <div className="video-frame">
+            <img src="/group2.jpg" alt="" />
+            </div>
+            <div className="video-frame">
+            <img src="/group3.jpg" alt="" />
+            </div>
+        </div>
+        </div>
+
+
         </>
        
     )

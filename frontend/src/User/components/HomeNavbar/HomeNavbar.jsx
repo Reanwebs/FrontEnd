@@ -5,13 +5,12 @@ import { SearchIcon } from "../SearchIcon/SearchIcon";
 
 export default function HomeNavbar({userInfo,logoutHandler}) {
   return (
-    <div >
-    <Navbar isBordered>
+    <Navbar>
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
         <img src="/reanicons.png" alt="connect" width="13" height="13" />
-        <p className="font-bold text-inherit" style={{ color: "#e51376" }}>NNECT</p>
+        <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>NNECT</p>
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent>
@@ -62,6 +61,5 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
         </Dropdown>
       </NavbarContent>
     </Navbar>
-    </div>
   );
 }
