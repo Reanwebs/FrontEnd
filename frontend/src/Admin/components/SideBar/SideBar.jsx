@@ -70,7 +70,7 @@ const Sidebar = ({
             </NavLink>
           </MenuItem>
           <MenuItem icon={<BsVectorPen />}>
-           Interests <Link to="/admin/interests" />
+           Interests <NavLink to="/admin/interests" />
           </MenuItem>
         </Menu>
       </SidebarContent>
