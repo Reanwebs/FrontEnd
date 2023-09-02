@@ -66,7 +66,8 @@ const Sidebar = ({
             </NavLink>
           </MenuItem>
           <MenuItem icon={<BsFillPersonFill  />}>
-           Users <NavLink  />
+           Users <NavLink to="/admin/users" >
+            </NavLink>
           </MenuItem>
           <MenuItem icon={<BsVectorPen />}>
            Interests <Link to="/admin/interests" />

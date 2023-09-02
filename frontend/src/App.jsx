@@ -8,6 +8,7 @@ import AdminLayout from './Admin/pages/AdminLayout'
 import AdminLogin from './Admin/pages/loginPage/AdminLogin'
 import AdminHome from './Admin/pages/AdminPrivateRoute/AdminPrivateRoute'
 import Dashboard from './Admin/components/DashBoard/DashBoard'
+import UsersTable from './Admin/components/UsersTable/UsersTable'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route index={true} element={<AdminLogin/>}/>
           <Route path='' element={<AdminHome/>}>
             <Route path='home' element={<Dashboard/>}/>
+            <Route path='users' element={<UsersTable/>}/>
           </Route>
         </Route>
       </Routes>  

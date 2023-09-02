@@ -43,6 +43,7 @@ const AdminHome = ()=>{
             <>
             <AdminHomeNavbar adminInfo={adminInfo} logoutHandler={logoutHandler} />
             <div className={`app ${toggled ? 'toggled' : ''}`}>
+            
            <Sidebar
              image={image}
              collapsed={collapsed}
@@ -52,6 +53,7 @@ const AdminHome = ()=>{
      
            />
           <Outlet/>
+         
      
          </div>
          </>
