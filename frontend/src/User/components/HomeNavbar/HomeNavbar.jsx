@@ -8,11 +8,8 @@ import { NavLink ,useNavigate} from "react-router-dom";
 export default function HomeNavbar({userInfo,logoutHandler}) {
   const navigate = useNavigate();
   return (
-<<<<<<< HEAD
     <Navbar>
-=======
-    <Navbar isBordered>
->>>>>>> ee55572e032d5e6d82c5c012268862e476b1af2e
+
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>

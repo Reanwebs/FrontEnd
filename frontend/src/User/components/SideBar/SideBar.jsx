@@ -8,10 +8,12 @@ import {
 } from '@mui/material';
 import { Home,Group, Chat, VideoCallRounded,GroupsRounded,EditCalendarRounded} from '@mui/icons-material';
 import {Tooltip} from "@nextui-org/react";
+import { useNavigate } from 'react-router-dom';
 
 
 const ReactSidebar = () => {
   const [active, setActive] = useState('home');
+  const navigate = useNavigate()
 
   const handleClick = (item) => {
     setActive(item);
@@ -36,16 +38,12 @@ const ReactSidebar = () => {
   );
 
   return (
-<<<<<<< HEAD
+
     <div className='side-bar'>
       <Drawer variant="permanent" open PaperProps={{ sx: { bgcolor: 'rgba(0, 0, 0, 0.1)',width: '60px',top: 64} }}>
-=======
-    <>
-    <div>
-      <Drawer variant="permanent" open PaperProps={{ sx: { bgcolor: 'black' ,width:'60px',top:64} }} >
->>>>>>> ee55572e032d5e6d82c5c012268862e476b1af2e
+
         <List>
-          <SidebarItem icon={<Home />} id="home" />
+          <SidebarItem icon={<Home />} id="home"  />
           <SidebarItem icon={<Group />} id="group" />
           <SidebarItem icon={<VideoCallRounded />}id="videocall" />
           <SidebarItem icon={<GroupsRounded />}  id="group" />
@@ -54,7 +52,7 @@ const ReactSidebar = () => {
         </List>
       </Drawer>
     </div>
-    </>
+   
   );
 };
 
