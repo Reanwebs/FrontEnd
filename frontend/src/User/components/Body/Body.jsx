@@ -1,4 +1,5 @@
 import Video from "../../components/Video/Video"
+
 import "./Body.css"
 import "./Body.scss"
 import { Button } from "@nextui-org/react";
