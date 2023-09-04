@@ -16,7 +16,7 @@ function GoogleAuth(){
 
   const googleLoginHandler = async (values)=>{
     try {
-      const res = await googleLogin(values).unwrap();
+      const res = await googleLogin({token:values}).unwrap();
       console.log(res);
       const data = {
         userName:res.username,
