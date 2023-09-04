@@ -36,6 +36,7 @@ const Home = ()=>{
             <div className="video-frame">
             <img src="/outriders.jpg" alt="" />
             <video src=""></video>
+            <p className="description">Outriders slayer broadcast</p>
             </div>
             <div className="video-frame">
             <img src="/broadcast1.jpg" alt="" />

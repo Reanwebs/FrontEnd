@@ -11,6 +11,7 @@ const ReactSidebar = () => {
   const [active, setActive] = useState('home');
 
   const handleClick = (item) => {
+    navigate(`/${item}`)
     setActive(item);
   };
 
@@ -24,6 +25,7 @@ const ReactSidebar = () => {
     <div>
       <Drawer variant="permanent" open PaperProps={{ sx: { bgcolor: 'black' ,width:'60px',top:64} }} >
         <List>
+          <SidebarItem icon={<Home />} id="home" />
           <SidebarItem icon={<Home />} id="home" />
           <SidebarItem icon={<Group />} id="group" />
           <SidebarItem icon={<VideoCallRounded />}id="videocall" />

@@ -60,7 +60,10 @@ const UserPrivateRoute  = ()=>{
         <>  
         <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} />
         <Sidebar/>
-        <Outlet/>
+        <div className="h-fit">
+        <Outlet />
+        </div>
+       
         </>
        )
        :(
