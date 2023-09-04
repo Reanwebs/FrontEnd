@@ -6,6 +6,7 @@ import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 
 export default function Header(){
   return (
+    <div>
       <Navbar >
       <NavbarBrand > 
       <p className="font-bold text-inherit"  style={{ color: "#01c8ef" }}>REAN C</p>
@@ -21,5 +22,6 @@ export default function Header(){
         </NavbarItem>
       </NavbarContent>
     </Navbar>  
+    </div>
   );
 }
