@@ -56,6 +56,11 @@ async function checkUserName(){
     if(user.userName === "") throw new Error("user name required")
     if(user.userName.length < 5) throw new Error("user name must be more than 4 charactors")
     if(user.userName.includes(' ')) throw new Error("Username cannot contain spaces")
+    const specialCharacterRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\]/;
+    if (specialCharacterRegex.test(user.userName)) {
+      throw new Error("Username cannot contain special characters");
+    }
+    
     const res = await validUserName(user).unwrap()
     setSuccess({
       ...success,

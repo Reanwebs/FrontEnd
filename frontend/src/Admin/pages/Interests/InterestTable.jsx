@@ -3,7 +3,7 @@ import { Tooltip, Button } from "@material-tailwind/react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import PageTitle from "../../components/PageTitle/PageTitle";
-import { useGetInterestsMutation ,useManageInterestMutation} from "../../slices/apiSlice/adminApiSlice";
+import { useGetInterestsMutation ,useManageInterestMutation,useAddInterestMutation} from "../../slices/apiSlice/adminApiSlice";
 
 
 
@@ -16,6 +16,7 @@ const InterestTable = () => {
 
   const [getInterests] = useGetInterestsMutation();
   const [manageInterest]= useManageInterestMutation();
+  const [addInterest,{isLoading}] = useAddInterestMutation();
 
   useEffect(()=>{
     getAllInterests()
@@ -24,7 +25,6 @@ const InterestTable = () => {
   async function getAllInterests(){
     try {
      const res = await getInterests().unwrap();
-     console.log(res);
      setInterests(res.interests)
         
     } catch (error) {
@@ -44,6 +44,21 @@ const InterestTable = () => {
         toast.error("error in managing interest")
     }
   };
+
+  const addInterestHandler = async (interest)=>{
+    try {
+      if(interest === '') return toast.error('please enter an interest')
+      if(interestError) return toast.error('please clear all errors')
+      const res = await addInterest({interest:interest}).unwrap()
+      setReStatus(!reStatus)
+      toast.success(res.message)
+      setInterest('')
+    } catch (error) {
+      toast.error(error?.data?.message)
+      
+    }
+  }
+
 
 
   return (
@@ -126,13 +141,19 @@ const InterestTable = () => {
             setInterest(e.target.value)
           }}
           onKeyUp={(e)=>{
-            console.log(e.target.value);
+            setInterestError('')
+            if(e.target.value === '') setInterestError('please enter a valid interest')
           }}
         />
+        <div className="text-red-600">{interestError}</div>
       </div>
-      <div className="mt-4">
+      <div className="m-4">
         <Button
+         
           className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-xs px-5 py-2.5 text-center"
+           onClick={()=>{
+            addInterestHandler(interest)
+           }}
           
         >
           Add Interest
