@@ -30,9 +30,6 @@ const Home = ()=>{
 
     return (
         <>
-        <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} />
-        <SideBar/>
-
         <div className="broadcast-section">
         <h1 className="sub-title">Broadcast</h1>
         <div className="video-container">
