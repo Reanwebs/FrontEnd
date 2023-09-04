@@ -7,7 +7,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
   return (
     <div >
     <Navbar isBordered>
-      <NavbarContent justify="start">
+      <NavbarContent justify="start" width="100%">
         <NavbarBrand className="mr-4">
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
         <img src="/reanicons.png" alt="connect" width="13" height="13" />
@@ -37,7 +37,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
+              color="#01c8ef"
               name="Jason Hughes"
               size="sm"
               src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
