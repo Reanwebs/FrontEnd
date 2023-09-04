@@ -1,51 +1,37 @@
 import { apiSlice } from "../../../utils/apiSlice/apiSlice";
 const USERS_URL = '/api/user'
 
-export const userApliSlice = apiSlice.injectEndpoints({
-    endpoints:(builder)=>({
-      login : builder.mutation({
-        query:(data)=>({
-            url:`${USERS_URL}/login`,
-            method:'POST',
-            body:data
-        })
-      }),
-      register: builder.mutation({
-        query:(data)=>({
-            url:`${USERS_URL}/signup`,
-            method:'POST',
-            body:data
-        })
-      }),
-      requestOtp:builder.mutation({
-        query:(data)=>({
-            url:`${USERS_URL}/otp`,
-            method:'POST',
-            body:data
-        })
-      }),
-      validUserName:builder.mutation({
-        query:(data)=>({
-          url:`${USERS_URL}/valid-name`,
-          method:'POST',
-          body:data
-        })
-      }),
-      logout:builder.mutation({
-        query:(data)=>({
-          url:`${USERS_URL}/logout`,
-          method:'POST',
-          body:data
-        })
-      }),
-      resendOtp:builder.mutation({
-        query:(data)=>({
-          url:`${USERS_URL}/resend-otp`,
-          method:'POST',
-          body:data
-        })
-      })
+
+const createApiMutation = (builder,endpoint,url,method)=>{
+  return builder.mutation({
+    query:(data)=>({
+      url:`${USERS_URL}/${url}`,
+      method:method,
+      body:data
     })
+  })
+}
+export const userApliSlice = apiSlice.injectEndpoints({
+  endpoints:(builder)=>({
+    login:createApiMutation(builder,'login','login','POST'),
+    register:createApiMutation(builder,'register','signup','POST'),
+    requestOtp:createApiMutation(builder,'requestOtp','otp','POST'),
+    validUserName:createApiMutation(builder,'validUserName','valid-name','POST'),
+    logout:createApiMutation(builder,'logout','logout','POST'),
+    resendOtp:createApiMutation(builder,'resendOtp','resend-otp','POST'),
+    googleLogin:createApiMutation(builder,'googleLogin','google-login','POST'),
+    validateUserStatus:createApiMutation(builder,'validateUserStatus','validate-user','POST')
+  })
 })
 
-export const {useLoginMutation,useRegisterMutation,useRequestOtpMutation,useValidUserNameMutation,useLogoutMutation,useResendOtpMutation} = userApliSlice
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useRequestOtpMutation,
+  useValidUserNameMutation,
+  useLogoutMutation,
+  useResendOtpMutation,
+  useGoogleLoginMutation,
+  useValidateUserStatusMutation
+} = userApliSlice
+

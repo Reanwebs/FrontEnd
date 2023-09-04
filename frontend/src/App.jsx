@@ -1,9 +1,12 @@
-
+import { Routes, Route} from 'react-router-dom'
 import Layout from './User/pages/Layout'
 import Landing from '../src/User/pages/Landing/Landing'
-import PrivateRoute from './User/components/PrivateRoute/PrivateRoute'
+import UserPrivateRoute from './User/pages/UserPrivateRoute/UserPrivateRoute'
 import Home from './User/pages/Home/Home'
-import { Routes, Route} from 'react-router-dom'
+import Profile from './User/pages/Profile/Profile'
+
+
+
 import AdminLayout from './Admin/pages/AdminLayout'
 import AdminLogin from './Admin/pages/loginPage/AdminLogin'
 import AdminHome from './Admin/pages/AdminPrivateRoute/AdminPrivateRoute'
@@ -16,8 +19,9 @@ function App() {
       <Routes>
         <Route path='/' element={<Layout/>}>
            <Route index={true} element={<Landing/>}/>
-           <Route path='' element={<PrivateRoute/>}>
-             <Route path='home' element={<Home/>}/>          
+           <Route path='' element={<UserPrivateRoute/>}>
+             <Route path='home' element={<Home/>}/>
+             <Route path='profile' element={<Profile/>}/>
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>

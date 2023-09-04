@@ -30,7 +30,8 @@ useAdminLogoutMutation,
 useManageUserMutation,
 useGetUsersMutation,
 useGetInterestsMutation,
-useManageInterestMutation
+useManageInterestMutation,
+useAddInterestMutation
 } = adminApiSlice
 
 

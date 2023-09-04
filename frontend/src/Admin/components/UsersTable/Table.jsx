@@ -12,7 +12,7 @@ const UserTable = () => {
   const [userData, SetUserData] = useState([{}]);
   const [reStatus,setReStatus] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  const [itemsPerPage] = useState(3);
   const [getUsers] = useGetUsersMutation();
   const [manageUser,{isLoading}] = useManageUserMutation()
 
@@ -23,6 +23,7 @@ useEffect(()=>{
 async function getAllUsers(){
     try {
     const res = await getUsers().unwrap();
+    console.log(res.users);
     SetUserData(res.users)  
     } catch (error) {
         toast.error("error in fetching users")
