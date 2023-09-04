@@ -16,6 +16,7 @@ const ReactSidebar = () => {
   const navigate = useNavigate()
 
   const handleClick = (item) => {
+    navigate(`/${item}`)
     setActive(item);
   };
 
@@ -23,12 +24,12 @@ const ReactSidebar = () => {
     <ListItem  onClick={() => handleClick(id)}>
       <Tooltip
       classNames={{
-        base: "bg-gray-950",
+        base: "bg-gray-950 p-2",
       }}
       key={id}
       placement="right-end"
       content={
-        <div className='text-white'>{id}</div>
+        <div className='text-white text-base'>{id}</div>
       }
        
     >
@@ -41,7 +42,6 @@ const ReactSidebar = () => {
 
     <div className='side-bar'>
       <Drawer variant="permanent" open PaperProps={{ sx: { bgcolor: 'rgba(0, 0, 0, 0.1)',width: '60px',top: 64} }}>
-
         <List>
           <SidebarItem icon={<Home />} id="home"  />
           <SidebarItem icon={<Group />} id="group" />

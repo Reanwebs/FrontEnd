@@ -4,6 +4,7 @@ import Landing from '../src/User/pages/Landing/Landing'
 import UserPrivateRoute from './User/pages/UserPrivateRoute/UserPrivateRoute'
 import Home from './User/pages/Home/Home'
 import Profile from './User/pages/Profile/Profile'
+import Schedule from './User/pages/Schedule/Schedule'
 
 
 
@@ -22,6 +23,7 @@ function App() {
            <Route path='' element={<UserPrivateRoute/>}>
              <Route path='home' element={<Home/>}/>
              <Route path='profile' element={<Profile/>}/>
+             <Route path='schedule' element={<Schedule/>}/>
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>
