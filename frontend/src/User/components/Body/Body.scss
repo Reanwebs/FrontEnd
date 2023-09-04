@@ -1,8 +1,7 @@
 @import url("https://cdn.skypack.dev/splitting/dist/splitting.css");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap");
-h1 {
+.scroll-text {
 	font-size: 3em;
-	
 	> span {
 		position: relative;
 		display: inline-block;

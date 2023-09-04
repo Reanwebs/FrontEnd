@@ -1,9 +1,9 @@
 import HomeNavbar from "../../components/HomeNavbar/HomeNavbar";
 import { useSelector } from 'react-redux';
-import { useLogoutMutation } from "../../../slices/api_slices/usersApiSlice";
+import { useLogoutMutation } from "../../slices/api_slices/usersApiSlice";
 import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
-import {removeCredentials } from "../../../slices/reducers/user_reducers/authSlice";
+import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
 import SideBar from "../../components/SideBar/SideBar";
 import "./Home.css"
@@ -34,7 +34,7 @@ const Home = ()=>{
         <SideBar/>
 
         <div className="broadcast-section">
-        <h1>Broadcast</h1>
+        <h1 className="sub-title">Broadcast</h1>
         <div className="video-container">
             <div className="video-frame">
             <img src="/outriders.jpg" alt="" />
@@ -50,7 +50,7 @@ const Home = ()=>{
         </div>
 
         <div className="public-section">
-        <h1>Public Conferences</h1>
+        <h1 className="sub-title">Public Conferences</h1>
         <div className="video-container">
             <div className="video-frame">
             <img src="/public1.jpg" alt="" />
@@ -65,7 +65,7 @@ const Home = ()=>{
         </div>
 
         <div className="group-section">
-        <h1>Group Conferences</h1>
+        <h1 className="sub-title">Group Conferences</h1>
         <div className="video-container">
             <div className="video-frame">
             <img src="/group1.jpg" alt="" />
