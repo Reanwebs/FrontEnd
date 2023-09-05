@@ -3,6 +3,7 @@ import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button,useDisclosu
 import LoginModal from "../../pages/LoginModal/LoginModal";
 import SignupModal from "../../pages/SignupModal/SignupModal";
 import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
+import "./Navbar.css"
 
 export default function Header(){
   return (
