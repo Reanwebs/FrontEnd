@@ -47,7 +47,8 @@ async function changeUserNameHandler(){
    const data = {
     userName:res.username,
     email:res.email,
-    phoneNumber:res.phoneNumber
+    phoneNumber:res.phoneNumber,
+    avatarId:res?.avatarId
   }
   dispatch(setCredentials({ ...data }));
   toast.success(res.message)

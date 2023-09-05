@@ -51,8 +51,6 @@ const UserPrivateRoute  = ()=>{
                 toast.error(err.message)
             }
         }
-
-
     return (
        userInfo 
        ?(

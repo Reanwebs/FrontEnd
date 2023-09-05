@@ -32,7 +32,8 @@ export default function LoginModal() {
         const data = {
           userName:res.username,
           email:res.email,
-          phoneNumber:res.phoneNumber
+          phoneNumber:res.phoneNumber,
+          avatarId:res?.avatarId
         }
         dispatch(setCredentials({ ...data }));
         navigate('/home')

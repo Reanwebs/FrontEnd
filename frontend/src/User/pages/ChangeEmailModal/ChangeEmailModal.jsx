@@ -1,4 +1,4 @@
-import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input,} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input, avatar,} from "@nextui-org/react";
 import {toast} from 'react-toastify'
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
@@ -54,7 +54,8 @@ export default function UserEmailModal() {
       const data = {
         userName:res.username,
         email:res.email,
-        phoneNumber:res.phoneNumber
+        phoneNumber:res.phoneNumber,
+        avatarId:res?.avatarId
       }
       dispatch(setCredentials({ ...data }));
       toast.success(res.message)

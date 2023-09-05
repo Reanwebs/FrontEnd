@@ -26,7 +26,9 @@ export const userApliSlice = apiSlice.injectEndpoints({
     changeEmail:createApiMutation(builder,'changeEmail','change-email-verify-otp','POST'),
     changeNumberRequestOtp:createApiMutation(builder,'changeNumberRequestOtp','change-phno-request','POST'),
     changeNumber:createApiMutation(builder,'changeNumber','change-phno','PATCH'),
-    changePassword:createApiMutation(builder,'changePassword','change-password','PATCH')
+    changePassword:createApiMutation(builder,'changePassword','change-password','PATCH'),
+    changeAvatar:createApiMutation(builder,'changeAvatar','change-avatar','PATCH'),
+    deleteAvatar:createApiMutation(builder,'deleteAvatar','delete-avatar','PATCH')
   })
 })
 
@@ -44,6 +46,8 @@ export const {
   useChangeEmailMutation,
   useChangeNumberRequestOtpMutation,
   useChangeNumberMutation,
-  useChangePasswordMutation
+  useChangePasswordMutation,
+  useChangeAvatarMutation,
+  useDeleteAvatarMutation
 } = userApliSlice
 

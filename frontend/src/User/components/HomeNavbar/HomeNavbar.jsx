@@ -43,7 +43,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
               color="#01c8ef"
               name={userInfo?.userName}
               size="sm"
-              src=""
+              src={userInfo?.avatarId && `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">

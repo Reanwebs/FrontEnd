@@ -7,24 +7,91 @@ import UserNameModal from "../ChangeUserNameModal/UserNameModal";
 import UserEmailModal from "../ChangeEmailModal/ChangeEmailModal";
 import UserNumberModal from "../ChangeNumberModal/ChangeNumberModal";
 import UserPasswordModal from "../ChangePasswordModal/ChangePasswordModal";
-
+import axios from "axios";
+import { useChangeAvatarMutation,useDeleteAvatarMutation } from "../../slices/api_slices/usersApiSlice";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 const Profile = ()=>{
-
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
+    const [deleteAvatar,{isLoading:deleteLoading}]=useDeleteAvatarMutation()
+    const dispatch = useDispatch()
+ 
      const userInfo  = useSelector((state) => state.auth.userInfo); 
-     const [status,setStatus] = useState(false)
-     console.log(userInfo);
+
+     const addProfileImageHandler = async ()=>{
+        try {
+            const formData = new FormData();
+           formData.append("file",selectedImage);
+           formData.append("upload_preset","reanconnect");
+           const cloudRes = await axios.post("https://api.cloudinary.com/v1_1/dcv6mx1nk/image/upload",formData)
+           console.log(cloudRes.data['public_id']);
+           const res = await changeAvatar({avatarId:cloudRes.data['public_id']}).unwrap()
+            console.log(res);
+            const data = {
+                userName:res.username,
+                email:res.email,
+                phoneNumber:res.phoneNumber,
+                avatarId:res?.avatarId
+              }
+              dispatch(setCredentials({ ...data }));
+            toast.success(res.message)    
+        } catch (error) {
+            toast.error(error?.message || error?.data?.message)
+        }
+      }
+
+      const removeAvatarHandler = async ()=>{
+        try {
+           const res = await deleteAvatar().unwrap()
+            console.log(res);
+            const data = {
+                userName:res.username,
+                email:res.email,
+                phoneNumber:res.phoneNumber,
+                avatarId:null
+              }
+            dispatch(setCredentials({ ...data }));
+            toast.success(res.message)    
+        } catch (error) {
+            console.log(error);
+            toast.error(error?.message || error?.data?.message)
+        }
+    }
     return (
      <section className="h-screen ml-12 pl-5 pr-5 justify-center ">
         <div className="bg-gray-800 m-12">
         <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-max mt-12 ">
             <div className="md:flex justify-center items-center">
                 <div className="md:shrink-0 relative mt-3">
-                 <Avatar src="" className="w-20 h-20 text-large"/>
-                 <div className="absolute bottom-0 right-0 ">
-                 <CameraIcon className="animate-pulse w-6 h-6 text-default-500" fill="bg-white" size={30} />  
-                 </div>     
-                </div>
+                <label className="cursor-pointer">
+                    <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => setSelectedImage(e.target.files[0])}
+                    />
+                        <Avatar name={userInfo.userName} src={
+                                selectedImage
+                                ? URL.createObjectURL(selectedImage)
+                                : userInfo.avatarId
+                                ? `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`
+                                : undefined 
+                            } className="w-20 h-20 text-large"
+                        />
+                </label>    
+                </div> 
             </div>
+             <div className="flex justify-center">
+                <Button color="#01c8ef" onClick={()=>{
+                   addProfileImageHandler()
+                }} variant="flat" style={{ color: "#01c8ef" }}>save</Button>
+
+                <Button color="#db2777" onClick={()=>{
+                    removeAvatarHandler()
+                }}  variant="flat" style={{ color: "#db2777" }}>delete</Button>
+                </div>
             <div className="pt-8 flex items-center ">
                 <p className="m-1">User Name:</p>
                 <p className="text-lg font-semibold">{userInfo?.userName}</p>
