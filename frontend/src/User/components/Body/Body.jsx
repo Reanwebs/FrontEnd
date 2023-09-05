@@ -12,7 +12,7 @@ const Body = () => {
     <div className="overlay-container">
       <Video />
       <div className="text-overlay">
-        <h1> 
+        <h1 className="scroll-text"> 
           <span>
             <span>Connect</span>
             <span>Collaborate</span>

@@ -22,6 +22,9 @@ h2{
     text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
+.scroll-text{
+  padding-left: 0;
+}
 
 :root {
   --bg: #080219;

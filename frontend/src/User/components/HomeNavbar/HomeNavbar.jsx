@@ -40,7 +40,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
+              color="#01c8ef"
               name={userInfo?.userName}
               size="sm"
               src=""
