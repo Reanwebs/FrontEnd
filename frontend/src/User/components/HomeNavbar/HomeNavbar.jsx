@@ -1,4 +1,3 @@
-
 import {Navbar, NavbarBrand, NavbarContent, Input, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar} from "@nextui-org/react";
 import { SearchIcon } from "../SearchIcon/SearchIcon";
 import { NavLink ,useNavigate} from "react-router-dom";
@@ -40,7 +39,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
+              color="#01c8ef"
               name={userInfo?.userName}
               size="sm"
               src=""
@@ -53,7 +52,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
               <p className="font-semibold">{userInfo?.phoneNumber}</p>
             </DropdownItem>
            
-            <DropdownItem key="myprofile" color="primary" textValue="profile" onPress={()=>{
+            <DropdownItem key="myprofile" color="#01c8ef" textValue="profile" onPress={()=>{
                 navigate('/profile')
             }}>
                 Profile

@@ -12,7 +12,7 @@ const Body = () => {
     <div className="overlay-container">
       <Video />
       <div className="text-overlay">
-        <h1> 
+        <h1 className="scroll-text"> 
           <span>
             <span>Connect</span>
             <span>Collaborate</span>
@@ -20,9 +20,9 @@ const Body = () => {
           </span>
         </h1>
           <p></p>
-        <h2>Elevate Your Connections with Seamless</h2>
+              <h2>Elevate Your Connections with Seamless</h2>
           <p></p>
-        <h2>Video Conferencing</h2>
+              <h2>Video Conferencing</h2>
       </div> 
 
       <div>
