@@ -27,7 +27,6 @@ const UserPrivateRoute  = ()=>{
         try {
             if(userInfo){
                 const res = await vaidateUser({email:userInfo.email}).unwrap();
-                console.log(res);
                 if(res.isBlocked){
                     dispatch(removeCredentials());
                     setStatus(!status)

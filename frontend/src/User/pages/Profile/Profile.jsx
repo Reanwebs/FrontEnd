@@ -1,19 +1,44 @@
+import { useSelector } from "react-redux";
+import {Avatar} from "@nextui-org/react";
+import CameraIcon from "../../components/CameraIcon/CameraIcon";
+import { Button } from "@nextui-org/react";
 
 
 const Profile = ()=>{
+
+     const userInfo  = useSelector((state) => state.auth.userInfo); 
+     console.log(userInfo);
     return (
-     <section className="h-screen ml-12 pl-5 pr-5 ">
-        <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-max mt-12">
-            <div className="md:flex ">
-                <div className="md:shrink-0">
-                <img className="h-48 w-full object-cover md:h-full md:w-48" src="/img/building.jpg" alt="Modern building architecture"/>
-                </div>
-                <div className="p-8">
-                <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Company retreats</div>
-                <p className="mt-2 text-slate-500">Looking to take your team away on a retreat to enjoy awesome food and take in some sunshine? We have a list of places to do just that.</p>
+     <section className="h-screen ml-12 pl-5 pr-5 justify-center ">
+        <div className="bg-gray-800 m-12">
+        <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-max mt-12 ">
+            <div className="md:flex justify-center items-center">
+                <div className="md:shrink-0 relative mt-3">
+                 <Avatar src="" className="w-20 h-20 text-large"/>
+                 <div className="absolute bottom-0 right-0 ">
+                 <CameraIcon className="animate-pulse w-6 h-6 text-default-500" fill="bg-white" size={30} />  
+                 </div>     
                 </div>
             </div>
+            <div className="pt-8 flex items-center ">
+                <p className="m-1">User Name:</p>
+                <p className="text-lg font-semibold">{userInfo?.userName}</p>
+                <Button color="primary" variant="flat" className="m-2">change</Button>
+            </div>
+            <div className="flex items-center">
+                <p className="m-1">Email:</p>
+                <p className="text-lg font-semibold">{userInfo?.email}</p>
+                <Button color="primary" variant="flat" className="m-2">change</Button>
+            </div>
+            {userInfo.phoneNumber &&
+            <div className="flex items-center">
+                <p className="m-1">Phone Number:</p>
+                <p className="text-lg font-semibold">{userInfo?.phoneNumber}</p>
+                <Button color="primary" variant="flat" className="m-2">change</Button>
+            </div>
+            }
         </div>
+    </div>
     </section>
     )
 }
