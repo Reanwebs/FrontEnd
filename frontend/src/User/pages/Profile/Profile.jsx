@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import {Avatar} from "@nextui-org/react";
 import CameraIcon from "../../components/CameraIcon/CameraIcon";
 import { Button } from "@nextui-org/react";
-
+import UserNameModal from "../ChangeUserNameModal/UserNameModal";
+import UserEmailModal from "../ChangeEmailModal/ChangeEmailModal";
+import UserNumberModal from "../ChangeNumberModal/ChangeNumberModal";
+import UserPasswordModal from "../ChangePasswordModal/ChangePasswordModal";
 
 const Profile = ()=>{
 
      const userInfo  = useSelector((state) => state.auth.userInfo); 
+     const [status,setStatus] = useState(false)
      console.log(userInfo);
     return (
      <section className="h-screen ml-12 pl-5 pr-5 justify-center ">
@@ -23,19 +28,26 @@ const Profile = ()=>{
             <div className="pt-8 flex items-center ">
                 <p className="m-1">User Name:</p>
                 <p className="text-lg font-semibold">{userInfo?.userName}</p>
-                <Button color="primary" variant="flat" className="m-2">change</Button>
+                <UserNameModal />
             </div>
             <div className="flex items-center">
                 <p className="m-1">Email:</p>
                 <p className="text-lg font-semibold">{userInfo?.email}</p>
-                <Button color="primary" variant="flat" className="m-2">change</Button>
+                {!userInfo.isGooleLogin &&
+                <UserEmailModal/>
+                }
             </div>
-            {userInfo.phoneNumber &&
+            {!userInfo.isGooleLogin &&
+            <>
             <div className="flex items-center">
                 <p className="m-1">Phone Number:</p>
                 <p className="text-lg font-semibold">{userInfo?.phoneNumber}</p>
-                <Button color="primary" variant="flat" className="m-2">change</Button>
+                <UserNumberModal/>
             </div>
+            <div className="flex items-center justify-center">
+                <UserPasswordModal/>
+            </div>
+            </>
             }
         </div>
     </div>

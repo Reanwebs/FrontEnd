@@ -21,7 +21,8 @@ function GoogleAuth(){
       const data = {
         userName:res.username,
         email:res.email,
-        phoneNumber:res.phoneNumber
+        phoneNumber:res.phoneNumber,
+        isGooleLogin:true
       }
       dispatch(setCredentials({ ...data }));
       navigate('/home')

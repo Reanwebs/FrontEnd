@@ -23,6 +23,5 @@ export const cPasswordValidation = (password,cPassword)=>{
 
 export const otpValidation = (otp)=>{
     if(otp === "") return "please enter your otp"
-    else if(otp.length < 4 || otp.length > 4) return "please provide a valid otp"
 }
 
