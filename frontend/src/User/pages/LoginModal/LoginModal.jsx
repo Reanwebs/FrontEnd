@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
 import { emailValidation,passwordValidation } from "../../../utils/validation/useFormValidation";
 import { useLoginMutation } from "../../slices/api_slices/usersApiSlice";
@@ -10,6 +10,7 @@ import GoogleAuth from "../../components/GoogleAuth/GoogleAuth";
 
 export default function LoginModal() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  
   const [user,setUser] = useState({
     email:'',
     password:''
