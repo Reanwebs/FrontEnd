@@ -20,7 +20,13 @@ export const userApliSlice = apiSlice.injectEndpoints({
     logout:createApiMutation(builder,'logout','logout','POST'),
     resendOtp:createApiMutation(builder,'resendOtp','resend-otp','POST'),
     googleLogin:createApiMutation(builder,'googleLogin','google-login','POST'),
-    validateUserStatus:createApiMutation(builder,'validateUserStatus','validate-user','POST')
+    validateUserStatus:createApiMutation(builder,'validateUserStatus','validate-user','POST'),
+    changeUserName:createApiMutation(builder,'changeUserName','change-user-name','PATCH'),
+    changeEmailRequestOtp:createApiMutation(builder,'changeEmailRequestOtp','change-email','PATCH'),
+    changeEmail:createApiMutation(builder,'changeEmail','change-email-verify-otp','POST'),
+    changeNumberRequestOtp:createApiMutation(builder,'changeNumberRequestOtp','change-phno-request','POST'),
+    changeNumber:createApiMutation(builder,'changeNumber','change-phno','PATCH'),
+    changePassword:createApiMutation(builder,'changePassword','change-password','PATCH')
   })
 })
 
@@ -32,6 +38,12 @@ export const {
   useLogoutMutation,
   useResendOtpMutation,
   useGoogleLoginMutation,
-  useValidateUserStatusMutation
+  useValidateUserStatusMutation,
+  useChangeUserNameMutation,
+  useChangeEmailRequestOtpMutation,
+  useChangeEmailMutation,
+  useChangeNumberRequestOtpMutation,
+  useChangeNumberMutation,
+  useChangePasswordMutation
 } = userApliSlice
 
