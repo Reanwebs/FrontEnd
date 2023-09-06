@@ -5,6 +5,7 @@ import UserPrivateRoute from './User/pages/UserPrivateRoute/UserPrivateRoute'
 import Home from './User/pages/Home/Home'
 import Profile from './User/pages/Profile/Profile'
 import Schedule from './User/pages/Schedule/Schedule'
+import MediaStream from './User/components/MediaStream/MediaStream'
 
 
 
@@ -25,6 +26,7 @@ function App() {
              <Route path='profile' element={<Profile/>}/>
              <Route path='schedule' element={<Schedule/>}/>
            </Route>
+           <Route path='/stream' element={<MediaStream/>}/>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>
           <Route index={true} element={<AdminLogin/>}/>

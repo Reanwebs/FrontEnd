@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import {Avatar} from "@nextui-org/react";
-import CameraIcon from "../../components/CameraIcon/CameraIcon";
 import { Button } from "@nextui-org/react";
 import UserNameModal from "../ChangeUserNameModal/UserNameModal";
 import UserEmailModal from "../ChangeEmailModal/ChangeEmailModal";
@@ -12,11 +11,16 @@ import { useChangeAvatarMutation,useDeleteAvatarMutation } from "../../slices/ap
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
+import {Spinner} from "@nextui-org/react";
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
     const [deleteAvatar,{isLoading:deleteLoading}]=useDeleteAvatarMutation()
     const dispatch = useDispatch()
+
+    useEffect(()=>{
+
+    },[selectedImage])
  
      const userInfo  = useSelector((state) => state.auth.userInfo); 
 
@@ -35,7 +39,8 @@ const Profile = ()=>{
                 phoneNumber:res.phoneNumber,
                 avatarId:res?.avatarId
               }
-              dispatch(setCredentials({ ...data }));
+            dispatch(setCredentials({ ...data }));
+            setSelectedImage(null)
             toast.success(res.message)    
         } catch (error) {
             toast.error(error?.message || error?.data?.message)
@@ -68,7 +73,7 @@ const Profile = ()=>{
                 <label className="cursor-pointer">
                     <input
                     type="file"
-                    accept="image/*"
+                    accept=".jpg, .jpeg, .png, .webp"
                     className="hidden"
                     onChange={(e) => setSelectedImage(e.target.files[0])}
                     />
@@ -83,20 +88,31 @@ const Profile = ()=>{
                 </label>    
                 </div> 
             </div>
-            {!userInfo.isGooleLogin &&
              <div className="flex justify-center">
                 {selectedImage &&
+                <>
                 <Button color="#01c8ef" onClick={()=>{
                    addProfileImageHandler()
-                }} variant="flat" style={{ color: "#01c8ef" }}>save</Button>
+                }} variant="flat" style={{ color: "#01c8ef" }}
+                isLoading={ isLoading ? <Spinner /> : false}
+                >save</Button>
+
+                <Button color="#db2777" onClick={()=>{
+                    console.log(selectedImage);
+                    setSelectedImage(null)
+                }}  variant="flat" style={{ color: "#db2777" }}>cancel</Button>
+                </>
+
                }
                 {userInfo?.avatarId &&
                 <Button color="#db2777" onClick={()=>{
                     removeAvatarHandler()
-                }}  variant="flat" style={{ color: "#db2777" }}>delete</Button>
+                }}  variant="flat" style={{ color: "#db2777" }}
+                isLoading={ deleteLoading ? <Spinner /> : false}
+                >delete</Button>
                  }
                 </div>
-                }
+                
             <div className="pt-8 flex items-center ">
                 <p className="m-1">User Name:</p>
                 <p className="text-lg font-semibold">{userInfo?.userName}</p>
