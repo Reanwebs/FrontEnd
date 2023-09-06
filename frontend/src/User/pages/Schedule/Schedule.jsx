@@ -15,6 +15,7 @@ const Schedule = () => {
 
   return (
     <>
+    <div className="h-fit">
       <div className="type-container">
         <div
           className={`flex-item ${activeTab === 'schedule' ? 'active' : ''}`}
@@ -53,6 +54,7 @@ const Schedule = () => {
       <div className={`completed-body ${activeTab === 'completed' ? 'active' : ''}`}>
         {activeTab === 'completed' && <Completed />}
       </div>
+    </div>
     </>
   );
 };
