@@ -22,9 +22,6 @@
     margin-bottom: 10px;
 }
   
-.schedule-meeting input[type="text"]:valid,
-.schedule-meeting input[type="date"]:valid,
-.schedule-meeting input[type="number"]:valid,
 .schedule-meeting textarea:valid {
     width: 100%;
     padding: 10px;
@@ -69,3 +66,35 @@
     color: white;
 }
   
+.time-dropdown{
+    padding-left: 10%;
+}
+
+.time-dropdown-label{
+    display: flex; 
+    gap: 20px; 
+}
+
+
+/* scheduled */
+
+
+.scheduled {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: transparent;
+    box-shadow: 0 0 1px #01c8ef; 
+}
+
+/* completed */
+
+.completed {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: transparent;
+    box-shadow: 0 0 1px #01c8ef; 
+}
