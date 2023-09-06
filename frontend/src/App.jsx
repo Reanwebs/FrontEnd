@@ -5,6 +5,9 @@ import UserPrivateRoute from './User/pages/UserPrivateRoute/UserPrivateRoute'
 import Home from './User/pages/Home/Home'
 import Profile from './User/pages/Profile/Profile'
 import Schedule from './User/pages/Schedule/Schedule'
+import Conference from './User/pages/Conference/Conference'
+import Group from './User/pages/Group/Group'
+import Chat  from './User/pages/Chat/Chat'
 
 
 
@@ -24,6 +27,9 @@ function App() {
              <Route path='home' element={<Home/>}/>
              <Route path='profile' element={<Profile/>}/>
              <Route path='schedule' element={<Schedule/>}/>
+             <Route path='conference' element={<Conference/>}/>
+             <Route path='group' element={<Group/>}/>
+             <Route path='chat'element={<Chat/>}/>
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>

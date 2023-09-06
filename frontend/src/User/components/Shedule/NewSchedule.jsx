@@ -321,7 +321,7 @@ const NewSchedule = () => {
         </label>
 
 
-        <button className="schdule-submit-button" type="submit">Schedule</button>
+        <button className="schedule-submit-button" type="submit">Schedule</button>
       </form>
     </div>
   );
