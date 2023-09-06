@@ -42,4 +42,25 @@
 
 .schedule-body.active{
     background-color: transparent;
+    height: 100vh;
+}
+
+.scheduled-body{
+    background-color: transparent;
+    
+}
+
+.scheduled-body.active{
+    background-color: transparent;
+    height: 100vh;
+}
+
+.completed-body{
+    background-color: transparent;
+    height: min-content;
+}
+
+.completed-body.active{
+    background-color: transparent;
+    height: 100vh;
 }
