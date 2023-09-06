@@ -17,12 +17,12 @@ function GoogleAuth(){
   const googleLoginHandler = async (values)=>{
     try {
       const res = await googleLogin({token:values}).unwrap();
-      console.log(res);
       const data = {
         userName:res.username,
         email:res.email,
         phoneNumber:res.phoneNumber,
-        isGooleLogin:true
+        isGooleLogin:true,
+        avatarId:res?.avatarId
       }
       dispatch(setCredentials({ ...data }));
       navigate('/home')
