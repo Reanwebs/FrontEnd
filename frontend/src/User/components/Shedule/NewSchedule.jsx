@@ -125,20 +125,21 @@ const NewSchedule = () => {
           </Switch>
         </label>
 
-
-        <label>
-          <Input type="number" name='participantlimit' label="Participant Limit" placeholder="Enter the number of participants" 
+        <div className='flex'>
+        <label className='m-2 mb-3'>
+          <Input size='md' type="number" name='participantlimit' label="Participant Limit" placeholder="Enter the number of participants" 
             value={meetingData.limit}
             onChange={handleInputChange} 
           />
         </label>
-
-        <label>
-          <Input type="date" name='date' label="Date" placeholder="Enter when your conference happens" 
+         
+        <label className='m-2 mb-3'>
+          <Input size='md' type="date" name='date' label="Date" placeholder="Enter when your conference happens" 
             value={meetingData.date}
             onChange={handleInputChange}
           />
         </label>
+        </div>
 
         <label className='time-dropdown-label'>
           <Options label={"time"} placeholder={"Select a time"} data={timeData} handlechange={handleInputChange}/>
@@ -146,7 +147,7 @@ const NewSchedule = () => {
           {/* <Options label={"timeZone"} placeholder={"Select the time zone"} data={timeZoneData} handlechange={handleInputChange}/> */}
           <Options label={"duration"} placeholder={"Select the duration"} data={duration} handlechange={handleInputChange}/>
         </label>
-
+       
 
         <button className="schedule-submit-button" type="submit">Schedule</button>
       </form>

@@ -57,7 +57,7 @@
 
 .completed-body{
     background-color: transparent;
-    height: min-content;
+    height: 100vh;
 }
 
 .completed-body.active{
