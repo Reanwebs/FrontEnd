@@ -43,11 +43,11 @@ const ReactSidebar = () => {
     <div className='side-bar'>
       <Drawer variant="permanent" open PaperProps={{ sx: { bgcolor: 'rgba(0, 0, 0, 0.1)',width: '60px',top: 64} }}>
         <List>
-          <SidebarItem icon={<Home />} id="home"  />
+          {/* <SidebarItem icon={<Home />} id="home"  />
           <SidebarItem icon={<VideoCallRounded />}id="conference" />
           <SidebarItem icon={<GroupsRounded />}  id="group" />
           <SidebarItem icon={<EditCalendarRounded/>} id="schedule" />
-          <SidebarItem icon={<Chat />}  id="chat" />
+          <SidebarItem icon={<Chat />}  id="chat" /> */}
         </List>
       </Drawer>
     </div>

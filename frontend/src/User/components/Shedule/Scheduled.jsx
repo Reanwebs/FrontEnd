@@ -35,7 +35,7 @@ const Scheduled =()=>{
               showAnchorIcon
               href="https://github.com/nextui-org/nextui"
             >
-              Link for joining the conference
+              Start Conference
             </Link>
           </CardFooter>
         </Card>
