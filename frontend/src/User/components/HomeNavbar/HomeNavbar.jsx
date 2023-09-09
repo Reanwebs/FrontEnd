@@ -78,7 +78,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
       </NavbarContent>
       
 
-      <NavbarContent as="div" className="items-center md:flex gap-12" justify="center"> 
+      <NavbarContent className="hidden md:flex items-center md:flex gap-12" as="div" justify="center"> 
       <NavbarItem>
           <Link color="foreground" href="/chat">
             Support

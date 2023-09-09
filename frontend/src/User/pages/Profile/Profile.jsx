@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {Spinner} from "@nextui-org/react";
+import RecordedVideos from "../../components/UserFeed/UserFeed";
+import "./Profile.css"
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
@@ -65,8 +67,9 @@ const Profile = ()=>{
         }
     }
     return (
-     <section className="h-screen ml-12 pl-5 pr-5 justify-center ">
-        <div className="bg-gray-800 bg-opacity-10 m-12">
+     <>
+     <section className="h-screen">
+        <div className="profile-container bg-gray-800 bg-opacity-10 m-12" >
         <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-max mt-12 ">
             <div className="md:flex justify-center items-center">
                 <div className="md:shrink-0 relative mt-3">
@@ -138,9 +141,18 @@ const Profile = ()=>{
             </>
             }
         </div>
+        
     </div>
+    
     </section>
+    <section>
+    <div>
+          <RecordedVideos/> 
+     </div>
+    </section>
+    </>
     )
+  
 }
 
 export default Profile

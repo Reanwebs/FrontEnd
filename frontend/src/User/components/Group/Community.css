@@ -1,0 +1,34 @@
+.community-head-container{
+    padding:1%;
+    height: 100px; 
+    display: flex;
+    background-color: transparent;
+    justify-content: center;
+}
+
+.community-thumbnail{
+    height: 100%
+}
+
+.create-community-container{
+    height: 100%;
+    justify-content: center;
+
+}
+
+.create-button{
+    background-color: transparent;
+    box-shadow: 0 0 5px #e51376;
+}
+
+.create-button:hover{
+   background-color: transparent;
+   box-shadow: 0 0 5px #01c8ef;
+}
+
+.community-text {
+    font-size: 25px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 20px #e51376;
+}
