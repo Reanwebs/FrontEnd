@@ -31,51 +31,9 @@ const Home = ()=>{
     return (
         <>
         <div className="broadcast-section">
-        <h1>Broadcast</h1>
-        <div className="video-container">
-            <div className="video-frame">
-            <img src="/outriders.jpg" alt="" />
-            <video src=""></video>
-            </div>
-            <div className="video-frame">
-            <img src="/broadcast1.jpg" alt="" />
-            </div>
-            <div className="video-frame">
-            <img src="/broadcast2.jpg" alt="" />
-            </div>
+        <img className="home-image" src="home1.png" alt="home1" />
+        <img className="home-image" src="home2.png" alt="home2" />
         </div>
-        </div>
-
-        <div className="public-section">
-        <h1>Public Conferences</h1>
-        <div className="video-container">
-            <div className="video-frame">
-            <img src="/public1.jpg" alt="" />
-            </div>
-            <div className="video-frame">
-            <img src="/public2.jpg" alt="" />
-            </div>
-            <div className="video-frame">
-            <img src="/public3.jpg" alt="" />
-            </div>
-        </div>
-        </div>
-
-        <div className="group-section">
-        <h1>Group Conferences</h1>
-        <div className="video-container">
-            <div className="video-frame">
-            <img src="/group1.jpg" alt="" />
-            </div>
-            <div className="video-frame">
-            <img src="/group2.jpg" alt="" />
-            </div>
-            <div className="video-frame">
-            <img src="/group3.jpg" alt="" />
-            </div>
-        </div>
-        </div>
-
 
         </>
        

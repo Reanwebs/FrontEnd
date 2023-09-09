@@ -1,4 +1,4 @@
-import {Select, SelectItem} from "@nextui-org/react";
+import {Select,SelectItem} from "@nextui-org/react" 
 
 export default function Options({label,placeholder,data,handlechange}) {
   return (

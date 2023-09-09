@@ -15,9 +15,9 @@ const Group =()=>{
 
     return (
         <>
-          <div className="type-container">
-
-          <div
+          <div className="group-container">
+          <img className="group-image"  src="group1.png" alt="group" />
+          {/* <div
               className={`flex-item ${activeTab === 'groups' ? 'active' : ''}`}
               onClick={() => {
                 handleTabClick('groups');
@@ -55,7 +55,8 @@ const Group =()=>{
 
           <div className={`group-body ${activeTab === 'trending' ? 'active' : ''}`}>
             {activeTab === 'trending' && <Trending/>}
-          </div>
+          </div> */}
+        </div>
         </>
     );
    

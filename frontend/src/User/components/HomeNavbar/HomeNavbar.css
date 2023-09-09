@@ -1,0 +1,9 @@
+.wallet-button{
+    background-color: transparent;
+    box-shadow: 0 0 5px #e51376;
+}
+
+.wallet-button:hover{
+   background-color: transparent;
+   box-shadow: 0 0 5px #01c8ef;
+}

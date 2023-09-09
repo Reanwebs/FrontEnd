@@ -35,7 +35,7 @@ const Completed =()=>{
               showAnchorIcon
               href="https://github.com/nextui-org/nextui"
             >
-              Link for joining the conference
+              Actions
             </Link>
           </CardFooter>
         </Card>
