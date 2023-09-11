@@ -9,6 +9,7 @@ import Conference from './User/pages/Conference/Conference'
 import Group from './User/pages/Group/Group'
 import Chat  from './User/pages/Chat/Chat'
 import MediaStream from './User/components/MediaStream/MediaStream'
+import WebRTC from './User/components/webrtc/WebRTC'
 
 
 

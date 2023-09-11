@@ -7,7 +7,6 @@ import { useNavigate ,Navigate, Outlet} from "react-router-dom";
 import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
-import Sidebar from '../../components/SideBar/SideBar'
 
 
 const UserPrivateRoute  = ()=>{
@@ -56,7 +55,6 @@ const UserPrivateRoute  = ()=>{
        ?(
         <>  
         <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} />
-        <Sidebar/>
         <div className="h-fit">
         <Outlet />
         </div>
