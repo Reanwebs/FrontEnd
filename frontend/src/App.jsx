@@ -8,8 +8,7 @@ import Schedule from './User/pages/Schedule/Schedule'
 import Conference from './User/pages/Conference/Conference'
 import Group from './User/pages/Group/Group'
 import Chat  from './User/pages/Chat/Chat'
-import MediaStream from './User/components/MediaStream/MediaStream'
-import WebRTC from './User/components/webrtc/WebRTC'
+import MediaContainer from './User/components/MediaContainer/MediaContainer'
 
 
 
@@ -32,8 +31,8 @@ function App() {
              <Route path='conference' element={<Conference/>}/>
              <Route path='group' element={<Group/>}/>
              <Route path='chat'element={<Chat/>}/>
+             <Route path='media-container'element={<MediaContainer/>}/>
            </Route>
-           <Route path='/stream' element={<MediaStream/>}/>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>
           <Route index={true} element={<AdminLogin/>}/>

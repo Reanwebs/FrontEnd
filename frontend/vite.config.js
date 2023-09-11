@@ -12,7 +12,8 @@ export default defineConfig({
         changeOrigin:true
       },
       '/webrtc':{
-        target:'http://localhost:4040'
+        target:'http://localhost:4040',
+        changeOrigin:true
       }
     }
   }
