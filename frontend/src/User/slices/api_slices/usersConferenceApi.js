@@ -14,12 +14,16 @@ const createApiMutation = (builder,endpoint,url,method)=>{
 
 export const userConferenceApiSlice = apiSlice.injectEndpoints({
     endpoints:(builder)=>({
+      startPrivateConference:createApiMutation(builder,'startPrivateConference','start-private-conference','POST'),
+      joinPrivateConference:createApiMutation(builder,'joinPrivateConference','join-private-conference','PATCH'),
       scheduleConference:createApiMutation(builder,'scheduleConference','schedule-private-conference','POST'),
       scheduledConference:createApiMutation(builder,'scheduledConference','scheduled-conference','GET')
     })
 })
 
 export const {
+  useStartPrivateConferenceMutation,
+  useJoinPrivateConferenceMutation,
   useScheduleConferenceMutation,
   useScheduledConferenceMutation
 } = userConferenceApiSlice

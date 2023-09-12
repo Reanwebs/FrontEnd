@@ -1,6 +1,10 @@
 import "./Conference.css"
 
-import React, { useState } from 'react';
+import{useState ,useRef} from 'react';
+import { useStartPrivateConferenceMutation } from "../../slices/api_slices/usersConferenceApi";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 
 const Private = () => {
   const [formData, setFormData] = useState({
@@ -11,19 +15,34 @@ const Private = () => {
     participantlimit: 0,
   });
 
+  const [startPrivateConference] = useStartPrivateConferenceMutation();
+  const navigate = useNavigate()
+
+
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
     setFormData({ ...formData, [name]: newValue });
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
-    console.log(formData);
+    const data = {
+      title:formData.title,
+      description:formData.description,
+      interest:formData.interest,
+      chat:formData.chat,
+      participantlimit:formData.participantlimit,
+    }
+    const res = await startPrivateConference(data).unwrap();
+    console.log(res,"66666666666666");
+    navigate('/media-container')
   };
 
+  
+
   return (
-    <div className="private-div">
+    <div className="flex flex-col items-center m-4">
       <form onSubmit={handleSubmit}>
         <div>
           <label>Title:</label>
@@ -76,7 +95,7 @@ const Private = () => {
           />
         </div>
         <div>
-          <button type="submit">Start Private Conference</button>
+          <button  type="submit">Start Private Conference</button>
         </div>
       </form>
     </div>

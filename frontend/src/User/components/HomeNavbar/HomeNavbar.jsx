@@ -35,30 +35,32 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
       </NavbarContent>
 
       <NavbarContent className="hidden md:flex gap-10" justify="center" style={{ maxWidth: 'fit-content' }}>
-        <NavbarBrand className="mr-4">
+        <NavbarBrand style={{cursor:'pointer'}} className="mr-4" onClick={()=>{
+          navigate('/home')
+        }}>
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
         <img src="/reanicons.png" alt="connect" width="13" height="13" />
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>NNECT</p>
         </NavbarBrand>
         <NavbarItem>
-          <Link color="foreground" href="/conference">
+          <NavLink color="foreground" to={'/conference'} >
             Conference
-          </Link>
+          </NavLink>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="/schedule" aria-current="page">
+        <NavLink color="foreground" to={'/schedule'} >
             Schedules
-          </Link>
+            </NavLink>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/group">
+        <NavLink color="foreground" to={'/group'} >
             Community
-          </Link>
+            </NavLink>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/chat">
+        <NavLink color="foreground" to={'/chat'} >
             Messages
-          </Link>
+            </NavLink>
         </NavbarItem>
       </NavbarContent>
 
@@ -80,7 +82,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
 
       <NavbarContent className="hidden md:flex items-center md:flex gap-12" as="div" justify="center"> 
       <NavbarItem>
-          <Link color="foreground" href="/chat">
+          <Link color="foreground" to="/chat">
             Support
           </Link>
         </NavbarItem>   
@@ -128,7 +130,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
               color={
                 index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
               }
-              href="#"
+              to="#"
               size="lg"
             >
               {item}
