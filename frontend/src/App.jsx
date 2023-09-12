@@ -31,7 +31,7 @@ function App() {
              <Route path='conference' element={<Conference/>}/>
              <Route path='group' element={<Group/>}/>
              <Route path='chat'element={<Chat/>}/>
-             <Route path='media-container'element={<MediaContainer/>}/>
+             <Route path='media-container/:id'element={<MediaContainer/>}/>
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>

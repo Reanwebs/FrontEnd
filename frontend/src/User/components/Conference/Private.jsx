@@ -26,17 +26,24 @@ const Private = () => {
     setFormData({ ...formData, [name]: newValue });
   };
   const handleSubmit =async (e) => {
-    e.preventDefault();
-    const data = {
-      title:formData.title,
-      description:formData.description,
-      interest:formData.interest,
-      chat:formData.chat,
-      participantlimit:formData.participantlimit,
+    try {
+      e.preventDefault();
+      const data = {
+        title:formData.title,
+        description:formData.description,
+        interest:formData.interest,
+        chat:formData.chat,
+        participantlimit:formData.participantlimit,
+      }
+      const res = await startPrivateConference(data).unwrap();
+      console.log(res,"66666666666666");
+      navigate(`/media-container/${res.conferenceID}`)
+      
+    } catch (error) {
+      console.log(error);
+      
     }
-    const res = await startPrivateConference(data).unwrap();
-    console.log(res,"66666666666666");
-    navigate('/media-container')
+   
   };
 
   

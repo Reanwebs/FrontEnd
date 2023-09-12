@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import "./Conference.css";
 import { useSelector} from 'react-redux';
+import { useNavigate } from "react-router-dom";
+
 import { useJoinPrivateConferenceMutation } from '../../slices/api_slices/usersConferenceApi';
 
 
 const Join = () => {
   const [conferenceId, setConferenceId] = useState('');
   const [joinConference] = useJoinPrivateConferenceMutation()
+  
+  const navigate = useNavigate()
 
-  const joinId = useSelector((state)=>state.joinId.joinId);
-  console.log(joinId);
+ 
 
 
 
@@ -19,10 +22,18 @@ const Join = () => {
   };
 
   const handleJoinConference = async() => {
-    // logic to join the conference
+   try {
     const res = await joinConference({conferenceID:conferenceId}).unwrap();
     console.log(res);
     console.log('Joining conference with ID:', conferenceId);
+    console.log(res);
+    navigate(`/media-container/${conferenceId}`)
+    
+   } catch (error) {
+    console.log(error);
+    
+   }
+    
 
   };
 
