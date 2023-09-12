@@ -7,3 +7,10 @@
    background-color: transparent;
    box-shadow: 0 0 5px #01c8ef;
 }
+
+.navbar-links .active{
+    background-color: transparent;
+    border-radius: 10;
+    text-shadow: 0 0 10px black;
+    color:  #01c8ef;
+}
