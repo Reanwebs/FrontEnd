@@ -13,7 +13,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <React.StrictMode>   
+    {/* <React.StrictMode>    */}
       <GoogleOAuthProvider clientId='42993781130-vbhpj9he4ij3s2uf7lerk03o07uf7o9o.apps.googleusercontent.com'>   
         <BrowserRouter>
         <main className=" dark text-foreground bg-[#080219]">
@@ -22,6 +22,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </main>
         </BrowserRouter>
       </GoogleOAuthProvider> 
-    </React.StrictMode>
+    {/* </React.StrictMode> */}
   </Provider>
 )

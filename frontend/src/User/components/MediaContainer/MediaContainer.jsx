@@ -1,148 +1,242 @@
-import { useState,useRef,useEffect } from "react"
+import { useEffect, useRef ,useState} from "react"
 import './MediaContainer.css'
-import { useSelector ,useDispatch} from 'react-redux';
-import { setJoinId } from "../../slices/reducers/user_reducers/mediaReducer";
-import io from 'socket.io-client'
+import AgoraRTM from 'agora-rtm-sdk'
+import {  useParams } from 'react-router-dom';
+import MediaController from "../MediaController/MediaController";
 
-const socket = io(
-  '/webRTCPeers',
-  {
-      path:'/webrtc'
-  }
-)
+
+
+
+
 const MediaContainer = ()=>{
-  const userInfo = useSelector((state)=>state.auth.userInfo)
+    const localStreamRef = useRef(null)
+    const remoteStreamRef = useRef(null)
+    const pc = useRef(null)
+    const channel = useRef(null);
+    const client = useRef(null);
+    const { id } = useParams();
+    const [video,setVideo] = useState(true);
+    const [audio,setAudio] = useState(true)
+
+
+    const token = null;
+    const uid = String(Math.floor(Math.random() * 10000));
   
 
-  const localVideoRef = useRef()
-    const remoteVideoRef = useRef()
-    const pc = useRef(new RTCPeerConnection(null))
-    const textref = useRef()
-    const [id,setId] = useState('')
-    const dispatch = useDispatch()
-   
-
-
-  useEffect(()=>{
-    
-    createOffer()
-    getUserMedia()
-    setId(userInfo.userName)
-        socket.on('connection-success', (success) => {
-          console.log('Connected to server',success); // Log when the client is connected
-      });
-
-      dispatch(setJoinId(userInfo.userName))
-
-      socket.on('disconnect', () => {
-          console.log('Disconnected from server'); // Log when the client is disconnected
-      });
-
-      socket.on('sdp',(data)=>{
-          pc.current.setRemoteDescription(new RTCSessionDescription(data.sdp))
-          textref.current.value = JSON.stringify(data.sdp)
-      })
-
-      socket.on('candidate',(candidate)=>{
-          // candidates.current = [...candidates.current,candidate]
-          pc.current.addIceCandidate(new RTCIceCandidate(candidate))
-      });
-
-  
-  
-  return () => {
-      socket.disconnect(); 
-  };
-    
-  },[])
-
-  const getUserMedia = async ()=>{
-    try {
-
-        let  constraints = {
-            audio:false,
-            video:true
-        }
-        // const _pc = new RTCPeerConnection(null)
-        pc.onicecandidate = (e)=>{
-            if(e.candidate) console.log(JSON.stringify(e.candidate));
-            sendToPeer('candidate',e.candidate)
-        }
-
-        pc.oniceconnectionstatechange = (e)=>{
-            console.log(e);
-        }
-
-        pc.ontrack = (e)=>{
-            console.log(e);
-            remoteVideoRef.current.srcObject = e.streams[0]
-        }
-        // pc.current = _pc
-      const stream = await navigator.mediaDevices.getUserMedia(constraints)
-
-
-      localVideoRef.current.srcObject = stream
-      stream.getTracks().forEach(track=>{
-        console.log(track,"trackk");
-         pc.addTrack(track,stream)
-        
-      })
-
-    } catch (error) {
-        console.log(error);
+    const servers = {
+        iceServers:[
+            {
+                urls:['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302']
+            }
+        ]
     }
-  }
 
-  const sendToPeer = (eventType,payload)=>{
-    socket.emit(eventType,payload)
-}
+    const APP_ID = "69a825afcede4da68c9fdad51b124b64"
 
+    let constraints ={
+        video:{
+            width:{min:640, ideal:1920, max:1920},
+            height:{min:480, ideal:1080, max:1080}
+            
+        },
+        audio:audio
+    }
+   useEffect(()=>{
 
-const processSDP = (sdp)=>{
-    pc.current.setLocalDescription(sdp)
-    sendToPeer('sdp',{sdp})
-}
-
-  const createOffer =  ()=>{
-    pc.current.createOffer({
-        offerToReceiveAudio:1,
-        offerToReceiveVideo:1
-
-    }).then(async(sdp)=>{
-         //sending offer to the connecting peer
-         console.log(sdp,"iiiiiiiiiii");
-        processSDP(sdp)
-    }).catch((error)=>{
-        console.log(error);
+    init();
+    return(()=>{
+        leaveChannel()
     })
+   },[])
 
-  }
+    async function init(){
+        try {
+            client.current = await AgoraRTM.createInstance(APP_ID)
+            await client.current.login({ uid, token });
 
-  const createAnswer = ()=>{
-    pc.current.createAnswer({
-        offerToReceiveAudio:1,
-        offerToReceiveVideo:1
+            channel.current = client.current.createChannel(id)
+            await channel.current.join()
 
-    }).then((sdp)=>{
-        //sending answer to connecting peer
-        processSDP(sdp)
-    }).catch((error)=>{
-        console.log(error);
-    })
-  }
-      
-    return(
-      <>
-        <div className="media-container">
-            <video ref={remoteVideoRef} className="remote-video"  autoPlay></video>
-            <video ref={localVideoRef} className="local-video" autoPlay muted></video>
-        </div>
-        <div>
-          <input value={id}></input>
-        </div>
-        </>
+            channel.current.on('MemberJoined',handleUserJoined)
+
+            channel.current.on('MemberLeft',handleUserLeft)
+
+            client.current.on('MessageFromPeer',handleMessageFromPeer)
+
+
+
+            const stream = await navigator.mediaDevices.getUserMedia(constraints)
+            localStreamRef.current.srcObject = stream
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    const handleUserLeft = (MemberId)=>{
+        remoteStreamRef.current.style.display = 'none'
+
+    }
+
+
+    const handleMessageFromPeer = async (message,MemberId)=>{
+        message = JSON.parse(message.text)
+        // console.log('Message:',message);
+
+        if(message.type === 'offer'){
+            await createAnswer(MemberId,message.offer)
+        }
+        if(message.type === 'answer'){
+           await  addAnswer(message.answer)
+        }
+        if(message.type === 'candidate'){
+            if(pc.current){
+              await pc.current.addIceCandidate(message.candidate)
+            }
+        }
+
+    }
+
+    const handleUserJoined = async (MemberId)=>{
+        await createOffer(MemberId)
+        // console.log('a new user joined the channel',MemberId);
+
+    }
+
+    const createPeerConnection = async (MemberId)=>{
+        try {
+
+            pc.current = new RTCPeerConnection(servers);
+
+            const remoteStream = new MediaStream()
+            remoteStreamRef.current.srcObject = remoteStream;
+            remoteStreamRef.current.style.display = 'block';
+
+            localStreamRef.current.classList.add('smallFrame')
+
         
+
+            if(!localStreamRef.current.srcObject){
+                const stream = await navigator.mediaDevices.getUserMedia({video:true,audio:false})
+                localStreamRef.current.srcObject = stream
+            }
+
+            localStreamRef.current.srcObject.getTracks().forEach(track => {
+                // console.log(track,"trackkkkkk");
+                pc.current.addTrack(track,localStreamRef.current.srcObject)   
+            });
+
+            pc.current.ontrack = (event)=>{
+                event.streams[0].getTracks().forEach(track=>{
+                    remoteStream.addTrack(track)
+                    
+                })
+            }
+
+            pc.current.onicecandidate = (event)=>{
+               if(event.candidate){
+                // console.log('new ice candidate ',event.candidate);
+                client.current.sendMessageToPeer({text:JSON.stringify({'type':'candidate','candidate':event.candidate})},MemberId)
+
+               }
+            }
+            
+
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    }
+
+    const createOffer = async (MemberId)=>{
+        try {
+
+            await createPeerConnection(MemberId)
+
+            const offer = await pc.current.createOffer()
+            await pc.current.setLocalDescription(offer)
+
+            // console.log(offer,"oferrrrrrrrrr");
+
+            client.current.sendMessageToPeer({text:JSON.stringify({'type':'offer','offer':offer})},MemberId)
+
+
+
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    
+
+
+    const createAnswer = async (MemberId,offer)=>{
+        try {
+
+            await createPeerConnection(MemberId)
+
+            await pc.current.setRemoteDescription(offer);
+
+            const answer = await pc.current.createAnswer();
+            await pc.current.setLocalDescription(answer)
+            // console.log(answer,"eeeeeeeeeeee");
+
+            client.current.sendMessageToPeer({text:JSON.stringify({'type':'answer','answer':answer})},MemberId)
+
+
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+    }
+
+    const addAnswer = async (answer)=>{
+        try {
+            if(!pc.current.currentRemoteDescription){
+                // console.log(answer,"oppppppuuuuuuu");
+               await pc.current.setRemoteDescription(answer)
+            }
+            
+        } catch (error) {
+            console.log(error); 
+        }
+
+    }
+
+    const leaveChannel = async ()=>{
+        await channel.current.leave();
+        await client.current.logout()
+    }
+
+    // window.addEventListener('beforeunload',leaveChannel)
+    const toggleVideo =()=>{
+        localStreamRef.current.srcObject.getVideoTracks()[0].enabled = !video;
+        setVideo(!video);
+    }
+
+    const toggleAudio =()=>{
+        localStreamRef.current.srcObject.getAudioTracks()[0].muted = !audio;
+        setVideo(!audio);
+    }
+
+
+
+    return(
+     <>
+     <div id="videos">
+        <video  ref={localStreamRef} className="video-player" id="user-1" autoPlay playsInline ></video>
+        <video  ref={remoteStreamRef} className="video-player" id="user-2" autoPlay playsInline ></video>
+        <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio}/>
+      </div>
+     
+    </>
     )
 }
 
- export default MediaContainer;
+export default MediaContainer
