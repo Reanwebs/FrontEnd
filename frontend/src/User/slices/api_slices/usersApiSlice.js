@@ -28,7 +28,8 @@ export const userApliSlice = apiSlice.injectEndpoints({
     changeNumber:createApiMutation(builder,'changeNumber','change-phno','PATCH'),
     changePassword:createApiMutation(builder,'changePassword','change-password','PATCH'),
     changeAvatar:createApiMutation(builder,'changeAvatar','change-avatar','PATCH'),
-    deleteAvatar:createApiMutation(builder,'deleteAvatar','delete-avatar','PATCH')
+    deleteAvatar:createApiMutation(builder,'deleteAvatar','delete-avatar','PATCH'),
+    userGetInterests:createApiMutation(builder,'getInterests','get-interests','GET')
   })
 })
 
@@ -48,6 +49,7 @@ export const {
   useChangeNumberMutation,
   useChangePasswordMutation,
   useChangeAvatarMutation,
-  useDeleteAvatarMutation
+  useDeleteAvatarMutation,
+  useUserGetInterestsMutation
 } = userApliSlice
 
