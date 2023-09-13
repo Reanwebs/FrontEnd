@@ -39,7 +39,7 @@ const MediaContainer = ()=>{
             height:{min:480, ideal:1080, max:1080}
             
         },
-        audio:audio
+        audio:true
     }
    useEffect(()=>{
 
@@ -221,7 +221,8 @@ const MediaContainer = ()=>{
     }
 
     const toggleAudio =()=>{
-        localStreamRef.current.srcObject.getAudioTracks()[0].muted = !audio;
+        console.log(localStreamRef.current.srcObject.getAudioTracks()[0]);
+        localStreamRef.current.srcObject.getAudioTracks()[0].enabled= !audio;
         setVideo(!audio);
     }
 
