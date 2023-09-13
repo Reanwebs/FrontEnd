@@ -2,6 +2,7 @@ import { useEffect, useRef ,useState} from "react"
 import './MediaContainer.css'
 import AgoraRTM from 'agora-rtm-sdk'
 import {  useParams } from 'react-router-dom';
+import MediaController from "../MediaController/MediaController";
 
 
 
@@ -14,8 +15,9 @@ const MediaContainer = ()=>{
     const channel = useRef(null);
     const client = useRef(null);
     const { id } = useParams();
+    const [video,setVideo] = useState(true);
+    const [audio,setAudio] = useState(true)
 
-    console.log(id);
 
     const token = null;
     const uid = String(Math.floor(Math.random() * 10000));
@@ -31,10 +33,20 @@ const MediaContainer = ()=>{
 
     const APP_ID = "69a825afcede4da68c9fdad51b124b64"
 
+    let constraints ={
+        video:{
+            width:{min:640, ideal:1920, max:1920},
+            height:{min:480, ideal:1080, max:1080}
+            
+        },
+        audio:audio
+    }
    useEffect(()=>{
 
     init();
-
+    return(()=>{
+        leaveChannel()
+    })
    },[])
 
     async function init(){
@@ -53,7 +65,7 @@ const MediaContainer = ()=>{
 
 
 
-            const stream = await navigator.mediaDevices.getUserMedia({video:true,audio:false})
+            const stream = await navigator.mediaDevices.getUserMedia(constraints)
             localStreamRef.current.srcObject = stream
             
         } catch (error) {
@@ -100,6 +112,10 @@ const MediaContainer = ()=>{
             const remoteStream = new MediaStream()
             remoteStreamRef.current.srcObject = remoteStream;
             remoteStreamRef.current.style.display = 'block';
+
+            localStreamRef.current.classList.add('smallFrame')
+
+        
 
             if(!localStreamRef.current.srcObject){
                 const stream = await navigator.mediaDevices.getUserMedia({video:true,audio:false})
@@ -198,8 +214,16 @@ const MediaContainer = ()=>{
         await client.current.logout()
     }
 
-    window.addEventListener('beforeunload',leaveChannel)
+    // window.addEventListener('beforeunload',leaveChannel)
+    const toggleVideo =()=>{
+        localStreamRef.current.srcObject.getVideoTracks()[0].enabled = !video;
+        setVideo(!video);
+    }
 
+    const toggleAudio =()=>{
+        localStreamRef.current.srcObject.getAudioTracks()[0].muted = !audio;
+        setVideo(!audio);
+    }
 
 
 
@@ -208,7 +232,9 @@ const MediaContainer = ()=>{
      <div id="videos">
         <video  ref={localStreamRef} className="video-player" id="user-1" autoPlay playsInline ></video>
         <video  ref={remoteStreamRef} className="video-player" id="user-2" autoPlay playsInline ></video>
+        <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio}/>
       </div>
+     
     </>
     )
 }
