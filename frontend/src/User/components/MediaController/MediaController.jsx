@@ -1,5 +1,5 @@
 import './MediaController.css'
-const MediaController = ({toggleVideo,toggleAudio,hangup})=>{
+const MediaController = ({toggleVideo,toggleAudio,hangup,screenShare})=>{
 
     return (
         <div className="auth">
@@ -19,6 +19,11 @@ const MediaController = ({toggleVideo,toggleAudio,hangup})=>{
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="svg">
                 <path className="on" d="M40 8H15.64l8 8H28v4.36l1.13 1.13L36 16v12.36l7.97 7.97L44 36V12c0-2.21-1.79-4-4-4zM4.55 2L2 4.55l4.01 4.01C4.81 9.24 4 10.52 4 12v24c0 2.21 1.79 4 4 4h29.45l4 4L44 41.46 4.55 2zM12 16h1.45L28 30.55V32H12V16z" fill="white"></path>
                 <path className="off" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zm-4 24l-8-6.4V32H12V16h16v6.4l8-6.4v16z" fill="white"></path>
+                </svg>
+            </button>
+            <button  onClick={screenShare} className="fullscreen-button" >
+                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"  fill='white'/>
                 </svg>
             </button>
             {/* <button  className="fullscreen-button">
