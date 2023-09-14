@@ -23,12 +23,9 @@ const MediaContainer = ()=>{
     const senders = useRef([])
     const [video,setVideo] = useState(true);
     const [audio,setAudio] = useState(true);
-    const [admin,setAdmin] = useState(false)
-    const navigate = useNavigate();
 
     const token = null;
     const uid = String(Math.floor(Math.random() * 10000));
-    const userInfo  = useSelector((state) => state.auth.userInfo); 
     // const uid = userInfo.userName
 
   
@@ -102,6 +99,7 @@ const MediaContainer = ()=>{
            await  addAnswer(message.answer)
         }
         if(message.type === 'candidate'){
+            console.log(message.candidate,"candidateee msg");
             if(pc.current){
               await pc.current.addIceCandidate(message.candidate)
             }
@@ -141,11 +139,7 @@ const MediaContainer = ()=>{
             });
 
             pc.current.ontrack = (event)=>{
-                event.streams[0].getTracks().forEach(track=>{
-                    // remoteStream.addTrack(track)
-                    remoteStreamRef.current.srcObject.addTrack(track)
-                    
-                })
+                event.streams[0].getTracks().forEach(track=>remoteStream.addTrack(track) )
             }
 
             pc.current.onicecandidate = (event)=>{
@@ -241,6 +235,7 @@ const MediaContainer = ()=>{
         try {
             const stream = await navigator.mediaDevices.getDisplayMedia({cursor:true})
             const streamTrack = stream.getTracks()[0];
+            console.log(streamTrack);
             senders.current.find(sender => sender.track.kind === 'video' ).replaceTrack(streamTrack);
             streamTrack.onended = ()=>{
                 senders.current.find(sender => sender.track.kind === 'video').replaceTrack(localStreamRef.current.srcObject.getTracks()[1])
