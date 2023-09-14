@@ -87,7 +87,7 @@ const MediaContainer = ()=>{
 
     const handleUserLeft = (MemberId)=>{
         remoteStreamRef.current.style.display = 'none'
-        toast.success(`user left meeting${MemberId}`)
+        toast.success(`user left meeting`)
     }
 
 
@@ -129,7 +129,7 @@ const MediaContainer = ()=>{
         
 
             if(!localStreamRef.current.srcObject){
-                const stream = await navigator.mediaDevices.getUserMedia({video:true,audio:false})
+                const stream = await navigator.mediaDevices.getUserMedia(constraints)
                 localStreamRef.current.srcObject = stream
             }
 
@@ -142,7 +142,8 @@ const MediaContainer = ()=>{
 
             pc.current.ontrack = (event)=>{
                 event.streams[0].getTracks().forEach(track=>{
-                    remoteStream.addTrack(track)
+                    // remoteStream.addTrack(track)
+                    remoteStreamRef.current.srcObject.addTrack(track)
                     
                 })
             }
@@ -155,7 +156,6 @@ const MediaContainer = ()=>{
                }
             }
             
-
         } catch (error) {
             console.log(error);
             
@@ -195,8 +195,6 @@ const MediaContainer = ()=>{
             // console.log(answer,"eeeeeeeeeeee");
 
             client.current.sendMessageToPeer({text:JSON.stringify({'type':'answer','answer':answer})},MemberId)
-
-
             
         } catch (error) {
             console.log(error);
@@ -241,14 +239,13 @@ const MediaContainer = ()=>{
 
     async function screenShare() {
         try {
-            console.log(senders.current);
             const stream = await navigator.mediaDevices.getDisplayMedia({cursor:true})
             const streamTrack = stream.getTracks()[0];
             senders.current.find(sender => sender.track.kind === 'video' ).replaceTrack(streamTrack);
             streamTrack.onended = ()=>{
                 senders.current.find(sender => sender.track.kind === 'video').replaceTrack(localStreamRef.current.srcObject.getTracks()[1])
             }
-            console.log(stream);
+          
         } catch (error) {
             console.log("Error occurred", error);
         }
