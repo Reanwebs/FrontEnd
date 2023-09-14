@@ -40,7 +40,7 @@ const Private = () => {
   const handleSubmit =async (e) => {
     try {
       e.preventDefault();
-      if(!formData.title || !formData.description || !formData.interest || !formData.chat || !formData.participantlimit){
+      if(!formData.title || !formData.description || !formData.interest || !formData.participantlimit){
         throw new Error('please enter all fileds')
       }
       const data = {
