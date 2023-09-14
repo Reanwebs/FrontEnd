@@ -12,13 +12,14 @@ const Scheduled =()=>{
 
   useEffect(()=>{
     scheduledDataHandler();
-  },[scheduledData])
+  },[])
   
   async function scheduledDataHandler(){
     try {
       const data = await scheduledConference().unwrap();
-      console.log(data);
-      setScheduledData(data)
+      console.log(data.Data,"oooooooooooooooooooo");
+      setScheduledData(data.Data)
+      console.log(scheduledData);
     } catch (error) {
       console.log(error);
       toast.error(error?.data?.message || error?.message)
@@ -26,50 +27,43 @@ const Scheduled =()=>{
 
   }
     return(
-         
-      <div className="scheduled" >
-        <div className="grid gap-4 grid-cols-4">
-        {['1','2','3','6','7'].map(()=>
-        <>
-        <Card className="max-w-[400px]">
-          <CardHeader className="flex gap-3">
-            <Image
-              alt="nextui logo"
-              height={40}
-              radius="sm"
-              src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-              width={40}
-            />
-            <div className="flex flex-col">
-              <p className="text-md">JaneFisher</p>
-              <p className="text-small text-default-500">jainfisher@gmail.com</p>
-            </div>
-          </CardHeader>
-          <Divider/>
-          <CardBody>
-            <p>Private Conference</p>
-            <p></p>
-            <p>Designing</p>
-            <p>Make beautiful websites regardless of your design experience.</p>
-            <p>Date : </p>
-            <p>Time : </p>
-
-          </CardBody>
-          <Divider/>
-          <CardFooter>
-            <Link
-              isExternal
-              showAnchorIcon
-              href="https://github.com/nextui-org/nextui"
-            >
-              Start Conference
-            </Link>
-          </CardFooter>
-        </Card>
-        </>
-        )}
+      <div>
+      {scheduledData.length > 0 ? (
+        <div className="scheduled">
+          <div className="grid gap-4 grid-cols-4">
+            {scheduledData.map((data, index) => (
+              <Card className="max-w-[400px]" key={index}>
+                <CardHeader className="flex gap-3">
+                  <div className="flex flex-col">
+                    <p className="text-md">{data?.title}</p>
+                    <p className="text-small text-default-500">{data?.description}</p>
+                  </div>
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                  <p>Type : {data?.type}</p>
+                  <p>Interest: {data?.interest}</p>
+                  <p>Partcipant Limit: {data?.participantLimit}</p>
+                  <p>Duration : {`${data?.durations} mins`}</p>
+                  <p>Date : {data?.date}</p>
+                  <p>Time : {data?.time}</p>
+                </CardBody>
+                <Divider />
+                <CardFooter>
+                  <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">
+                    Start Conference
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>   
+      ) : (
+        <div className="flex justify-center m-4">
+          <h2 className="text-5xl">No scheduled conferences</h2>
+        </div>
+      )}
+    </div>
     )
 }
 

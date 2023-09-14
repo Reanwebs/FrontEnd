@@ -20,6 +20,7 @@ const MediaContainer = ()=>{
     const channel = useRef(null);
     const client = useRef(null);
     const { id } = useParams();
+    const senders = useRef([])
     const [video,setVideo] = useState(true);
     const [audio,setAudio] = useState(true);
     const [admin,setAdmin] = useState(false)
@@ -134,7 +135,9 @@ const MediaContainer = ()=>{
 
             localStreamRef.current.srcObject.getTracks().forEach(track => {
                 // console.log(track,"trackkkkkk");
+                senders.current.push(
                 pc.current.addTrack(track,localStreamRef.current.srcObject)   
+                )
             });
 
             pc.current.ontrack = (event)=>{
@@ -236,6 +239,21 @@ const MediaContainer = ()=>{
         }
     }
 
+    async function screenShare() {
+        try {
+            console.log(senders.current);
+            const stream = await navigator.mediaDevices.getDisplayMedia({cursor:true})
+            const streamTrack = stream.getTracks()[0];
+            senders.current.find(sender => sender.track.kind === 'video' ).replaceTrack(streamTrack);
+            streamTrack.onended = ()=>{
+                senders.current.find(sender => sender.track.kind === 'video').replaceTrack(localStreamRef.current.srcObject.getTracks()[1])
+            }
+            console.log(stream);
+        } catch (error) {
+            console.log("Error occurred", error);
+        }
+    }
+
     
 
 
@@ -245,7 +263,7 @@ const MediaContainer = ()=>{
      <div id="videos">
         <video  ref={localStreamRef} className="video-player" id="user-1" autoPlay playsInline ></video>
         <video  ref={remoteStreamRef} className="video-player" id="user-2" autoPlay playsInline ></video>
-        <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio} hangup={hangup}/>
+        <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio} hangup={hangup} screenShare={screenShare}/>
       </div>
      
     </>
