@@ -3,6 +3,11 @@ import './MediaContainer.css'
 import AgoraRTM from 'agora-rtm-sdk'
 import {  useParams } from 'react-router-dom';
 import MediaController from "../MediaController/MediaController";
+import {toast} from 'react-toastify'
+import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
+
+
 
 
 
@@ -15,12 +20,17 @@ const MediaContainer = ()=>{
     const channel = useRef(null);
     const client = useRef(null);
     const { id } = useParams();
+    const senders = useRef([])
     const [video,setVideo] = useState(true);
-    const [audio,setAudio] = useState(true)
-
+    const [audio,setAudio] = useState(true);
+    const [admin,setAdmin] = useState(false)
+    const navigate = useNavigate();
 
     const token = null;
     const uid = String(Math.floor(Math.random() * 10000));
+    const userInfo  = useSelector((state) => state.auth.userInfo); 
+    // const uid = userInfo.userName
+
   
 
     const servers = {
@@ -44,9 +54,9 @@ const MediaContainer = ()=>{
    useEffect(()=>{
 
     init();
-    return(()=>{
-        leaveChannel()
-    })
+    // return(()=>{
+    //     leaveChannel()
+    // })
    },[])
 
     async function init(){
@@ -56,6 +66,7 @@ const MediaContainer = ()=>{
 
             channel.current = client.current.createChannel(id)
             await channel.current.join()
+            console.log(channel.current);
 
             channel.current.on('MemberJoined',handleUserJoined)
 
@@ -76,7 +87,7 @@ const MediaContainer = ()=>{
 
     const handleUserLeft = (MemberId)=>{
         remoteStreamRef.current.style.display = 'none'
-
+        toast.success(`user left meeting${MemberId}`)
     }
 
 
@@ -124,7 +135,9 @@ const MediaContainer = ()=>{
 
             localStreamRef.current.srcObject.getTracks().forEach(track => {
                 // console.log(track,"trackkkkkk");
+                senders.current.push(
                 pc.current.addTrack(track,localStreamRef.current.srcObject)   
+                )
             });
 
             pc.current.ontrack = (event)=>{
@@ -160,11 +173,7 @@ const MediaContainer = ()=>{
 
             // console.log(offer,"oferrrrrrrrrr");
 
-            client.current.sendMessageToPeer({text:JSON.stringify({'type':'offer','offer':offer})},MemberId)
-
-
-
-            
+            client.current.sendMessageToPeer({text:JSON.stringify({'type':'offer','offer':offer})},MemberId) 
         } catch (error) {
             console.log(error);
             
@@ -208,12 +217,6 @@ const MediaContainer = ()=>{
         }
 
     }
-
-    const leaveChannel = async ()=>{
-        await channel.current.leave();
-        await client.current.logout()
-    }
-
     // window.addEventListener('beforeunload',leaveChannel)
     const toggleVideo =()=>{
         localStreamRef.current.srcObject.getVideoTracks()[0].enabled = !video;
@@ -221,10 +224,37 @@ const MediaContainer = ()=>{
     }
 
     const toggleAudio =()=>{
-        console.log(localStreamRef.current.srcObject.getAudioTracks()[0]);
         localStreamRef.current.srcObject.getAudioTracks()[0].enabled= !audio;
-        setVideo(!audio);
+        setAudio(!audio);
     }
+
+    const hangup = async  ()=>{
+        try {
+          await channel.current.leave();
+          localStreamRef.current.srcObject = null
+          await client.current.logout()
+          window.location.assign('/home');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function screenShare() {
+        try {
+            console.log(senders.current);
+            const stream = await navigator.mediaDevices.getDisplayMedia({cursor:true})
+            const streamTrack = stream.getTracks()[0];
+            senders.current.find(sender => sender.track.kind === 'video' ).replaceTrack(streamTrack);
+            streamTrack.onended = ()=>{
+                senders.current.find(sender => sender.track.kind === 'video').replaceTrack(localStreamRef.current.srcObject.getTracks()[1])
+            }
+            console.log(stream);
+        } catch (error) {
+            console.log("Error occurred", error);
+        }
+    }
+
+    
 
 
 
@@ -233,7 +263,7 @@ const MediaContainer = ()=>{
      <div id="videos">
         <video  ref={localStreamRef} className="video-player" id="user-1" autoPlay playsInline ></video>
         <video  ref={remoteStreamRef} className="video-player" id="user-2" autoPlay playsInline ></video>
-        <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio}/>
+        <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio} hangup={hangup} screenShare={screenShare}/>
       </div>
      
     </>

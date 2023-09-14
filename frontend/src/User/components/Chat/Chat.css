@@ -86,7 +86,7 @@
     margin-top: 10px;  
 }
   
-.message-input input[type="text"] {
+/* .message-input input[type="text"] {
     flex: 1;
     padding: 8px;
     border:none;
@@ -105,7 +105,7 @@
     padding: 8px 12px;
     cursor: pointer;
     font-size: 14px;
-  }
+  } */
   
   .no-user-selected {
     display: flex;

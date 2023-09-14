@@ -1,9 +1,14 @@
-import "./Conference.css"
+// import "./Conference.css"
 
-import{useState ,useRef} from 'react';
+import{useState ,useRef,useEffect} from 'react';
 import { useStartPrivateConferenceMutation } from "../../slices/api_slices/usersConferenceApi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { Button ,Select,SelectItem,Input,Textarea,Checkbox} from "@nextui-org/react";
+import { useUserGetInterestsMutation } from "../../slices/api_slices/usersApiSlice";
+import { toast } from "react-toastify";
+import Options from '../Options/Options';
+
 
 
 const Private = () => {
@@ -14,9 +19,16 @@ const Private = () => {
     chat: false,
     participantlimit: 0,
   });
+  const [conferenceID,setConferenceId] = useState('')
 
   const [startPrivateConference] = useStartPrivateConferenceMutation();
   const navigate = useNavigate()
+  const [getInterest] = useUserGetInterestsMutation()
+  const [interest,setInterest] = useState([])
+
+  useEffect(()=>{
+    getInterestHandler()
+  },[])
 
 
 
@@ -28,6 +40,9 @@ const Private = () => {
   const handleSubmit =async (e) => {
     try {
       e.preventDefault();
+      if(!formData.title || !formData.description || !formData.interest || !formData.chat || !formData.participantlimit){
+        throw new Error('please enter all fileds')
+      }
       const data = {
         title:formData.title,
         description:formData.description,
@@ -36,75 +51,132 @@ const Private = () => {
         participantlimit:formData.participantlimit,
       }
       const res = await startPrivateConference(data).unwrap();
-      console.log(res,"66666666666666");
-      navigate(`/media-container/${res.conferenceID}`)
-      
+      setConferenceId(res.conferenceID)      
     } catch (error) {
-      console.log(error);
+      toast.error(error?.data?.message || error.message  )
       
     }
    
   };
 
+  const joinConference = ()=>{
+    if(conferenceID){
+      navigate(`/media-container/${conferenceID}`)
+    }
+  }
+
+  const getInterestHandler = async ()=>{
+    try {
+      const res = await getInterest().unwrap();
+      setInterest(res.interests)
+    } catch (error) {
+      toast.error(error.data.message || error.message)
+      
+    }
+  }
+
   
 
   return (
+    
+    
     <div className="flex flex-col items-center m-4">
+      {!conferenceID ?
+      <>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="items-center">
+        <div className="m-4 ">
           <label>Title:</label>
-          <input
+          <Input
+            placeholder='enter a title'
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            required
+            isRequired
           />
         </div>
-        <div>
+        <div className="m-4 ">
           <label>Description:</label>
-          <textarea
+          <Textarea
+            placeholder='enter a description'
             name="description"
             value={formData.description}
             onChange={handleChange}
-            required
+            isRequired
           />
         </div>
-        <div>
+        <div className="m-4 ">
           <label>Interest:</label>
-          <input
-            type="text"
-            name="interest"
-            value={formData.interest}
+          <Select
+            isRequired
+            label='interests'
+            placeholder='select an interes'
+            className="w-full"
             onChange={handleChange}
-            required
-          />
+            name='interest'
+              >
+                {interest.map((value) => (
+                  <SelectItem key={value.interest}  value={value.interest} className="w-fit">
+                    {value.interest}
+                  </SelectItem>
+                ))}
+              </Select>
         </div>
-        <div>
+        <div className="m-4 ">
           <label>
-            <input
+            <Checkbox
               type="checkbox"
               name="chat"
               checked={formData.chat}
               onChange={handleChange}
-            />{' '}
+            />
             Enable Chat
           </label>
         </div>
-        <div>
+        <div className="m-4 ">
           <label>Participant Limit:</label>
-          <input
+          <Input
+            placeholder='enter participant limit'
             type="number"
             name="participantlimit"
             value={formData.participantlimit}
             onChange={handleChange}
-            required
+            isRequired
           />
         </div>
-        <div>
-          <button  type="submit">Start Private Conference</button>
+        <div className="m-4 mx-14">
+          <Button className="" type="submit">Start Private Conference</Button>
+        </div>
         </div>
       </form>
+      </>
+     
+      :
+      <>
+
+          <div>
+             <label>share this id to join conference</label>
+            <Input
+            disabled
+            type="text"
+            name="conferenceId"
+            value={conferenceID}
+            required
+          />
+
+          </div>
+          <div className="m-4">
+            <Button onClick={joinConference}>
+              join conference
+            </Button>
+          </div>
+
+      </>
+          
+
+      }
+      
     </div>
   );
 };

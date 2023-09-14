@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import "./Conference.css";
-import { useSelector} from 'react-redux';
+// import "./Conference.css";
 import { useNavigate } from "react-router-dom";
+import {toast} from 'react-toastify'
+import { Input ,Button} from '@nextui-org/react';
 
 import { useJoinPrivateConferenceMutation } from '../../slices/api_slices/usersConferenceApi';
 
@@ -31,7 +32,7 @@ const Join = () => {
     
    } catch (error) {
     console.log(error);
-    
+    toast.error('invalid token id')
    }
     
 
@@ -41,17 +42,15 @@ const Join = () => {
     <div className='flex flex-col items-center m-4'>
     <div className="m-4">
       <p>Enter the Conference ID to join:</p>
-      <input
-        type="text"
-        placeholder="Conference ID"
-        value={conferenceId}
-        onChange={handleInputChange}
-      />
+      <Input className='m-2' name='description' isRequired type="text"  placeholder="Conference ID"
+            value={conferenceId}
+            onChange={handleInputChange}
+          />
     </div>
     <div className='m-4'>
-       <button className="bg-sky-500 hover:bg-sky-700 w-" onClick={handleJoinConference}>
+       <Button  onClick={handleJoinConference}>
            join conference
-   </button>
+   </Button>
     </div>
     </div>
 

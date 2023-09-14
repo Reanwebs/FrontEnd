@@ -12,8 +12,8 @@ export default function Options({label,placeholder,data,handlechange}) {
       
     >
       {data.map((value) => (
-        <SelectItem key={value.type}  value={value.type} className="w-fit">
-          {value.type}
+        <SelectItem key={value.type ? value.type :value}  value={value.type ? value.type :value} className="w-fit">
+          {value.type ? value.type :value}
         </SelectItem>
       ))}
     </Select>

@@ -3,7 +3,7 @@ import {Navbar, NavbarBrand, NavbarContent, Input,NavbarItem,NavbarMenu,NavbarMe
 import { SearchIcon } from "../SearchIcon/SearchIcon";
 import { NavLink ,useNavigate} from "react-router-dom";
 import "./HomeNavbar.css"
-import React from "react";
+import React,{useState} from "react";
 
 
 
@@ -47,7 +47,11 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
             Conference
           </NavLink>
         </NavbarItem>
+<<<<<<< HEAD
         <NavbarItem className="navbar-links">
+=======
+        <NavbarItem >
+>>>>>>> cf42fb65bcbc55202cb47b590849c895bc530845
         <NavLink color="foreground" to={'/schedule'} >
             Schedules
             </NavLink>

@@ -97,3 +97,7 @@
     background-color: transparent;
     box-shadow: 0 0 1px #01c8ef; 
 }
+
+.type-options{
+    max-width: max-content;
+}
