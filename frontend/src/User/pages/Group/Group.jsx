@@ -1,63 +1,172 @@
 import "./Group.css"
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import Groups from "../../components/Group/Groups";
-import Create from "../../components/Group/Create";
-import Trending from "../../components/Group/Trending";
-
+import CommunityHead from "../../components/Group/CommunityHead";
+import CommunityFeed from "../../components/Group/CommunityFeed";
+import ActiveCommunity from "../../components/Group/ActiveCommunity";
+import RecentFeed from "../../components/Group/RecentConferences";
 const Group =()=>{
-    const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('groups'); 
-  
-    const handleTabClick = (tab) => {
-      setActiveTab(tab);
-    };
+  const groups = [
+    {
+      name: "Group 1",
+      thumbnail: "CommunityThumbnail.png",
+      members: 50,
+      joinLink: "/join/group1",
+      chatLink: "/chat/group1",
+      coins: 100,
+      rank: 1,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 3",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 3,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 3",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 3,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 3",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 3,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 3",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 3,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 3",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 3,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 3",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 3,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 3",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 3,
+    },
+    {
+      name: "Group 2",
+      thumbnail: "CommunityThumbnail.png",
+      members: 30,
+      joinLink: "/join/group2",
+      chatLink: "/chat/group2",
+      coins: 75,
+      rank: 2,
+    },
+    {
+      name: "Group 4",
+      thumbnail: "CommunityThumbnail.png",
+      members: 70,
+      joinLink: "/join/group3",
+      chatLink: "/chat/group3",
+      coins: 50,
+      rank: 4,
+    },
+  ];
 
     return (
-        <>
-          <div className="group-container">
-          <img className="group-image"  src="group1.png" alt="group" />
-          {/* <div
-              className={`flex-item ${activeTab === 'groups' ? 'active' : ''}`}
-              onClick={() => {
-                handleTabClick('groups');
-              }}
-            >
-              <p>Joined Groups</p>
-            </div>
-
-            <div
-              className={`flex-item ${activeTab === 'create' ? 'active' : ''}`}
-              onClick={() => {
-                handleTabClick('create');
-              }}
-            >
-              <p>Create A Group</p>
-            </div>
-            <div
-              className={`flex-item ${activeTab === 'trending' ? 'active' : ''}`}
-              onClick={() => {
-                handleTabClick('trending');
-              }}
-            >
-              <p>Top 10</p>
-            </div>
-
-            
-          </div>
-          <div className={`group-body ${activeTab === 'groups' ? 'active' : ''}`}>
-            {activeTab === 'groups' && <Groups/>}
-          </div>
-    
-          <div className={`group-body ${activeTab === 'create' ? 'active' : ''}`}>
-            {activeTab === 'create' && <Create/>}
-          </div>
-
-          <div className={`group-body ${activeTab === 'trending' ? 'active' : ''}`}>
-            {activeTab === 'trending' && <Trending/>}
-          </div> */}
-        </div>
-        </>
+      <>
+        <CommunityHead/>
+        <CommunityFeed groups={groups}/>
+        <ActiveCommunity/>
+        <RecentFeed/>
+      </>
     );
    
 }
