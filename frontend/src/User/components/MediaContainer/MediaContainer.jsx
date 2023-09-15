@@ -71,8 +71,6 @@ const MediaContainer = ()=>{
 
             client.current.on('MessageFromPeer',handleMessageFromPeer)
 
-
-
             const stream = await navigator.mediaDevices.getUserMedia(constraints)
             localStreamRef.current.srcObject = stream
             
@@ -83,6 +81,7 @@ const MediaContainer = ()=>{
     }
 
     const handleUserLeft = (MemberId)=>{
+        console.log(M);
         remoteStreamRef.current.style.display = 'none'
         toast.success(`user left meeting`)
     }
@@ -108,6 +107,9 @@ const MediaContainer = ()=>{
     }
 
     const handleUserJoined = async (MemberId)=>{
+        toast.success("user trying to join",{
+
+        })
         await createOffer(MemberId)
         // console.log('a new user joined the channel',MemberId);
 
@@ -123,8 +125,6 @@ const MediaContainer = ()=>{
             remoteStreamRef.current.style.display = 'block';
 
             localStreamRef.current.classList.add('smallFrame')
-
-        
 
             if(!localStreamRef.current.srcObject){
                 const stream = await navigator.mediaDevices.getUserMedia(constraints)

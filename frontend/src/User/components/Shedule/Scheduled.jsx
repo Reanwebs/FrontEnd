@@ -28,7 +28,7 @@ const Scheduled =()=>{
   }
     return(
       <div>
-      {scheduledData.length > 0 ? (
+      {scheduledData && scheduledData.length > 0 ? (
         <div className="scheduled">
           <div className="grid gap-4 grid-cols-4">
             {scheduledData.map((data, index) => (

@@ -7,7 +7,7 @@ import Trending from "../../components/Group/Trending";
 
 const Group =()=>{
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('groups'); 
+    const [activeTab, setActiveTab] = useState('communities'); 
   
     const handleTabClick = (tab) => {
       setActiveTab(tab);
@@ -15,49 +15,33 @@ const Group =()=>{
 
     return (
         <>
-          <div className="group-container">
-          <img className="group-image"  src="group1.png" alt="group" />
-          {/* <div
-              className={`flex-item ${activeTab === 'groups' ? 'active' : ''}`}
-              onClick={() => {
-                handleTabClick('groups');
-              }}
-            >
-              <p>Joined Groups</p>
-            </div>
+        <div className="h-screen">
+         <div className="type-container justify-center ">
+          <div className={`flex-item ${activeTab === 'communities' ? 'active' : ''} mx-12`}
+                  onClick={() => {
+                    handleTabClick('communities');
+                  }}>
+              <p>Communities</p>
+          </div >
 
-            <div
-              className={`flex-item ${activeTab === 'create' ? 'active' : ''}`}
-              onClick={() => {
-                handleTabClick('create');
-              }}
-            >
-              <p>Create A Group</p>
-            </div>
-            <div
-              className={`flex-item ${activeTab === 'trending' ? 'active' : ''}`}
-              onClick={() => {
-                handleTabClick('trending');
-              }}
-            >
-              <p>Top 10</p>
-            </div>
-
+          <div className={`flex-item ${activeTab === 'create' ? 'active' : ''} mx-12`}
+                  onClick={() => {
+                    handleTabClick('create');
+                  }}>
+              <p>Create</p>
+          </div>
             
-          </div>
-          <div className={`group-body ${activeTab === 'groups' ? 'active' : ''}`}>
-            {activeTab === 'groups' && <Groups/>}
-          </div>
-    
-          <div className={`group-body ${activeTab === 'create' ? 'active' : ''}`}>
-            {activeTab === 'create' && <Create/>}
-          </div>
-
-          <div className={`group-body ${activeTab === 'trending' ? 'active' : ''}`}>
-            {activeTab === 'trending' && <Trending/>}
-          </div> */}
+         </div>
+         <div className={`conference-body ${activeTab === 'communities' ? 'active' : ''}`}>
+                {activeTab === 'communities' && <Groups/>}
+              </div>
+        
+              <div className={`conference-body ${activeTab === 'create' ? 'active' : ''}`}>
+                {activeTab === 'create' && <Create/>}
+              </div>
         </div>
-        </>
+         
+        </> 
     );
    
 }
