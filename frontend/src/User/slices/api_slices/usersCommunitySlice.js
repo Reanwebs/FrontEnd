@@ -11,15 +11,27 @@ const createApiMutation = (builder,endpoint,url,method)=>{
     })
   }
 
+ const createApiGetQuery = (builder, endpoint, url) => {
+    return builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/${url}`,
+        method: 'GET',
+        params: `?userName=${data}`,
+      }),
+    });
+  };
+
   export const userCommunitySlice = apiSlice.injectEndpoints({
     endpoints:(builder)=>({
         createCommunity:createApiMutation(builder,'createCommunity','create-community','POST'),
-        getAllActiveCommunity:createApiMutation(builder,'getAllActiveCommunity','get-community','GET')
+        getAllActiveCommunity:createApiMutation(builder,'getAllActiveCommunity','get-active-community','GET'),
+        searchUser:createApiGetQuery(builder,'searchUser','get-user-by-name')
     })
     
   })
 
   export const {
     useCreateCommunityMutation,
-    useGetAllActiveCommunityMutation
+    useGetAllActiveCommunityMutation,
+    useSearchUserMutation
 } = userCommunitySlice

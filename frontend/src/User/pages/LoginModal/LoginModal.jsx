@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
 import { emailValidation,passwordValidation } from "../../../utils/validation/useFormValidation";
-import { useLoginMutation } from "../../slices/api_slices/usersApiSlice";
+import { useLoginMutation ,useForgotPasswordGetOtpMutation} from "../../slices/api_slices/usersApiSlice";
 import {toast} from "react-toastify"
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
@@ -10,17 +10,25 @@ import GoogleAuth from "../../components/GoogleAuth/GoogleAuth";
 
 export default function LoginModal() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  
+  const [show ,setShow] = useState(true)
+
   const [user,setUser] = useState({
     email:'',
-    password:''
+    password:'',
   })
   const [error,setError] = useState({
     emailError:"",
     passwordError:""
   })
+
+  const [fuser,setFUser] = useState({
+    email:'',
+    password:'',
+    cPassword:''
+  })
   const dispatch = useDispatch()
   const [login,{isLoading}] = useLoginMutation();
+  const [sendOtp,{isLoading:otpLoading}] = useForgotPasswordGetOtpMutation()
   const navigate = useNavigate();
 
   async function authUser(){
@@ -43,6 +51,17 @@ export default function LoginModal() {
     }
  }
 
+ const sendOtpHandler = async ()=>{
+  try {
+    const res = await sendOtp(fuser.email).unwrap();
+    console.log(res);
+    
+  } catch (error) {
+    toast.error(error?.data?.message || error?.message)
+    
+  }
+ }
+
   return (
     <>
      <Button onPress={onOpen} isLoading={isLoading} color="#01c8ef"  variant="flat" style={{ color: "#01c8ef" }}>
@@ -63,8 +82,11 @@ export default function LoginModal() {
         <ModalContent>
           {(onClose) => (
             <>
-           
               <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+              {show 
+              ?
+              (
+              <>
               <ModalBody>
                 <Input
                   autoFocus
@@ -108,26 +130,67 @@ export default function LoginModal() {
                     })
                   }}
                 />
-                {/* <div className="flex py-2 px-1 justify-between">
-                  <Checkbox
+                <div className="flex py-2 px-1 justify-between">
+                  {/* <Checkbox
                     classNames={{
                       label: "text-small",
                     }}
                   >
                     Remember me
-                  </Checkbox>
-                  <Link color="primary" href="#" size="sm">
+                  </Checkbox> */}
+                  <Link color="primary" style={{cursor:'pointer'}} onClick={()=>{
+                        setShow(false)
+                        setUser({
+                          user:'',
+                          password:''
+                        })
+                  }} size="sm">
                     Forgot password?
                   </Link>
-                </div> */}
+                </div>
               </ModalBody>
               <ModalFooter className="justify-center">
                 <Button color="primary" onPress={authUser} isLoading={isLoading} variant="flat">
                   Sign in
                 </Button>
               </ModalFooter>
-              <GoogleAuth/>
-              
+              <GoogleAuth/> 
+              </>
+              )
+              :
+              (
+                <>
+                <ModalBody>
+                <Input
+                  autoFocus
+                  label="Email"
+                  placeholder="Enter your registered email"
+                  variant="bordered"
+                  color={error.emailError ? "danger" : "success"}
+                  errorMessage={error.emailError}
+                  validationState={error.emailError ? "inavlid" : "valid"}
+                  value={fuser.email}
+                  onChange={(e)=>{ 
+                    setFUser({
+                    ...fuser,
+                    email:e.target.value
+                  })}}
+                  onKeyUp={(e)=>{
+                    setError({
+                      ...error,
+                      emailError:emailValidation(e.target.value)
+                    })
+                  }}
+                />
+                <Button color="primary" variant="flat" isLoading={otpLoading} onClick={()=>{
+                  sendOtpHandler()
+                }}>
+                  continue
+                </Button>
+                </ModalBody>
+                </>
+              )
+              }
             </>
           )}
         </ModalContent>

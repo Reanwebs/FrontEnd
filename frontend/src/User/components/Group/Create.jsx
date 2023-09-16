@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "./Group.css";
-import { Input, Textarea ,Avatar,Select,SelectItem,Button} from "@nextui-org/react";
+import { Input, Textarea ,Avatar,Select,SelectItem,Button,Chip} from "@nextui-org/react";
 import axios from "axios";
 import {toast} from 'react-toastify'
-import { useCreateCommunityMutation } from "../../slices/api_slices/usersCommunitySlice";
+import { useCreateCommunityMutation ,useSearchUserMutation} from "../../slices/api_slices/usersCommunitySlice";
 import { useNavigate } from "react-router-dom";
 
 
@@ -16,15 +16,30 @@ const Create = () => {
     members:[]
   })
 
+  const [user,setUser] = useState('')
+
   const [selectedImage,setSelectedImage] = useState(null)
   const [createCommunity,{isLoading}] = useCreateCommunityMutation()
-  const navigate = useNavigate()
-
+  const [searchUser]  = useSearchUserMutation()
   
+
+  const searchUserhandler = async ()=>{
+    try {
+      const res = await searchUser(user).unwrap()
+      console.log(res);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
  
   const createCommunityHandler = async()=>{
     try {
-      await addCommunityImageHandler();  
+      if(!community.communityName || !community.description || !community.joinedType) throw new Error('please fill all fields')
+      if(selectedImage){
+        await addCommunityImageHandler();  
+      }
       const res = await createCommunity(community).unwrap();
       toast.success(res.message)
       setCommunity({
@@ -150,15 +165,22 @@ const Create = () => {
                <SelectItem key='request'  value='request' className="w-fit">Admin need to accept</SelectItem>   
               </Select>
             </div>
-            <div className="m-2 items-center flex ">
+            {/* <div className="m-2 items-center flex ">
               <Input
               className="flex-1"
                type="text"
                label="Add members"
                labelPlacement="outside-left"
                placeholder="Search user"
+               value={user}
+               onChange={(e)=>{
+                setUser(e.target.value)
+               }}
+               onKeyUp={()=>{
+                searchUserhandler(user)
+               }}
               />          
-            </div>
+            </div> */}
             <div className="m-2 items-center">
               <Button color="primary"  variant="flat" onClick={createCommunityHandler} isLoading={isLoading}>
                 Create

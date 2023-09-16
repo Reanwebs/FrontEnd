@@ -3,6 +3,7 @@ import './Group.css';
 import { useGetAllActiveCommunityMutation } from '../../slices/api_slices/usersCommunitySlice';
 import {toast} from 'react-toastify'
 import { Button } from '@nextui-org/react';
+import CommunityCard from '../CommunityCard/CommunityCard';
 const Groups = () => {
   const [communities, setCommunities] = useState([]); 
   const [getCommunity] = useGetAllActiveCommunityMutation();
@@ -15,6 +16,7 @@ const Groups = () => {
     try {
      const res = await getCommunity().unwrap();
      console.log(res);
+     setCommunities(res.community)
       
     } catch (error) {
       console.log(error);
@@ -32,9 +34,14 @@ const Groups = () => {
 
 
   return (
-    <div>
-      communities
-    </div>
+   
+      <div className='h-screen'>
+        <div className='flex overflow-x-hidden justify-center whitespace-nowrap gap-4'>
+        <CommunityCard communities={communities}/>
+        </div>
+       
+      </div>
+    
    
   );
 };

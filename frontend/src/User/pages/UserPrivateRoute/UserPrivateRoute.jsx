@@ -9,6 +9,7 @@ import {  useDispatch } from 'react-redux';
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 
 
+
 const UserPrivateRoute  = ()=>{
     const userInfo  = useSelector((state) => state.auth.userInfo); 
     const [logOut,{isLoading}] = useLogoutMutation()
@@ -16,6 +17,7 @@ const UserPrivateRoute  = ()=>{
     const dispatch = useDispatch()
     const [vaidateUser] = useValidateUserStatusMutation()
     const [status,setStatus] = useState(false)
+    
    
 
     useEffect(()=>{
