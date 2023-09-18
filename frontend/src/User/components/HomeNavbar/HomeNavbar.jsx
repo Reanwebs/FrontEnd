@@ -47,11 +47,8 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
             Conference
           </NavLink>
         </NavbarItem>
-<<<<<<< HEAD
+
         <NavbarItem className="navbar-links">
-=======
-        <NavbarItem >
->>>>>>> cf42fb65bcbc55202cb47b590849c895bc530845
         <NavLink color="foreground" to={'/schedule'} >
             Schedules
             </NavLink>
