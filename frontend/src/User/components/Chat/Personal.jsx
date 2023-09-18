@@ -1,44 +1,68 @@
 import React, { useState,useEffect } from 'react';
 import "./Chat.css"
-import { useCreateChatMutation } from '../../slices/api_slices/chatApiSlice';
+import { useGetChatMutation,useCreateChatMutation } from '../../slices/api_slices/chatApiSlice';
 const Personal = () => {
+  const socket = new WebSocket('ws://localhost:5053/ws');
   const [selectedUser, setSelectedUser] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
-
-  const users = [
-    { id: 1, name: 'User 1' },
-    { id: 2, name: 'User 2' },
-    { id: 3, name: 'User 3' },
-  ];
-
+  const [getChat] = useGetChatMutation()
   const [createChat] = useCreateChatMutation()
+  const [users, setUser] = useState([])
 
   useEffect(()=>{
-    createChatHandler()
+    getChatHandler()
   },[])
 
-  const createChatHandler = async ()=>{
+  const getReq ={
+    UserID :"sender",
+  }
+
+  const getChatHandler = async ()=>{
      try {
-      const res = await createChat()
-      console.log(res);
+      const chatRes = await getChat(getReq)
+      console.log(chatRes,"pppppppppppp");
+      setUser(chatRes.data)
      } catch (error) {
       console.log(error);
      }
   }
+
+  const createChatHandler = async ()=>{
+    try{
+      const res = await createChat(chatreq)
+      console.log(res);
+    } catch (error){
+      console.log(error);
+    }
+  }
+
+  const chatreq ={
+    UserID : "sender",
+    RecipientID : "recipient"
+  }
+  
    
 
   const handleUserClick = (user) => {
+
+    createChatHandler(chatreq)
     setSelectedUser(user);
     
   };
-
 
   const handleSendMessage = () => {
     if (message.trim() === '') {
       return; 
     }
+    
+    const messageObject = {
+      text: message,
+      sender: 'sender', 
+      recipient: 'recipient', 
+    };
 
+    socket.send(JSON.stringify(messageObject));
 
     setChatHistory((prevHistory) => [
       ...prevHistory,
@@ -53,13 +77,13 @@ const Personal = () => {
     <div className="chat-container">
       <div className="users-list">
         <ul>
-          {users.map((user) => (
+          {users.map((user,index) => (
             <li
-              key={user.id}
+              key={index}
               onClick={() => handleUserClick(user)}
               className={selectedUser && selectedUser.id === user.id ? 'active' : ''}
             >
-              {user.name}
+              {user.RecipientID}
             </li>
           ))}
         </ul>

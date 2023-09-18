@@ -31,7 +31,7 @@ function App() {
              <Route path='schedule' element={<Schedule/>}/>
              <Route path='conference' element={<Conference/>}/>
              <Route path='group' element={<Group/>}/>
-             <Route path='chat'element={<Chat/>}/>
+             <Route path='messages'element={<Chat/>}/>
              <Route path='media-container/:id'element={<MediaContainer/>}/>
            </Route>
         </Route>
