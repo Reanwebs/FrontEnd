@@ -46,7 +46,6 @@ function GoogleAuth(){
             type="standard"
             ux_mode="popup"
               onSuccess={(response) => {
-                console.log(response);
                 googleLoginHandler(response.credential)
               }}
             />

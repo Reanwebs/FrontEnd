@@ -6,7 +6,7 @@ const Completed =()=>{
   const [completedData,setCompletedData] = useState([])
     return(
       <div>
-      {completedData.length > 0 ? (
+      {completedData && completedData.length > 0 ? (
         <div className="scheduled">
           <div className="grid gap-4 grid-cols-4">
             {completedData.map((data, index) => (

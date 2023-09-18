@@ -18,6 +18,7 @@ import AdminHome from './Admin/pages/AdminPrivateRoute/AdminPrivateRoute'
 import Dashboard from './Admin/components/DashBoard/DashBoard'
 import UserTable from './Admin/components/UsersTable/Table'
 import InterestTable from './Admin/pages/Interests/InterestTable'
+import CommunityTable from './Admin/pages/CommunityTable/CommunityTable'
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path='home' element={<Dashboard/>}/>
             <Route path='users' element={<UserTable/>}/>
             <Route path='interests' element={<InterestTable/>}/>
+            <Route path='community' element={<CommunityTable/>}/>
             <Route/>
           </Route>
         </Route>

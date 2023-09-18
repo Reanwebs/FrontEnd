@@ -10,6 +10,7 @@ import {
   FaAngleDoubleLeft,
   FaAngleDoubleRight,
   FaTachometerAlt,
+  FaUsers
 } from 'react-icons/fa';
 
 import {BsFillPersonFill,BsVectorPen} from 'react-icons/bs'
@@ -71,6 +72,9 @@ const Sidebar = ({
           </MenuItem>
           <MenuItem icon={<BsVectorPen />}>
            Interests <NavLink to="/admin/interests" />
+          </MenuItem>
+          <MenuItem icon={< FaUsers />}>
+           Communities <NavLink to="/admin/community" />
           </MenuItem>
         </Menu>
       </SidebarContent>

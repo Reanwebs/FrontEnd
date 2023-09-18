@@ -26,15 +26,11 @@ const NewSchedule = () => {
   });
 
   const handleInputChange = (e) => {
-    console.log(e);
     const { name, value, type, checked } = e.target;
-    console.log(name,value,type,checked)
     setMeetingData({ ...meetingData, [name]: value });
-    console.log(meetingData);
   };
 
   const handleChatInput = (e)=>{
-    console.log(e);
     setMeetingData({
       ...meetingData,
       chat:!meetingData.chat
@@ -44,7 +40,6 @@ const NewSchedule = () => {
    const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log(meetingData);
       const data ={
         title :meetingData.title,
         description:meetingData.description,
@@ -55,23 +50,30 @@ const NewSchedule = () => {
         time: meetingData.date + " " + meetingData.time,
         duration:meetingData.duration.replace("minutes", "").trim()
       }
+      if(meetingData.participantlimit < 2){
+        throw new Error('participant limit must be greater that 1')
+      }
       const res = await sheduleConference(data).unwrap()
-
-      console.log(res);
+      toast.success('conference scheduled successfully');
+      setMeetingData({
+        type: '',
+        title: '',
+        description: '',
+        interest: '',
+        recording: false,
+        chat: false,
+        broadcast: false,
+        participantlimit: 0,
+        date: '',
+        time:'',
+        duration:'',
+      })
     } catch (error) {
       toast.error(error?.data?.message || error?.message)
       console.log(error);
       
     }
   }
-    
-    
-
-
-
-
-
-
   return (
     <div className="schedule-meeting">
       <form onSubmit={handleSubmit}>

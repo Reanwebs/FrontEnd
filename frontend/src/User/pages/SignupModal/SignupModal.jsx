@@ -120,6 +120,7 @@ async function resendOtpHandler(){
     console.log(res);
 
   }catch(err){
+    toast.error(err?.data?.message || err?.message)
 
   }
 }
