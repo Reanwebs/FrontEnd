@@ -6,6 +6,7 @@ import MediaController from "../MediaController/MediaController";
 import {toast} from 'react-toastify'
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import { APP_ID } from "../../../utils/config/config";
 
 
 
@@ -38,7 +39,7 @@ const MediaContainer = ()=>{
         ]
     }
 
-    const APP_ID = "69a825afcede4da68c9fdad51b124b64"
+    // const APP_ID = "69a825afcede4da68c9fdad51b124b64"
 
     let constraints ={
         video:{

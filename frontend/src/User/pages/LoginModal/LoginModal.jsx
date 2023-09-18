@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
-import { emailValidation,passwordValidation,otpValidation } from "../../../utils/validation/useFormValidation";
+import { emailValidation,passwordValidation,otpValidation ,cPasswordValidation} from "../../../utils/validation/useFormValidation";
 import { useLoginMutation ,   
      useForgotPasswordGetOtpMutation,
      useForgotPasswordValidateOtpMutation,
@@ -17,6 +17,7 @@ export default function LoginModal() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [show ,setShow] = useState(true)
   const [showOtp,setShowOtp] = useState(false)
+  const [showPassword,setShowPassword] = useState(false)
 
   const [user,setUser] = useState({
     email:'',
@@ -44,7 +45,7 @@ export default function LoginModal() {
   const [sendOtp,{isLoading:otpLoading}] = useForgotPasswordGetOtpMutation()
   const [validateOtp,{isLoading:validateLoading}] = useForgotPasswordValidateOtpMutation()
   const [changePassword,{isLoading:changePasswordLoading}]=useForgotPasswordChangePasswordMutation()
-  
+
   const [startTimer,seconds,timerActive] = useResendOtp()
 
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ export default function LoginModal() {
 
  const sendOtpHandler = async ()=>{
   try {
-    if(!fuser.email) throw new Error('please enter an email')
+    if(!fuser.email) throw new Error('please enter your registered email')
     if(fError.emailError) throw new Error('please clear all error')
     const res = await sendOtp({phoneNumber:fuser.email}).unwrap();
     console.log(res);
@@ -94,11 +95,38 @@ export default function LoginModal() {
   }
     const res = await validateOtp(data).unwrap()
     console.log(res);
+    setShowPassword(true)
     
   } catch (error) {
     console.log(error);
     toast.error(error?.data?.message || error?.message)
   }
+ }
+
+ const changePasswordHandler = async ()=>{
+  try {
+    if(!fuser.password || !fuser.cPassword) throw new Error('please enter all fileds')
+    if(fError.passwordError || fError.cPasswordError) throw new Error('please enter all fileds')
+    const data = {
+      phoneNumber:fuser.email,
+      password:fuser.password
+    }
+    const res = await changePassword(data).unwrap();
+    console.log(res);
+    toast.success(res.message)
+    setShow(true)
+    // setShowOtp(false)
+    // setShowPassword(false)
+  } catch (error) {
+    console.log(error);
+    toast.error(error?.data?.message || error?.message)
+  }
+ }
+
+ const cancelForgotPassword = ()=>{
+    setShow(true)
+    // setShowOtp(false)
+    // setShowPassword(false)
  }
 
   return (
@@ -170,13 +198,6 @@ export default function LoginModal() {
                   }}
                 />
                 <div className="flex py-2 px-1 justify-between">
-                  {/* <Checkbox
-                    classNames={{
-                      label: "text-small",
-                    }}
-                  >
-                    Remember me
-                  </Checkbox> */}
                   <Link color="primary" style={{cursor:'pointer'}} onClick={()=>{
                         setShow(false)
                         setUser({
@@ -200,6 +221,9 @@ export default function LoginModal() {
               (
                 <>
                 <ModalBody>
+                  {!showPassword 
+                  ? 
+                <>
                 <Input
                   autoFocus
                   label="Email"
@@ -223,19 +247,22 @@ export default function LoginModal() {
                     })
                   }}
                 />
-                 {!showOtp 
-                 ? 
-                 <>
-
-                <Button color="primary" variant="flat" isLoading={otpLoading} onClick={()=>{
+                <Button color="primary" variant="flat" isLoading={otpLoading} className={showOtp ? 'hidden':'block'} onClick={()=>{
                   sendOtpHandler()
+                  startTimer()
                 }}>
                   Request OTP
                 </Button>
-                </>
-                :
-                (
+             
+                {showOtp 
+                 &&
                   <>
+                   <Button color="primary" isDisabled={timerActive} onClick={()=>{
+                sendOtpHandler()
+                startTimer()
+                  }} isLoading={otpLoading}>
+                        {timerActive ? `Resend OTP in ${seconds} seconds` : 'Resend OTP'}
+                      </Button>
                 <Input
                   autoFocus
                   label="Otp"
@@ -264,12 +291,75 @@ export default function LoginModal() {
                   continue
                 </Button>
                 </>
-                )
+              
+                }
+               </>
+                 :
+              <>
+               <Input
+                  label="Password"
+                  placeholder="Enter a new password"
+                  type="password"
+                  variant="bordered"
+                  color={fError.passwordError ? "danger" : "success"}
+                  errorMessage={fError.passwordError}
+                  validationState={fError.passwordError ? "inavlid" : "valid"}
+                  value={fuser.password}
+                  onChange={(e)=>{                   
+                    setFUser({
+                    ...fuser,
+                    password:e.target.value
+                  })}}
+                  onKeyUp={(e)=>{
+                    setFError({
+                      ...fError,
+                      passwordError:passwordValidation(e.target.value)
+                    })
+                  }}
+                />
+                 <Input
+                  label="Confirm Password"
+                  placeholder="Confirm your password"
+                  type="password"
+                  variant="bordered"
+                  color={fError.cPasswordError ? "danger" : "success"}
+                  errorMessage={fError.cPasswordError}
+                  validationState={fError.cPasswordError ? "inavlid" : "valid"}
+                  value={fuser.cPassword}
+                  onChange={(e)=>{                   
+                    setFUser({
+                    ...fuser,
+                    cPassword:e.target.value
+                  })}}
+                  onKeyUp={(e)=>{
+                    setFError({
+                      ...fError,
+                      cPasswordError:cPasswordValidation(fuser.password,e.target.value)
+                    })
+                  }}
+                />
+                <div className="flex justify-center ">
+
+                
+                 <Button  className='m-2' color="danger"  variant="flat"  onClick={()=>{
+                   cancelForgotPassword()
+                }}>
+                  cancel
+                </Button>
+                 <Button   className='m-2' color="primary"  isLoading={changePasswordLoading} variant="flat"  onClick={()=>{
+                  changePasswordHandler()
+                }}>
+                  change
+                </Button>
+                </div>
+                </>
+                
                 }
                 </ModalBody>
                 </>
               )
               }
+            
             </>
           )}
         </ModalContent>
