@@ -10,6 +10,10 @@ export default defineConfig({
       '/api':{
         target:'http://localhost:8080',
         changeOrigin:true
+      },
+      '/chat':{
+        target:'http://localhost:5053',
+        changeOrigin:true
       }
     }
   }

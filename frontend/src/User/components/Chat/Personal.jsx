@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import "./Chat.css"
-
+import { useCreateChatMutation } from '../../slices/api_slices/chatApiSlice';
 const Personal = () => {
   const [selectedUser, setSelectedUser] = useState(null); 
   const [message, setMessage] = useState(''); 
@@ -11,6 +11,22 @@ const Personal = () => {
     { id: 2, name: 'User 2' },
     { id: 3, name: 'User 3' },
   ];
+
+  const [createChat] = useCreateChatMutation()
+
+  useEffect(()=>{
+    createChatHandler()
+  },[])
+
+  const createChatHandler = async ()=>{
+     try {
+      const res = await createChat()
+      console.log(res);
+     } catch (error) {
+      console.log(error);
+     }
+  }
+   
 
   const handleUserClick = (user) => {
     setSelectedUser(user);

@@ -1,7 +1,12 @@
 import {useEffect, useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
-import { emailValidation,passwordValidation } from "../../../utils/validation/useFormValidation";
-import { useLoginMutation ,useForgotPasswordGetOtpMutation} from "../../slices/api_slices/usersApiSlice";
+import { emailValidation,passwordValidation,otpValidation } from "../../../utils/validation/useFormValidation";
+import { useLoginMutation ,   
+     useForgotPasswordGetOtpMutation,
+     useForgotPasswordValidateOtpMutation,
+     useForgotPasswordChangePasswordMutation
+    } from "../../slices/api_slices/usersApiSlice";
+import { useResendOtp } from "../../../utils/helperFunctions/useResendOtp";
 import {toast} from "react-toastify"
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
@@ -11,6 +16,7 @@ import GoogleAuth from "../../components/GoogleAuth/GoogleAuth";
 export default function LoginModal() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [show ,setShow] = useState(true)
+  const [showOtp,setShowOtp] = useState(false)
 
   const [user,setUser] = useState({
     email:'',
@@ -23,12 +29,24 @@ export default function LoginModal() {
 
   const [fuser,setFUser] = useState({
     email:'',
+    otp:'',
     password:'',
     cPassword:''
+  })
+  const [fError,setFError] = useState({
+    emailError:"",
+    otpError:'',
+    passwordError:"",
+    cPasswordError:''
   })
   const dispatch = useDispatch()
   const [login,{isLoading}] = useLoginMutation();
   const [sendOtp,{isLoading:otpLoading}] = useForgotPasswordGetOtpMutation()
+  const [validateOtp,{isLoading:validateLoading}] = useForgotPasswordValidateOtpMutation()
+  const [changePassword,{isLoading:changePasswordLoading}]=useForgotPasswordChangePasswordMutation()
+  
+  const [startTimer,seconds,timerActive] = useResendOtp()
+
   const navigate = useNavigate();
 
   async function authUser(){
@@ -53,12 +71,33 @@ export default function LoginModal() {
 
  const sendOtpHandler = async ()=>{
   try {
-    const res = await sendOtp(fuser.email).unwrap();
+    if(!fuser.email) throw new Error('please enter an email')
+    if(fError.emailError) throw new Error('please clear all error')
+    const res = await sendOtp({phoneNumber:fuser.email}).unwrap();
+    console.log(res);
+    toast.success('otp send to your email')
+    setShowOtp(true)
+  } catch (error) {
+    console.log(error);
+    toast.error(error?.data?.message || error?.message)
+    
+  }
+ }
+
+ const validateOtpHandler = async  ()=>{
+  try {
+    if(!fuser.email || !fuser.otp) throw new Error('please enter all fields')
+    if(fError.emailError || fError.otpError) throw new Error('please clear all error')
+    const data = {
+      phoneNumber:fuser.email,
+      otp:fuser.otp
+  }
+    const res = await validateOtp(data).unwrap()
     console.log(res);
     
   } catch (error) {
+    console.log(error);
     toast.error(error?.data?.message || error?.message)
-    
   }
  }
 
@@ -164,11 +203,13 @@ export default function LoginModal() {
                 <Input
                   autoFocus
                   label="Email"
+                  type="email"
+                  isDisabled={showOtp}
                   placeholder="Enter your registered email"
                   variant="bordered"
-                  color={error.emailError ? "danger" : "success"}
-                  errorMessage={error.emailError}
-                  validationState={error.emailError ? "inavlid" : "valid"}
+                  color={fError.emailError ? "danger" : "success"}
+                  errorMessage={fError.emailError}
+                  validationState={fError.emailError ? "inavlid" : "valid"}
                   value={fuser.email}
                   onChange={(e)=>{ 
                     setFUser({
@@ -176,17 +217,55 @@ export default function LoginModal() {
                     email:e.target.value
                   })}}
                   onKeyUp={(e)=>{
-                    setError({
-                      ...error,
+                    setFError({
+                      ...fError,
                       emailError:emailValidation(e.target.value)
                     })
                   }}
                 />
+                 {!showOtp 
+                 ? 
+                 <>
+
                 <Button color="primary" variant="flat" isLoading={otpLoading} onClick={()=>{
                   sendOtpHandler()
                 }}>
+                  Request OTP
+                </Button>
+                </>
+                :
+                (
+                  <>
+                <Input
+                  autoFocus
+                  label="Otp"
+                  type="text"
+                  placeholder="Enter otp send to your email"
+                  variant="bordered"
+                  color={fError.otpError ? "danger" : "success"}
+                  errorMessage={fError.otpError }
+                  validationState={fError.otpError  ? "inavlid" : "valid"}
+                  value={fuser.otp}
+                  onChange={(e)=>{ 
+                    setFUser({
+                    ...fuser,
+                    otp:e.target.value
+                  })}}
+                  onKeyUp={(e)=>{
+                   setFError({
+                      ...fError,
+                      otpError:otpValidation(e.target.value)
+                    })
+                  }}
+                />
+                <Button color="primary"  isLoading={validateLoading} variant="flat"  onClick={()=>{
+                  validateOtpHandler()
+                }}>
                   continue
                 </Button>
+                </>
+                )
+                }
                 </ModalBody>
                 </>
               )
