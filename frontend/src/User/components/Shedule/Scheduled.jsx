@@ -17,8 +17,8 @@ const Scheduled =()=>{
   async function scheduledDataHandler(){
     try {
       const data = await scheduledConference().unwrap();
-      console.log(data.Data,"oooooooooooooooooooo");
-      setScheduledData(data.Data)
+      console.log(data,"oooooooooooooooooooo");
+      setScheduledData(data.data)
       console.log(scheduledData);
     } catch (error) {
       console.log(error);
@@ -35,18 +35,20 @@ const Scheduled =()=>{
               <Card className="max-w-[400px]" key={index}>
                 <CardHeader className="flex gap-3">
                   <div className="flex flex-col">
-                    <p className="text-md">{data?.title}</p>
-                    <p className="text-small text-default-500">{data?.description}</p>
+                    <p className="text-md">{data?.Title}</p>
+                    <p className="text-small text-default-500">{data?.Description}</p>
                   </div>
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                  <p>Type : {data?.type}</p>
-                  <p>Interest: {data?.interest}</p>
-                  <p>Partcipant Limit: {data?.participantLimit}</p>
-                  <p>Duration : {`${data?.durations} mins`}</p>
+                  <p>Type : Private</p>
+                  <p>Interest: {data?.Interest}</p>
+                  <p>Partcipant Limit: {data?.ParticipantLimit}</p>
+                  <p>Schedulr Id : {data?.ScheduleID}</p>
+                  <p>Chat : {data?.Chat}</p>
+                  <p>Duration : {`${data?.Durations} mins`}</p>
                   <p>Date : {data?.date}</p>
-                  <p>Time : {data?.time}</p>
+                  <p>Time : {data?.Time}</p>
                 </CardBody>
                 <Divider />
                 <CardFooter>

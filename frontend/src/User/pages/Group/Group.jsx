@@ -1,10 +1,8 @@
 import "./Group.css"
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import Groups from "../../components/Group/Groups";
-import Create from "../../components/Group/Create";
-import Trending from "../../components/Group/Trending";
-
+import CommunityHead from "../../components/Group/CommunityHead";
+import CommunityFeed from "../../components/Group/CommunityFeed";
+import ActiveCommunity from "../../components/Group/ActiveCommunity";
+import RecentFeed from "../../components/Group/RecentConferences";
 const Group =()=>{
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('communities'); 

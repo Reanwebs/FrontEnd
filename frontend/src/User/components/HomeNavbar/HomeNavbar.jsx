@@ -42,22 +42,23 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
         <img src="/reanicons.png" alt="connect" width="13" height="13" />
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>NNECT</p>
         </NavbarBrand>
-        <NavbarItem>
+        <NavbarItem className="navbar-links">
           <NavLink color="foreground" to={'/conference'} >
             Conference
           </NavLink>
         </NavbarItem>
-        <NavbarItem >
+
+        <NavbarItem className="navbar-links">
         <NavLink color="foreground" to={'/schedule'} >
             Schedules
             </NavLink>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="navbar-links">
         <NavLink color="foreground" to={'/group'} >
             Community
             </NavLink>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="navbar-links">
         <NavLink color="foreground" to={'/chat'} >
             Messages
             </NavLink>
@@ -80,9 +81,9 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
       </NavbarContent>
       
 
-      <NavbarContent as="div" className="items-center md:flex gap-12" justify="center"> 
+      <NavbarContent className="hidden md:flex items-center gap-12" as="div" justify="center"> 
       <NavbarItem>
-          <Link color="foreground" to="/chat">
+          <Link color="foreground" to="/messages">
             Support
           </Link>
         </NavbarItem>   

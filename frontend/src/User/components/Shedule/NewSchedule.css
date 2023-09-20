@@ -80,9 +80,8 @@
 
 
 .scheduled {
-    max-width: 90%;
+    max-width: 94%;
     margin: 0 auto;
-    padding: 20px;
     border-radius: 5px;
     background-color: transparent;
     box-shadow: 0 0 1px #01c8ef; 
@@ -97,4 +96,8 @@
     border-radius: 5px;
     background-color: transparent;
     box-shadow: 0 0 1px #01c8ef; 
+}
+
+.type-options{
+    max-width: max-content;
 }

@@ -77,7 +77,7 @@ const NewSchedule = () => {
   return (
     <div className="schedule-meeting">
       <form onSubmit={handleSubmit}>
-        <label>
+        <label className='type-options'>
           <Options label={"type"} placeholder={"Select a type"} data={[{type:"public"},{type:"group"},{type:"private"},{type:"broadcast"}]} handlechange={handleInputChange}/>
         </label>
 
