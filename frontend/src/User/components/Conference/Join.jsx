@@ -28,7 +28,7 @@ const Join = () => {
     console.log(res);
     console.log('Joining conference with ID:', conferenceId);
     console.log(res);
-    navigate(`/media-container/${conferenceId}`)
+    navigate(`/live/${conferenceId}`)
     
    } catch (error) {
     console.log(error);

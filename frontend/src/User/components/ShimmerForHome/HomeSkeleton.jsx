@@ -1,7 +1,13 @@
 import React from "react";
-import {Card, Skeleton} from "@nextui-org/react";
+import {Card, Skeleton,Button} from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
-export default function HomeSkeleton() {
+export default function HomeSkeleton({id,members}) {
+  console.log(id,"rrrrrrrrrrrrrrrrrrrr");
+  const navigate = useNavigate()
+  const joinStreamHandler=()=>{
+   navigate(`/live/${id}`)
+  }
   return (
     <Card className="w-[200px] space-y-5 p-4" radius="2xl">
       <Skeleton className="rounded-lg">
@@ -18,6 +24,16 @@ export default function HomeSkeleton() {
           <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
         </Skeleton>
       </div>
+      <div>
+         {members}
+      </div>
+      <Button
+      onClick={()=>{
+       joinStreamHandler()
+      }}
+      >
+        join
+      </Button>
     </Card>
   );
 }
