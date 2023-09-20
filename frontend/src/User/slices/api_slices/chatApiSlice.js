@@ -11,22 +11,16 @@ const createApiMutation = (builder,endpoint,url,method)=>{
   })
 }
 
-export const chatApilSlice = apiSlice.injectEndpoints({
+export const chatApiSlice = apiSlice.injectEndpoints({
   endpoints:(builder)=>({
-   getChat:createApiMutation(builder,'getChat','get','POST'),
+   getChat:createApiMutation(builder,'getChat','get-chatlist','POST'),
+   createChat:createApiMutation(builder,'createChat','create-chat','POST'),
+   getChatHistory:createApiMutation(builder,'getChatHistory','get-chat','POST'),
   })
 }) 
 
 export const {
   useGetChatMutation,
-} = chatApilSlice
-
-export const chatApiSlice = apiSlice.injectEndpoints({
-  endpoints:(builder)=>({
-    createChat:createApiMutation(builder,'createChat','create','POST')
-  })
-})
-
-export const{
   useCreateChatMutation,
+  useGetChatHistoryMutation,
 } = chatApiSlice

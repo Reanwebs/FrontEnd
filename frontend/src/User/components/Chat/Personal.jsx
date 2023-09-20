@@ -1,54 +1,85 @@
 import React, { useState,useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import "./Chat.css"
-import { useGetChatMutation,useCreateChatMutation } from '../../slices/api_slices/chatApiSlice';
+import { useGetChatMutation,useCreateChatMutation,useGetChatHistoryMutation} from '../../slices/api_slices/chatApiSlice';
 const Personal = () => {
+  const userInfo = useSelector(state => state.auth.userInfo)
   const socket = new WebSocket('ws://localhost:5053/ws');
   const [selectedUser, setSelectedUser] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
   const [getChat] = useGetChatMutation()
   const [createChat] = useCreateChatMutation()
+  const [getChatHistory] = useGetChatHistoryMutation()
   const [users, setUser] = useState([])
 
   useEffect(()=>{
     getChatHandler()
   },[])
 
+  useEffect(()=>{
+    socket.addEventListener('message', handleReceivedMessage);
+  },[chatHistory])
+
   const getReq ={
-    UserID :"sender",
+    UserID :userInfo.userName,
   }
 
   const getChatHandler = async ()=>{
      try {
       const chatRes = await getChat(getReq)
-      console.log(chatRes,"pppppppppppp");
+      console.log(chatRes);
       setUser(chatRes.data)
      } catch (error) {
       console.log(error);
      }
   }
 
-  const createChatHandler = async ()=>{
-    try{
-      const res = await createChat(chatreq)
+  const createChatHandler = async (chatreq) => { 
+    try {
+      const res = await createChat(chatreq); 
       console.log(res);
-    } catch (error){
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  const chatreq ={
-    UserID : "sender",
-    RecipientID : "recipient"
+  const getChatHistoryHandler = async (chatreq)=>{
+    try{
+      const res = await getChatHistory(chatreq)
+      console.log(res);
+    }catch (error){
+      console.log(error)
+    }
   }
-  
    
 
   const handleUserClick = (user) => {
-
+    const chatreq={
+      UserID:"",
+      ReciepentID: user.RecipientID
+    }
+    console.log(user,"userrrr",chatreq)
     createChatHandler(chatreq)
-    setSelectedUser(user);
+    getChatHistoryHandler(chatreq)
+    setSelectedUser(user.RecipientID);
     
+  };
+
+  const handleReceivedMessage = (event) => {
+    if (event.data.startsWith('{')) {
+      const receivedMessage = JSON.parse(event.data);
+      console.log(receivedMessage);
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        {
+          user: receivedMessage.sender,
+          text: receivedMessage.text,
+        },
+      ]);
+    } else {
+      console.log("Received plain text message:", event.data);
+    }
   };
 
   const handleSendMessage = () => {
@@ -58,15 +89,15 @@ const Personal = () => {
     
     const messageObject = {
       text: message,
-      sender: 'sender', 
-      recipient: 'recipient', 
+      sender: userInfo.userName, 
+      recipient: selectedUser, 
     };
 
     socket.send(JSON.stringify(messageObject));
-
+    
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { user: selectedUser, text: message },
+      { user: selectedUser, text: message},
     ]);
 
   
@@ -82,7 +113,7 @@ const Personal = () => {
               key={index}
               onClick={() => handleUserClick(user)}
               className={selectedUser && selectedUser.id === user.id ? 'active' : ''}
-            >
+            >  
               {user.RecipientID}
             </li>
           ))}
@@ -93,7 +124,7 @@ const Personal = () => {
       <div className="chat-box">
         {selectedUser ? (
           <div>
-            <h2>Chat with {selectedUser.name}</h2>
+            <h2>Chat with {selectedUser}</h2>
             <div className="message-history">
               {chatHistory.map((message, index) => (
                 <div key={index} className="message">
