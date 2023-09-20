@@ -35,7 +35,7 @@ function App() {
              <Route path='messages'element={<Chat/>}/>
              <Route path='media-container/:id'element={<MediaContainer/>}/>
              <Route path='go-live' element={<GoLive/>}/>
-             <Route path='live' element={<LiveContainer/>}/>
+             <Route path='live/:id' element={<LiveContainer/>}/>
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>
