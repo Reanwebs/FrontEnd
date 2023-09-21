@@ -1,7 +1,8 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { useSelector } from 'react-redux';
 import "./Chat.css"
 import { useGetChatMutation,useCreateChatMutation,useGetChatHistoryMutation} from '../../slices/api_slices/chatApiSlice';
+import { color } from 'framer-motion';
 const Personal = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
   const userName = userInfo.userName;
@@ -13,6 +14,8 @@ const Personal = () => {
   const [createChat] = useCreateChatMutation()
   const [getChatHistory] = useGetChatHistoryMutation()
   const [users, setUser] = useState([])
+  const messageHistoryRef = useRef(null);
+
 
   useEffect(()=>{
     getChatHandler()
@@ -25,7 +28,11 @@ const Personal = () => {
   const getReq ={
     UserID :userInfo.userName,
   }
-
+  const scrollToBottom = () => {
+    if (messageHistoryRef.current) {
+      messageHistoryRef.current.scrollTop = messageHistoryRef.current.scrollHeight;
+    }
+  };
   const getChatHandler = async ()=>{
      try {
       const chatRes = await getChat(getReq)
@@ -55,6 +62,7 @@ const Personal = () => {
       }));
       setChatHistory([]);
       setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
+      scrollToBottom();
       console.log(res,"history");
     }catch (error){
       console.log(error)
@@ -86,6 +94,7 @@ const Personal = () => {
           text: receivedMessage.text,
         },
       ]);
+      scrollToBottom();
     } else {
       console.log("Received plain text message:", event.data);
     }
@@ -106,52 +115,95 @@ const Personal = () => {
     
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { user: selectedUser, text: message},
+      { user: userInfo.userName, text: message},
     ]);
 
-  
+    scrollToBottom();
     setMessage('');
+  };
+
+  const [isUserListOpen, setIsUserListOpen] = useState(false);
+  const toggleUserList = () => {
+    setIsUserListOpen(!isUserListOpen);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
   };
 
   return (
     <div className="chat-container">
       <div className="users-list">
-        <ul>
-          {users.map((user,index) => (
-            <li
-              key={index}
-              onClick={() => handleUserClick(user)}
-              className={selectedUser && selectedUser.id === user.id ? 'active' : ''}
-            >  
-              {user.RecipientID}
-            </li>
-          ))}
-        </ul>
-      </div>
+          <div className='users-list-head'>
+          <button className="toggle-button" onClick={toggleUserList}>User List</button>
+          </div>
+   
+          <ul className={isUserListOpen ? 'open' : ''}>
+            {users.map((user, index) => (
+              <li
+                key={index}
+                onClick={() => handleUserClick(user)}
+                className={selectedUser === user.RecipientID ? 'active' : ''}
+              >
+                <div className="userlist-container">
+                  <div className="user-avatar">
+                    <img src={userInfo?.avatarId && `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`} alt={`avatar`} />
+                  </div>
+                  <div className="user-info">
+                    <span className="user-name">{user.RecipientID}</span>
+                    <span className="last-seen">{user.lastSeen}</span>
+                    {user.unseenMessages > 0 && (
+                      <span className="unseen-messages">{user.unseenMessages} New</span>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
 
     
       <div className="chat-box">
         {selectedUser ? (
-          <div>
-            <h2>Chat with {selectedUser}</h2>
-            <div className="message-history">
+        
+          <div className='selected-chat-box'>
+            
+            <div className='chat-box-head'>
+            <div className="user-avatar">
+                    <img src={userInfo?.avatarId && `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`} alt={`avatar`} />
+            </div>
+            <div>
+            {selectedUser}
+            <h6 style={{ color: 'grey' }}>click here for user info</h6>
+            </div>
+              
+            </div>
+
+            <div className="message-history" ref={messageHistoryRef}>
             {chatHistory.map((message, index) => (
+              
               <div
                 key={index}
                 className={`message-bubble ${message.user === userInfo.userName ? 'sent-bubble' : 'received-bubble'}`}
               >
                 {message.text}
               </div>
+              
             ))}
             </div>
             <div className="message-input">
-              <input
+              <button className="attach-file-button"onClick={handleSendMessage}>+</button>
+              <input className='message-input-field'
                 type="text"
                 placeholder="Type your message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
-              <button onClick={handleSendMessage}>Send</button>
+              <button className="message-send-button"onClick={handleSendMessage}>Send</button>
             </div>
             
           </div>
