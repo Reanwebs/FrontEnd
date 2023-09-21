@@ -173,3 +173,24 @@
     font-size: 14px;
   }
   
+  .message-bubble {
+    display: inline-block;
+    max-width: 70%; /* Adjust the maximum width as needed */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    word-wrap: break-word;
+  }
+  
+  .sent-bubble {
+    background-color: #007bff; /* Change to your desired color */
+    color: #fff;
+    float: right;
+  }
+  
+  .received-bubble {
+    background-color: #f0f0f0; /* Change to your desired color */
+    color: #000;
+    float: left;
+  }

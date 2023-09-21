@@ -4,7 +4,8 @@ import "./Chat.css"
 import { useGetChatMutation,useCreateChatMutation,useGetChatHistoryMutation} from '../../slices/api_slices/chatApiSlice';
 const Personal = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
-  const socket = new WebSocket('ws://localhost:5053/ws');
+  const userName = userInfo.userName;
+  const socket = new WebSocket(`ws://localhost:5053/ws?userName=${userName}`);
   const [selectedUser, setSelectedUser] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
@@ -46,20 +47,27 @@ const Personal = () => {
 
   const getChatHistoryHandler = async (chatreq)=>{
     try{
+      console.log(chatreq,"chat history req")
       const res = await getChatHistory(chatreq)
-      console.log(res);
+      const mappedMessages = res.data.messages.map((message) => ({
+        user: message.UserID,
+        text: message.Text,
+      }));
+      setChatHistory([]);
+      setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
+      console.log(res,"history");
     }catch (error){
       console.log(error)
     }
   }
-   
+  
 
   const handleUserClick = (user) => {
     const chatreq={
-      UserID:"",
-      ReciepentID: user.RecipientID
+      UserID:userInfo.userName,
+      RecipientID: user.RecipientID
     }
-    console.log(user,"userrrr",chatreq)
+    setChatHistory([]);
     createChatHandler(chatreq)
     getChatHistoryHandler(chatreq)
     setSelectedUser(user.RecipientID);
@@ -70,6 +78,7 @@ const Personal = () => {
     if (event.data.startsWith('{')) {
       const receivedMessage = JSON.parse(event.data);
       console.log(receivedMessage);
+      
       setChatHistory((prevHistory) => [
         ...prevHistory,
         {
@@ -92,7 +101,7 @@ const Personal = () => {
       sender: userInfo.userName, 
       recipient: selectedUser, 
     };
-
+  
     socket.send(JSON.stringify(messageObject));
     
     setChatHistory((prevHistory) => [
@@ -126,11 +135,14 @@ const Personal = () => {
           <div>
             <h2>Chat with {selectedUser}</h2>
             <div className="message-history">
-              {chatHistory.map((message, index) => (
-                <div key={index} className="message">
-                  <strong>{message.user.name}:</strong> {message.text}
-                </div>
-              ))}
+            {chatHistory.map((message, index) => (
+              <div
+                key={index}
+                className={`message-bubble ${message.user === userInfo.userName ? 'sent-bubble' : 'received-bubble'}`}
+              >
+                {message.text}
+              </div>
+            ))}
             </div>
             <div className="message-input">
               <input
