@@ -11,7 +11,7 @@ import Chat  from './User/pages/Chat/Chat'
 import MediaContainer from './User/components/MediaContainer/MediaContainer'
 import LiveContainer from './User/components/LiveContainer/LiveContainer'
 import StartStream from './User/pages/StartStream/StartStream'
-
+import ParticipantContainer from './User/components/LiveContainer/liveContainerTemplate'
 
 import AdminLayout from './Admin/pages/AdminLayout'
 import AdminLogin from './Admin/pages/loginPage/AdminLogin'
@@ -36,6 +36,8 @@ function App() {
              <Route path='media-container/:id'element={<MediaContainer/>}/>
              <Route path='stream' element={<StartStream/>}/>
              <Route path='live/:id' element={<LiveContainer/>}/>
+             <Route path='go' element={<ParticipantContainer/>}/>
+
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>

@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import "./Chat.css"
+// import "./Chat.css"
 import { useGetChatMutation,useCreateChatMutation,useGetChatHistoryMutation} from '../../slices/api_slices/chatApiSlice';
 const Personal = () => {
   const userInfo = useSelector(state => state.auth.userInfo)

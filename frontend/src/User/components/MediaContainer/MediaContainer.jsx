@@ -252,8 +252,8 @@ const MediaContainer = ()=>{
     return(
      <>
      <div id="videos">
-        <video  ref={localStreamRef} className="video-player" id="user-1" autoPlay playsInline ></video>
-        <video  ref={remoteStreamRef} className="video-player" id="user-2" autoPlay playsInline ></video>
+        <video  ref={localStreamRef} className="media-player" id="user-1" autoPlay playsInline ></video>
+        <video  ref={remoteStreamRef} className="media-player" id="user-2" autoPlay playsInline ></video>
         <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio} hangup={hangup} screenShare={screenShare}/>
       </div>
      
