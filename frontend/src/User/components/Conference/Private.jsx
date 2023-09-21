@@ -63,7 +63,7 @@ const Private = () => {
 
   const joinConference = ()=>{
     if(conferenceID){
-      navigate(`/live/${conferenceID}`)
+      navigate(`/media-container/${conferenceID}`)
     }
   }
 

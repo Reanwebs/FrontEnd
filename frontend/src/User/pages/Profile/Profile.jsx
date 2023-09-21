@@ -13,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {Spinner} from "@nextui-org/react";
 import RecordedVideos from "../../components/UserFeed/UserFeed";
-import "./Profile.css"
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()

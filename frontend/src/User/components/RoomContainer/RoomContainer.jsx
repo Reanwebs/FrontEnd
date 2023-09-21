@@ -41,7 +41,7 @@ const RoomContainer = ()=>{
                 setRooms(msgData);
 
                 const count = await rtmClient.current.getChannelMemberCount([msgData.room])
-                // console.log("count of members!!!!!!!!!!!!!!!!",count);
+                console.log("count of members!!!!!!!!!!!!!!!!",count);
                 // setRooms(count) 
                 
             } catch (error) {

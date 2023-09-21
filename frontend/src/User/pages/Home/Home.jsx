@@ -4,7 +4,6 @@ import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
 import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
-import "./Home.css"
 
 import RoomContainer from "../../components/RoomContainer/RoomContainer";
 
@@ -31,9 +30,9 @@ const Home = ()=>{
 
 
     return (
-        <>
-      <RoomContainer/>
-        </>
+        <div className='h-screen'>
+        <RoomContainer/>
+        </div>
        
     )
 

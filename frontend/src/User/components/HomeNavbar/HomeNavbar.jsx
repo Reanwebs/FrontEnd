@@ -83,9 +83,11 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
 
       <NavbarContent className="hidden md:flex items-center gap-12" as="div" justify="center"> 
       <NavbarItem>
-          <Link color="foreground" to="/messages">
-            Support
-          </Link>
+        <Button color="primary" variant="bordered" onClick={()=>{
+          navigate('/stream')
+        }}>
+          Stream Now
+        </Button> 
         </NavbarItem>   
         
         <Button className="wallet-button" style={{ backgroundColor: 'transparent'}}>

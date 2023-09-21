@@ -9,6 +9,9 @@ export default function HomeSkeleton({id,members}) {
    navigate(`/live/${id}`)
   }
   return (
+    id 
+      ?
+      (
     <Card className="w-[200px] space-y-5 p-4" radius="2xl">
       <Skeleton className="rounded-lg">
         <div className="h-24 rounded-lg bg-default-300"></div>
@@ -35,5 +38,12 @@ export default function HomeSkeleton({id,members}) {
         join
       </Button>
     </Card>
+      )
+    :
+    (
+      <h1>no live streams</h1>
+    )
+
+  
   );
 }
