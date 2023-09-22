@@ -54,7 +54,6 @@ const Personal = () => {
 
   const getChatHistoryHandler = async (chatreq)=>{
     try{
-      console.log(chatreq,"chat history req")
       const res = await getChatHistory(chatreq)
       const mappedMessages = res.data.messages.map((message) => ({
         user: message.UserID,
@@ -63,7 +62,6 @@ const Personal = () => {
       setChatHistory([]);
       setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
       scrollToBottom();
-      console.log(res,"history");
     }catch (error){
       console.log(error)
     }
@@ -79,26 +77,38 @@ const Personal = () => {
     createChatHandler(chatreq)
     getChatHistoryHandler(chatreq)
     setSelectedUser(user.RecipientID);
+    scrollToBottom();
     
   };
+
+  const [online, setOnline] = useState(false);
+
+  
 
   const handleReceivedMessage = (event) => {
     if (event.data.startsWith('{')) {
       const receivedMessage = JSON.parse(event.data);
-      console.log(receivedMessage);
+      console.log(receivedMessage,"recieved message");
       
-      setChatHistory((prevHistory) => [
-        ...prevHistory,
-        {
-          user: receivedMessage.sender,
-          text: receivedMessage.text,
-        },
-      ]);
-      scrollToBottom();
+      if (receivedMessage.type === "onlineStatus") {
+        const isOnline = receivedMessage.online;
+        setOnline(isOnline)
+      } else {
+        setChatHistory((prevHistory) => [
+            ...prevHistory,
+            {
+                user: receivedMessage.sender,
+                text: receivedMessage.text,
+            },
+        ]);
+        setOnline(true)
+        scrollToBottom();
+      }
     } else {
       console.log("Received plain text message:", event.data);
     }
   };
+
 
   const handleSendMessage = () => {
     if (message.trim() === '') {
@@ -117,6 +127,9 @@ const Personal = () => {
       ...prevHistory,
       { user: userInfo.userName, text: message},
     ]);
+
+    const updatedUsers = users.filter((user) => user.RecipientID !== selectedUser);
+    setUser([users.find((user) => user.RecipientID === selectedUser), ...updatedUsers]);
 
     scrollToBottom();
     setMessage('');
@@ -141,7 +154,7 @@ const Personal = () => {
           </div>
    
           <ul className={isUserListOpen ? 'open' : ''}>
-            {users.map((user, index) => (
+            {users !== null && users.map((user, index) => (
               <li
                 key={index}
                 onClick={() => handleUserClick(user)}
@@ -164,7 +177,6 @@ const Personal = () => {
           </ul>
         </div>
 
-
     
       <div className="chat-box">
         {selectedUser ? (
@@ -177,7 +189,7 @@ const Personal = () => {
             </div>
             <div>
             {selectedUser}
-            <h6 style={{ color: 'grey' }}>click here for user info</h6>
+            <h6 style={{ color: 'grey' }}>{online ? "Online" : "Offline"}</h6>
             </div>
               
             </div>

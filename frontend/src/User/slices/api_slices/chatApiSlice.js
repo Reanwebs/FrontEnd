@@ -16,6 +16,10 @@ export const chatApiSlice = apiSlice.injectEndpoints({
    getChat:createApiMutation(builder,'getChat','get-chatlist','POST'),
    createChat:createApiMutation(builder,'createChat','create-chat','POST'),
    getChatHistory:createApiMutation(builder,'getChatHistory','get-chat','POST'),
+
+   getGroup:createApiMutation(builder,'getGroupChat','get-group','POST'),
+   createGroupChat:createApiMutation(builder,'createGroupChat','create-group-chat','POST'),
+   getGroupChat:createApiMutation(builder,'getGroupChat','get-group-chat','POST')
   })
 }) 
 
@@ -23,4 +27,8 @@ export const {
   useGetChatMutation,
   useCreateChatMutation,
   useGetChatHistoryMutation,
+
+  useGetGroupMutation,
+  useCreateGroupChatMutation,
+  useGetGroupChatMutation,
 } = chatApiSlice

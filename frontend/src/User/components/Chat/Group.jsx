@@ -1,35 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
+import { useSelector } from 'react-redux';
 import "./Chat.css"
-
+import { useGetGroupMutation, useCreateGroupChatMutation,useGetGroupChatMutation,} from '../../slices/api_slices/chatApiSlice';
 const Group = () => {
+  const userInfo = useSelector(state => state.auth.userInfo)
+  const userName = userInfo.userName;
+  const socket = new WebSocket(`ws://localhost:5053/ws/group?userName=${userName}`);
+  const [groups, setGroups] = useState([])
   const [selectedGroup, setSelectedGroup] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
+  const [getGroup] = useGetGroupMutation();
+  const [createGroupChat] = useCreateGroupChatMutation();
+  const [getGroupChat] = useGetGroupChatMutation();
+  
+  useEffect(()=>{
+    getGroupHandler()
+  },[])
 
-  const Groups = [
-    { id: 1, name: 'Group 1' },
-    { id: 2, name: 'Group 2' },
-    { id: 3, name: 'Group 3' },
-  ];
+
+  const getGroupReq={
+    UserID :userInfo.userName,
+  }
+  const getGroupHandler = async ()=>{
+    try{
+     const groupRes = await getGroup(getGroupReq)
+     setGroups(groupRes.data)
+    }catch(error){
+      console.log(error)
+    }
+  }
+  
+  const createGroupChatHandler = async (createChatReq)=>{
+    try{
+      const res = await createGroupChat(createChatReq)
+      console.log(res)
+    }catch(error){
+      console.log(error)
+    }
+  } 
+  
+  const getGroupChatHandler = async(getChatReq)=>{
+    try{
+     const res = await getGroupChat(getChatReq)
+      console.log(res)
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   const handleGroupClick = (Group) => {
+    createGroupChatHandler()
+    getGroupChatHandler()
     setSelectedGroup(Group);
-    
   };
-
 
   const handleSendMessage = () => {
     if (message.trim() === '') {
       return; 
     }
-
-
     setChatHistory((prevHistory) => [
       ...prevHistory,
       { Group: selectedGroup, text: message },
     ]);
-
-  
     setMessage('');
   };
 
@@ -37,7 +70,7 @@ const Group = () => {
     <div className="chat-container">
       <div className="users-list">
         <ul>
-          {Groups.map((Group) => (
+          {groups !== null && groups.map((Group) => (
             <li
               key={Group.id}
               onClick={() => handleGroupClick(Group)}

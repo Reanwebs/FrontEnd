@@ -20,7 +20,10 @@ const Public = () => {
 
   return (
     <div className="public-chat-container">
-      <div className="public-message-history">
+      <div className='public-chat-head'>
+           <p>Let's Chat to the world</p>
+      </div>
+      <div className="public-chat-box">
         {chatHistory.map((message, index) => (
           <div key={index} className="message">
             {message.text}
