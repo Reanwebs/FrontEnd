@@ -67,7 +67,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
           {users.map((user)=>
             <div className="flex items-center justify-between  m-2"key={user.id}>
               <div className="flex">
-              <Avatar alt={user.userName} className="flex-shrink-0" size="md" src={`${CLOUDINARY_FETCH_URL}/${user.avatarId}`} />
+              <Avatar alt={user.userName} className="flex-shrink-0" size="md" src={userInfo.avatarId ?`${CLOUDINARY_FETCH_URL}/${user.avatarId}` : undefined} />
             <div className="flex items-center">
               <span className="text-small ml-2">{user.userName}</span>
             </div>
