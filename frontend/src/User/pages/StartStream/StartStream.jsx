@@ -20,10 +20,10 @@ const StartStream = ()=>{
     console.log(userInfo,"user info")
     const [streamData,setStreamData] = useState({
         title:'',
-        desciption:'',
+        description:'',
         interest:'',
         thumbnail:'',
-        avatartId:userInfo.avatarId ? userInfo.avatarId : '',
+        avatarId:userInfo.avatarId ? userInfo.avatarId : '',
         userName:userInfo.userName
     })
    
@@ -69,17 +69,18 @@ const StartStream = ()=>{
 
       async function streamHandler(){
         try {
-            if(!streamData.title || !streamData.desciption || !streamData.interest) throw new Error("fill all fields")
+            if(!streamData.title || !streamData.description || !streamData.interest) throw new Error("fill all fields")
             if(!selectedImage) throw new Error("please select a thumbnail for your stream")
            const thumbnail = await addThumbnailHandler()
            const data = {
             title:streamData.title,
-            desciption:streamData.desciption,
+            description:streamData.description,
             interest:streamData.interest,
             thumbnail:thumbnail,
-            avatartId:streamData.avatartId,
+            avatarId:streamData.avatarId,
             userName:streamData.userName
            }
+           console.log(data,"data of streams");
            const res = await streamStart(data).unwrap()
            console.log(res,"response from stream backend"); 
            dispatch(setStreamState({status:true}))
@@ -118,11 +119,11 @@ const StartStream = ()=>{
                     placeholder='enter a description for your stream'
                     name="description"
                     isRequired
-                    value={streamData.desciption}
+                    value={streamData.description}
                     onChange={(e)=>{
                         setStreamData({
                             ...streamData,
-                            desciption:e.target.value
+                            description:e.target.value
                         })
                     }}
                 />
