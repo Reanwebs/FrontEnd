@@ -61,6 +61,7 @@ const StartStream = ()=>{
             ...streamData,
             thumbnail:cloudRes.data['public_id']
            })
+           return cloudRes.data['public_id']
         } catch (error) {
             toast.error(error?.message || error?.data?.message)
         }
@@ -70,10 +71,17 @@ const StartStream = ()=>{
         try {
             if(!streamData.title || !streamData.desciption || !streamData.interest) throw new Error("fill all fields")
             if(!selectedImage) throw new Error("please select a thumbnail for your stream")
-            await addThumbnailHandler()
-        console.log(streamData,"stream data")
-           const res = await streamStart(streamData).unwrap()
-           console.log(res); 
+           const thumbnail = await addThumbnailHandler()
+           const data = {
+            title:streamData.title,
+            desciption:streamData.desciption,
+            interest:streamData.interest,
+            thumbnail:thumbnail,
+            avatartId:streamData.avatartId,
+            userName:streamData.userName
+           }
+           const res = await streamStart(data).unwrap()
+           console.log(res,"response from stream backend"); 
            dispatch(setStreamState({status:true}))
            navigate(`/live/${res.StreamID}`)
         } catch (error) {

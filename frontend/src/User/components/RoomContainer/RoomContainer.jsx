@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setStreamState } from "../../slices/reducers/user_reducers/streamReducer";
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
+import { Card,CardFooter,CardHeader,Button,Image } from "@nextui-org/react";
+import './RoomContainer.css'
 
 
 const RoomContainer = ()=>{
@@ -89,7 +91,7 @@ const RoomContainer = ()=>{
     async function getStreamsDataHandler(){
       try {
         const res = await getStreamsData().unwrap()
-        console.log(res);
+        console.log(res,"response from streams");
         setRooms(res)
         
       } catch (error) {
@@ -101,10 +103,46 @@ const RoomContainer = ()=>{
       getStreamsDataHandler()
     },[])
 
+
+    const RoomCards = ()=>{
+      return(
+        <Card isFooterBlurred className="w-full h-[300px] col-span-12 sm:col-span-7 ">
+        <Image
+          removeWrapper
+          alt="Relaxing app background"
+          className="z-0 w-full h-full object-cover"
+          src="../../../../streambgimage.jpg"
+        />
+        <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
+          <div className="flex flex-grow gap-2 items-center">
+            <Image
+              alt="Breathing app icon"
+              className="rounded-full w-10 h-11 bg-black"
+              src="../../../../streambgimage.jpg"
+            />
+            <div className="flex flex-col">
+              <p className="text-tiny text-white/60">Ajith v</p>
+              <p className="text-tiny text-white/60">Some description</p>
+            </div>
+          </div>
+          <Button radius="full" color="" size="sm">Join</Button>
+        </CardFooter>
+      </Card>
+      )
+    }
+
     return (
         <>
        <section className="h-screen">
-          
+      <div className="m-4">
+        <div className="card_header">
+         <h1 className="card_title">now streaming </h1>
+        </div>
+        
+       <div className="max-w-[900px] gap-2 grid grid-cols-12 grid-rows-2 px-8">
+          <RoomCards/>  
+          </div>
+       </div>
        </section>
         </>
        
