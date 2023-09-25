@@ -2,6 +2,7 @@ import React, { useState,useEffect,useRef } from 'react';
 import { useSelector } from 'react-redux';
 // import "./Chat.css"
 import { useGetChatMutation,useCreateChatMutation,useGetChatHistoryMutation} from '../../slices/api_slices/chatApiSlice';
+import {CLOUDINARY_FETCH_URL} from '../../../utils/config/config'
 import { color } from 'framer-motion';
 const Personal = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
@@ -162,7 +163,7 @@ const Personal = () => {
               >
                 <div className="userlist-container">
                   <div className="user-avatar">
-                    <img src={userInfo?.avatarId && `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`} alt={`avatar`} />
+                    <img src={userInfo?.avatarId && `${CLOUDINARY_FETCH_URL}/${userInfo.avatarId}`} alt={`avatar`} />
                   </div>
                   <div className="user-info">
                     <span className="user-name">{user.RecipientID}</span>
