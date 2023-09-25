@@ -36,7 +36,7 @@ function App() {
              <Route path='media-container/:id'element={<MediaContainer/>}/>
              <Route path='stream' element={<StartStream/>}/>
              <Route path='live/:id' element={<LiveContainer/>}/>
-             <Route path='go' element={<ParticipantContainer/>}/>
+             <Route path='go/:id' element={<ParticipantContainer/>}/>
 
            </Route>
         </Route>

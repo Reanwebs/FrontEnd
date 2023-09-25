@@ -4,6 +4,10 @@ import { useUserGetInterestsMutation } from "../../slices/api_slices/usersApiSli
 import { useStartStreamMutation } from "../../slices/api_slices/usersConferenceApi";
 import {toast} from 'react-toastify'
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+import { setStreamState } from "../../slices/reducers/user_reducers/streamReducer";
+
 
 
 
@@ -12,15 +16,22 @@ const StartStream = ()=>{
     const [interest,setInterest] = useState([])
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading,setLoading] = useState(false)
+    const userInfo  = useSelector((state) => state.auth.userInfo); 
     const [streamData,setStreamData] = useState({
         title:'',
         desciption:'',
         interest:'',
-        thumbnail:''
+        thumbnail:'',
+        avatartId:userInfo.avatartId ? userInfo.avatartId : '',
+        userName:userInfo.userName
     })
+   
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+  
 
     const [getInterest] = useUserGetInterestsMutation()
-    const [startStream] = useStartStreamMutation()
+    const [streamStart] = useStartStreamMutation()
 
     
    
@@ -38,14 +49,14 @@ const StartStream = ()=>{
         }
       }
 
-      const addProfileImageHandler = async ()=>{
+      const addThumbnailHandler = async ()=>{
         try {
             const formData = new FormData();
            formData.append("file",selectedImage);
            formData.append("upload_preset","reanconnect");
            const cloudRes = await axios.post("https://api.cloudinary.com/v1_1/dcv6mx1nk/image/upload",formData)
            console.log(cloudRes.data['public_id']);
-          await setStreamData({
+           await setStreamData({
             ...streamData,
             thumbnail:cloudRes.data['public_id']
            })
@@ -58,11 +69,11 @@ const StartStream = ()=>{
         try {
             if(!streamData.title || !streamData.desciption || !streamData.interest) throw new Error("fill all fields")
             if(!selectedImage) throw new Error("please select a thumbnail for your stream")
-            await addProfileImageHandler()
-           const res = await startStream(streamData).unwrap()
-           console.log(res);
-           console.log(streamData,"stream dataaaaa");
-
+            await addThumbnailHandler()
+           const res = await streamStart(streamData).unwrap()
+           console.log(res); 
+           dispatch(setStreamState({status:true}))
+           navigate(`/live/${res.StreamID}`)
         } catch (error) {
             console.log(error);
             toast.error(error?.message || error?.data?.message)

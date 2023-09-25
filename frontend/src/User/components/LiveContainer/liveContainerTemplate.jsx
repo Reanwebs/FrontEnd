@@ -1,6 +1,7 @@
 import { Chip, Input } from "@nextui-org/react"
 import { CheckIcon } from '../../components/CheckIcon/CheckIcon'
 import { Avatar} from "@nextui-org/react";
+import './LiveContainer.css'
 
 
 const ParticipantContainer = () => {
@@ -160,6 +161,74 @@ const ParticipantContainer = () => {
         </div>
       </div>
     </section>
+    //  <section className="h-screen">
+    //         <div className="flex flex-row ">
+    //         <div className="basis-1/4 h-screen bg-zinc-950">
+    //             {showControls && 
+    //             <>
+    //             <p>{participant.length}</p>
+    //         {participant.map((user,idx)=>
+                   
+    //                <div key={idx}>
+    //                    <span>{user}</span>
+                      
+                      
+    //                </div>)}
+    //          </>
+    //         }
+    //         </div>
+    //         <div className="basis-1/2 h-screen bg-slate-600">
+    //             <div id="video-stream">
+                      
+    //             </div>
+    //          {showControls &&
+    //          <>
+    //             <button onClick={hangup} className="m-2">
+    //                 hangup
+    //             </button>
+    //             <button className="m-2"
+    //             onClick={()=>{
+    //                 toggleStream()
+    //             }}
+    //             >
+    //                 {streaming ? "stop streaming" :"start streaming"}
+    //             </button>
+    //             <button onClick={toggleCamera} className="m-2">
+    //                 toggleCamera
+    //             </button>
+    //             <button onClick={toggleMike} className="m-2">
+    //                 toggleMike
+    //             </button>
+    //             <button onClick={toggleScreenShare} className="m-2">
+    //                {screenSharing ? 'stop screenShare' : 'start screenShare'} 
+    //             </button>
+    //             </>
+    //             }
+    //             live part
+    //         </div>
+    //         <div className="basis-1/4 h-screen bg-zinc-950  overflow-auto">
+    //             {messages.map((msg,idx)=>
+                   
+    //                 <div key={idx}>
+    //                     <span>{msg.time}</span>
+    //                     <span>{msg.user}</span>
+    //                     <span>{msg.message}</span>
+                       
+    //                 </div>)}
+    //             <form className="fixed bottom-0">
+    //                 <input className="w-96 h-10"
+    //                 required
+    //                 value={message}
+    //                 onChange={(e)=>{
+    //                     setMessage(e.target.value)
+    //                 }}
+    //                 >
+    //                 </input>
+    //                 <button className="send_message_button" onClick={handleSendMessage}>Send</button>
+    //             </form>
+    //          </div>
+    //         </div>
+    //     </section>
   );
 }
 
