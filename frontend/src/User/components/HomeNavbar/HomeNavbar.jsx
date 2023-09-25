@@ -59,7 +59,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
             </NavLink>
         </NavbarItem>
         <NavbarItem className="navbar-links">
-        <NavLink color="foreground" to={'/chat'} >
+        <NavLink color="foreground" to={'/messages'} >
             Messages
             </NavLink>
         </NavbarItem>
