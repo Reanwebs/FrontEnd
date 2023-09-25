@@ -9,9 +9,9 @@ import Conference from './User/pages/Conference/Conference'
 import Group from './User/pages/Group/Group'
 import Chat  from './User/pages/Chat/Chat'
 import MediaContainer from './User/components/MediaContainer/MediaContainer'
-import GoLive from './User/pages/GoLive/GoLive'
 import LiveContainer from './User/components/LiveContainer/LiveContainer'
-
+import StartStream from './User/pages/StartStream/StartStream'
+import ParticipantContainer from './User/components/LiveContainer/liveContainerTemplate'
 
 import AdminLayout from './Admin/pages/AdminLayout'
 import AdminLogin from './Admin/pages/loginPage/AdminLogin'
@@ -34,8 +34,10 @@ function App() {
              <Route path='group' element={<Group/>}/>
              <Route path='messages'element={<Chat/>}/>
              <Route path='media-container/:id'element={<MediaContainer/>}/>
-             <Route path='go-live' element={<GoLive/>}/>
+             <Route path='stream' element={<StartStream/>}/>
              <Route path='live/:id' element={<LiveContainer/>}/>
+             <Route path='go/:id' element={<ParticipantContainer/>}/>
+
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>

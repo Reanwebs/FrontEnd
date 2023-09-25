@@ -1,45 +1,83 @@
 import AgoraRTC from "agora-rtc-sdk-ng";
+import AgoraRTM from "agora-rtm-sdk";
 import { APP_ID } from "../../../utils/config/config";
 import { useEffect, useRef ,useState} from "react";
-import { useSelector } from "react-redux";
-import {  useParams } from 'react-router-dom';
-import AgoraRTM from "agora-rtm-sdk";
+import { useSelector ,useDispatch} from "react-redux";
+import {  useParams ,useNavigate} from 'react-router-dom';
 import './LiveContainer.css'
-import { toast } from "react-toastify";
+import { Chip, Input } from "@nextui-org/react"
+import { CheckIcon } from '../../components/CheckIcon/CheckIcon'
+import { Avatar} from "@nextui-org/react";
+import { useGetStreamDataByIdMutation,useExitStreamMutation,useStopStreamMutation } from "../../slices/api_slices/usersConferenceApi";
+import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
+import { setStreamState,removeStreamState } from "../../slices/reducers/user_reducers/streamReducer";
+
+
+
 
 const LiveContainer = ()=>{
-const [user,setUser] = useState('')
+
 
 const userInfo  = useSelector((state) => state.auth.userInfo); 
-const [localTracks,setLocalTracks] = useState([])
-const remoteTracks = useRef({})
+const streamInfo = useSelector((state) => state.stream.streamState)
 const localScreenTracks = useRef(null)
 const [streaming,setStreaming] = useState(false)
 const [screenSharing,setScreenSharing] = useState(false)
 const rtmClient = useRef(null)
 const rtcClient = useRef(null)
+const localScreenShare = useRef(null)
 
-const localStream = useRef(null)
 const { id } = useParams();
-// const rtmClient = useRef(null)
 const channel = useRef(null);
 const [message,setMessage] = useState('')
 const [messages,setMessages]=useState([])
 const [participant,setParticipants] = useState([])
 const localChannel = useRef(null)
+const [showControls,setShowControls] = useState(false)
+const [active,setActive] = useState({
+    camera:false,
+    screen:false,
+    mike:false,
+    start:false
+})
+const [streamData,setStreamData] = useState(null)
+
+const [getStreamById] = useGetStreamDataByIdMutation()
+const [stopStream] = useStopStreamMutation()
+const [exitStream] = useExitStreamMutation()
+
+const navigate = useNavigate()
+const dispatch = useDispatch()
 
 
 
-const uid = String(Math.floor(Math.random() * 10000));
 
-const token = null
-const rtcId = Math.floor(Math.random()*232)
-
+async function getStreamDataHandler(){
+    try{
+        const res = await getStreamById(id)
+        console.log(res,"stream details");
+        setStreamData(res)
+    }catch(error){
+        console.log(error);
+    }
+}
 
 useEffect(()=>{
- init()
- stream()
+    if(!streamInfo){
+         navigate('/home')
+    }else{
+        getStreamDataHandler()
+        init()
+        stream()
+    }
 },[])
+
+
+
+const token = null
+
+
+
 
 
 //RTM config for messaging 
@@ -53,33 +91,26 @@ async function init(){
        await channel.current.join()
 
 
-       try {
-        let attributes = await rtmClient.current.getChannelAttributesByKeys(id,['room_name'])
-        console.log("attributes",attributes);
-        console.log("id in attributes:",id);        
-      } catch (error) {
-         console.log("id in attributes:",id);        
+       await getChanneldetails()
 
-          console.error("error in setting attributes:",error)
-          await rtmClient.current.setChannelAttributes(id,{'room_name':id})
-      }
-
-       localChannel.current=rtmClient.current.createChannel('lobby')
-       await localChannel.current.join()
+    //    localChannel.current=rtmClient.current.createChannel('lobby')
+    //    await localChannel.current.join()
 
 
-       localChannel.current.on('MemberJoined',async (memberId)=>{
-          const participants = await channel.current.getMembers()
-        //   console.log(participants,"paticipantssss");
-          if(participants[0] === userInfo.userName){
-            const lobbyMembers = await localChannel.current.getMembers()
-            // console.log("lobbymemebrrssss:",lobbyMembers,);
-            for(let i=0;i<lobbyMembers.length; i++){
-                rtmClient.current.sendMessageToPeer({text:JSON.stringify({'room':id,'type':'room_added','members':participants.length})},lobbyMembers[i])
-            }
-          }
+    //    localChannel.current.on('MemberJoined',async (memberId)=>{
+           
+    //       const participants = await channel.current.getMembers()
+    //       console.log(participants,"paticipantssss");
           
-       })
+    //       if(participants[0] === userInfo.userName){
+    //         const lobbyMembers = await localChannel.current.getMembers()
+    //         // console.log("lobbymemebrrssss:",lobbyMembers,);
+    //         for(let i=0;i<lobbyMembers.length; i++){
+    //             rtmClient.current.sendMessageToPeer({text:JSON.stringify({'room':id,'type':'room_added','members':participants.length})},lobbyMembers[i])
+    //         }
+    //       }
+          
+    //    })
 
        channel.current.on('MemberJoined',async (memberId)=>{
          await  handleMemeberJoined(memberId,"joined")
@@ -100,8 +131,27 @@ async function init(){
     }
 }
 
+async function getChanneldetails(){
+    try {
+        let attributes = await rtmClient.current.getChannelAttributesByKeys(id,['room_name','host_id'])
+        console.log("attributes",attributes);
+        console.log("id in attributes:",id);  
+        const host_id = attributes.host_id.value;
+        if(host_id === userInfo.userName){
+             setShowControls(true)
+         }else{
+            rtcClient.current.setClientRole('audience')
+         }
+            
+      } catch (error) {
+          await rtmClient.current.setChannelAttributes(id,{'room_name':id,'host_id':userInfo.userName})
+          getChanneldetails()
+        
+      }
+}
+
 async function handleMemeberJoined(memberId,state){
-    toast.success(`${memberId} ${state} stream`)
+    // toast.success(`${memberId} ${state} stream`)
     const member = await channel.current.getMembers()
     setParticipants(member)
 }
@@ -110,15 +160,14 @@ function sendMessageHandler(data,user){
     // console.log(data,user,"oooooooooooooooo");
     setMessages((prevMessages) => [
         ...prevMessages,
-        { message: data.message,time:data.time, user: user }
+        { message: data.message,avatarId:data.avatarId, user: user }
       ]);
 }
 
 async function handleSendMessage(e){
   e.preventDefault()
-  const time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
-  channel.current.sendMessage({text:JSON.stringify({'message':message,'time':time})})
-  sendMessageHandler({message:message,time:time},userInfo.userName)
+  channel.current.sendMessage({text:JSON.stringify({'message':message,'avatarId':userInfo.avatarId ?userInfo.avatarId:'' })})
+  sendMessageHandler({message:message,avatarId:userInfo.avatarId ?userInfo.avatarId:''},userInfo.userName)
   setMessage('')
 }
 
@@ -126,6 +175,9 @@ const hangup = async  ()=>{
     try {
       await channel.current.leave();
       await rtmClient.current.logout()
+      await rtcClient.current.leave();
+      await stopStream(id)
+      dispatch(removeStreamState())
       window.location.assign('/home');
     } catch (error) {
         console.log(error);
@@ -163,16 +215,24 @@ async function stream(){
 async function toggleStream(){
     try {
         if(!streaming){
+            setActive({
+                ...active,
+                start:!active.start
+            })
             setStreaming(true)
             toggleVideoShare(true)
         }else{
            setStreaming(false)
-           for(let i = 0 ; i < localTracks.length; i++){
+           setActive({
+            ...active,
+            start:!active.start
+        })
+           for(let i = 0 ; i < localScreenTracks.current.length; i++){
             // console.log(localTracks[i],"local tracksss");
-            localTracks[i].stop()
-            localTracks[i].close()
+            localScreenTracks.current[i].stop()
+            localScreenTracks.current[i].close()
            }
-           await rtcClient.current.unpublish([localTracks[0],localTracks[1]])
+           await rtcClient.current.unpublish([localScreenTracks.current[0],localScreenTracks.current[1]])
         }
         
     } catch (error) {
@@ -182,9 +242,11 @@ async function toggleStream(){
 
 async function toggleVideoShare(){
     try {
-       rtcClient.current.setClientRole('host')
+       
+       await rtcClient.current.setClientRole('host')
        const track = await AgoraRTC.createMicrophoneAndCameraTracks()
-       setLocalTracks(track)
+       localScreenTracks.current = track;
+       console.log("local screen tracks",localScreenTracks,)
        document.getElementById('video-stream').innerHTML=''
 
        let player = `<div class="video-container" id="user-container-${rtcUid}">
@@ -193,8 +255,8 @@ async function toggleVideoShare(){
                         </div>
                     </div>`
        document.getElementById('video-stream').insertAdjacentHTML('beforeend',player)
-       track[1].play(`user-${rtcUid}`)
-       await rtcClient.current.publish([track[0],track[1]])
+       localScreenTracks.current[1].play(`user-${rtcUid}`)
+       await rtcClient.current.publish([localScreenTracks.current[0],localScreenTracks.current[1]])
         
     } catch (error) {
 
@@ -205,6 +267,7 @@ async function toggleVideoShare(){
 
 async function handleUserPublished(user,mediaType){
     try {
+        console.log("media type in user published",mediaType,);
         await rtcClient.current.subscribe(user,mediaType)
         if(mediaType === 'video'){
             let player = document.getElementById(`user-container-${user.uid}`)
@@ -232,61 +295,236 @@ async function handleUserUnPublished(){
 
 }
 
+async function toggleCamera() {
+      
+    try {
+        setActive({
+            ...active,
+            camera:!active.camera
+        })
+        if (localScreenTracks.current[1].muted) {
+            localScreenTracks.current[1].setMuted(false);
+        } else {
+            localScreenTracks.current[1].setMuted(true);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function toggleMike() {
+    try {
+        setActive({
+            ...active,
+            mike:!active.mike
+        })
+        if (localScreenTracks.current[0].muted) {
+            localScreenTracks.current[0].setMuted(false);
+        } else {
+            localScreenTracks.current[0].setMuted(true);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+async function toggleScreenShare(){
+    try {
+       
+        if(screenSharing){
+            console.log(screenSharing,"screen sharing");
+            setScreenSharing(false)
+            await rtcClient.current.unpublish([localScreenShare.current])
+            toggleVideoShare()
+            setActive({
+                ...active,
+                screen:!active.screen
+            })
+           
+        }else{
+            setScreenSharing(true)
+            const tracks = await AgoraRTC.createScreenVideoTrack()
+            localScreenShare.current = tracks
+            document.getElementById('video-stream').innerHTML=''
+
+            let player = document.getElementById(`user-container-${rtcUid}`)
+            if(player !== null){
+                player.remove()
+            }
+
+             player = `<div class="video-container" id="user-container-${rtcUid}">
+                        <div class="video-player" id="user-${rtcUid}">
+                           
+                        </div>
+                    </div>`
+       document.getElementById('video-stream').insertAdjacentHTML('beforeend',player)
+       await rtcClient.current.unpublish([localScreenTracks.current[0],localScreenTracks.current[1]])
+       localScreenShare.current.play(`user-${rtcUid}`)
+       await rtcClient.current.publish([localScreenShare.current])
+            setActive({
+                ...active,
+                screen:!active.screen
+            })
+        }
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function leaveStream(){
+    try {
+        await channel.current.leave();
+        await rtmClient.current.logout()
+        await rtcClient.current.leave();
+        await exitStream(id)
+        navigate('/home')
+        dispatch(removeStreamState())
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
     return(
-        <section className="h-screen">
-            <div className="flex flex-row ">
-            <div className="basis-1/4 h-screen bg-zinc-950">
-                <p>{participant.length}</p>
-            {participant.map((user,idx)=>
-                   
-                   <div key={idx}>
-                       <span>{user}</span>
-                      
-                      
-                   </div>)}
-            </div>
-            <div className="basis-1/2 h-screen bg-slate-600">
-                <div id="video-stream">
-                      
-                </div>
-
-                <button onClick={hangup}>
-                    hangup
-                </button>
-                <button className="bg-red"
-                onClick={()=>{
-                    toggleStream()
-                }}
-                >
-                    {streaming ? "stop streaming" :"start streaming"}
-                </button>
-                live part
-                </div>
-            <div className="basis-1/4 h-screen bg-zinc-950  overflow-auto">
-                {messages.map((msg,idx)=>
-                   
-                    <div key={idx}>
-                        <span>{msg.time}</span>
-                        <span>{msg.user}</span>
-                        <span>{msg.message}</span>
-                       
-                    </div>)}
-                <form className="fixed bottom-0">
-                    <input className="w-96 h-10"
-                    required
-                    value={message}
-                    onChange={(e)=>{
-                        setMessage(e.target.value)
+        <section className="h-fit m-2">
+            <div className="flex  h-[830px]">
+                <div className="flex-grow-2 w-3/4 flex flex-col">
+                <div
+                    className="h-screen bg-cover bg-center container relative"
+                    style={{
+                    backgroundImage: `url("../../../../streambgimage.jpg")`
                     }}
+                >
+                    <div id='video-stream' className="player-container">
+                       
+                    </div>
+                    <div className="absolute top-0 right-0 mr-2 mt-2"> 
+                    <Chip
+                        startContent={<CheckIcon size={18} />}
+                        variant="faded"
+                        color="danger"
                     >
-                    </input>
-                    <button className="send_message_button" onClick={handleSendMessage}>Send</button>
-                </form>
-             </div>
+                       {`${participant.length} watching`}
+                    </Chip>
+                    </div>
+                   
+                    {showControls ?  
+                    <div className="auth">
+                    <div className='media-controls'>
+                        <button className="call-exit-button"
+                        onClick={hangup}
+                          >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" fill='white' />
+                        </svg>
+                        </button>
+                        <button  className={active.mike ? 'audio-button' : 'active-button'}
+                         onClick={toggleMike}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="svg">
+                            <path className="on" d="M38 22h-3.4c0 1.49-.31 2.87-.87 4.1l2.46 2.46C37.33 26.61 38 24.38 38 22zm-8.03.33c0-.11.03-.22.03-.33V10c0-3.32-2.69-6-6-6s-6 2.68-6 6v.37l11.97 11.96zM8.55 6L6 8.55l12.02 12.02v1.44c0 3.31 2.67 6 5.98 6 .45 0 .88-.06 1.3-.15l3.32 3.32c-1.43.66-3 1.03-4.62 1.03-5.52 0-10.6-4.2-10.6-10.2H10c0 6.83 5.44 12.47 12 13.44V42h4v-6.56c1.81-.27 3.53-.9 5.08-1.81L39.45 42 42 39.46 8.55 6z" fill="white"></path>
+                            <path className="off" d="M24 28c3.31 0 5.98-2.69 5.98-6L30 10c0-3.32-2.68-6-6-6-3.31 0-6 2.68-6 6v12c0 3.31 2.69 6 6 6zm10.6-6c0 6-5.07 10.2-10.6 10.2-5.52 0-10.6-4.2-10.6-10.2H10c0 6.83 5.44 12.47 12 13.44V42h4v-6.56c6.56-.97 12-6.61 12-13.44h-3.4z" fill="white"></path>
+                            </svg>
+                        </button>
+                        <button  className={ active.camera ? 'video-button' : 'active-button'}
+                           onClick={toggleCamera}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="svg">
+                            <path className="on" d="M40 8H15.64l8 8H28v4.36l1.13 1.13L36 16v12.36l7.97 7.97L44 36V12c0-2.21-1.79-4-4-4zM4.55 2L2 4.55l4.01 4.01C4.81 9.24 4 10.52 4 12v24c0 2.21 1.79 4 4 4h29.45l4 4L44 41.46 4.55 2zM12 16h1.45L28 30.55V32H12V16z" fill="white"></path>
+                            <path className="off" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zm-4 24l-8-6.4V32H12V16h16v6.4l8-6.4v16z" fill="white"></path>
+                            </svg>
+                        </button>
+                        <button   className={active.screen ? "screen-button" : "active-button"}
+                          onClick={toggleScreenShare}
+                         >
+                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"  fill='white'/>
+                            </svg>
+                        </button>
+                        <button  className={active.start ?"start-button" : "active-button"}
+                          onClick={toggleStream}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="svg">
+                             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"  fill='white'/>
+                          </svg>
+                        </button>
+                    </div>      
+                </div>
+                :
+                 <div className="auth">
+                    <div className="media-controls">
+                    <button className="call-exit-button"
+                        onClick={leaveStream}
+                          >
+                       <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" fill="white" />
+                        </svg>
+                        </button>
+                    </div>
+                 </div>
+
+                    }
+                   
+                </div>
+                <div className="h-1/3 pt-12 pl-4">
+                    <div className="flex">
+                    <Avatar name={streamData ? streamData.userName : ''} className="flex-shrink-0" size="lg" 
+                    src={streamData 
+                        && streamData.avtarId 
+                        ? `${CLOUDINARY_FETCH_URL}/${streamData.avtarId}`
+                        : undefined
+                    }
+                    />
+                    <h1 className="font-bold m-2">{streamData ? streamData.userName : ''}</h1>
+                    </div>
+                    <div className="ml-12">
+                    <h1 className="ml-2">{streamData ? streamData.description : ''}</h1>
+                    </div>
+                </div>
+                </div>
+                <div className="flex-grow w-1/4 border-l border-gray-500">
+                <div>
+                <div className="text-center my-2">
+                    <h1 className="text-xl font-bold">Live Chat</h1>
+                </div>
+                <div className="overflow-y-scroll h-[700px] ml-6 message_container" >
+                <div className="flex gap-2 flex-col">
+                    {messages.map((msg,index)=>
+                         <div className="flex my-2" key={index}>
+                            <Avatar name={msg.user} className="flex-shrink-0" size="sm"  
+                      src={
+                        msg.avtarId ? `${CLOUDINARY_FETCH_URL}/${msg.avtarId}` : undefined
+                      }/>
+                            <span className="text-small m-2">{msg.user}</span>
+                            <span className="text-small text-default-400 m-2">{msg.message}</span>
+                         </div> 
+                    )}
+                </div>
+                </div>
+                    <div className="flex ml-4">
+                        <Input
+                        placeholder="send message"
+                        value={message}
+                        onChange={(e)=>{
+                            setMessage(e.target.value)
+                        }}
+                        endContent={
+                        <button onClick={handleSendMessage}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                        </svg>
+                        </button>
+                        }
+                        />
+                    </div>
+                </div>
+                </div>
             </div>
         </section>
+
+       
     )
 }
 

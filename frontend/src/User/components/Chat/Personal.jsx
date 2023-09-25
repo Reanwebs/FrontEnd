@@ -1,6 +1,6 @@
 import React, { useState,useEffect,useRef } from 'react';
 import { useSelector } from 'react-redux';
-import "./Chat.css"
+// import "./Chat.css"
 import { useGetChatMutation,useCreateChatMutation,useGetChatHistoryMutation} from '../../slices/api_slices/chatApiSlice';
 import { color } from 'framer-motion';
 const Personal = () => {

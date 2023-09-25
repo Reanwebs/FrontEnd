@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {Spinner} from "@nextui-org/react";
 import RecordedVideos from "../../components/UserFeed/UserFeed";
-import "./Profile.css"
+import { CLOUDINARY_FETCH_URL,CLOUDINARY_UPLOAD_URL } from "../../../utils/config/config";
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
@@ -31,7 +31,7 @@ const Profile = ()=>{
             const formData = new FormData();
            formData.append("file",selectedImage);
            formData.append("upload_preset","reanconnect");
-           const cloudRes = await axios.post("https://api.cloudinary.com/v1_1/dcv6mx1nk/image/upload",formData)
+           const cloudRes = await axios.post(CLOUDINARY_UPLOAD_URL,formData)
            console.log(cloudRes.data['public_id']);
            const res = await changeAvatar({avatarId:cloudRes.data['public_id']}).unwrap()
             console.log(res);
@@ -84,7 +84,7 @@ const Profile = ()=>{
                                 selectedImage
                                 ? URL.createObjectURL(selectedImage)
                                 : userInfo.avatarId
-                                ? `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`
+                                ? `${CLOUDINARY_FETCH_URL}/${userInfo.avatarId}`
                                 : undefined 
                             } className="w-20 h-20 text-large"
                         />

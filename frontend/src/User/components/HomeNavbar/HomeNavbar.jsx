@@ -4,6 +4,7 @@ import { SearchIcon } from "../SearchIcon/SearchIcon";
 import { NavLink ,useNavigate} from "react-router-dom";
 import "./HomeNavbar.css"
 import React,{useState} from "react";
+import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 
 
 
@@ -83,9 +84,11 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
 
       <NavbarContent className="hidden md:flex items-center gap-12" as="div" justify="center"> 
       <NavbarItem>
-          <Link color="foreground" to="/messages">
-            Support
-          </Link>
+        <Button color="primary" variant="bordered" onClick={()=>{
+          navigate('/stream')
+        }}>
+          Stream Now
+        </Button> 
         </NavbarItem>   
         
         <Button className="wallet-button" style={{ backgroundColor: 'transparent'}}>
@@ -101,7 +104,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
               color="#01c8ef"
               name={userInfo?.userName}
               size="sm"
-              src={userInfo?.avatarId && `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`}
+              src={userInfo?.avatarId && `${CLOUDINARY_FETCH_URL}/${userInfo.avatarId}`}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
