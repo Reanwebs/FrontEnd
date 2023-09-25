@@ -56,7 +56,7 @@ async function getStreamDataHandler(){
     try{
         const res = await getStreamById(id)
         console.log(res,"stream details");
-        setStreamData(res)
+        setStreamData(res.data)
     }catch(error){
         console.log(error);
     }
@@ -122,6 +122,7 @@ async function init(){
 
        channel.current.on('ChannelMessage',(msg,memberId)=>{
           const data = JSON.parse(msg.text)
+          console.log(data,"message from peer");
         //   console.log(data,memberId,"message from channel");
           sendMessageHandler(data,memberId)
         })
@@ -158,10 +159,13 @@ async function handleMemeberJoined(memberId,state){
 
 function sendMessageHandler(data,user){
     // console.log(data,user,"oooooooooooooooo");
+    console.log(data,"data");
+    console.log(user,"user");
     setMessages((prevMessages) => [
         ...prevMessages,
         { message: data.message,avatarId:data.avatarId, user: user }
       ]);
+      console.log(messages);
 }
 
 async function handleSendMessage(e){
@@ -176,7 +180,7 @@ const hangup = async  ()=>{
       await channel.current.leave();
       await rtmClient.current.logout()
       await rtcClient.current.leave();
-      await stopStream(id)
+      await stopStream({streamID:id})
       dispatch(removeStreamState())
       window.location.assign('/home');
     } catch (error) {
@@ -378,7 +382,7 @@ async function leaveStream(){
         await channel.current.leave();
         await rtmClient.current.logout()
         await rtcClient.current.leave();
-        await exitStream(id)
+        await exitStream({streamID:id})
         navigate('/home')
         dispatch(removeStreamState())
     } catch (error) {
@@ -472,8 +476,8 @@ async function leaveStream(){
                     <div className="flex">
                     <Avatar name={streamData ? streamData.UserName : ''} className="flex-shrink-0" size="lg" 
                     src={streamData 
-                        && streamData.avtarId 
-                        ? `${CLOUDINARY_FETCH_URL}/${streamData.AvtarId}`
+                        && streamData.AvatarID
+                        ? `${CLOUDINARY_FETCH_URL}/${streamData.AvatarID}`
                         : undefined
                     }
                     />
@@ -481,7 +485,7 @@ async function leaveStream(){
                     </div>
                     <div className="ml-12">
                     <h1 className="ml-2">{streamData ? streamData.Title : ''}</h1>
-                    <h1 className="ml-2">{streamData ? streamData.Description : ''}</h1>
+                    <h1 className="ml-2">{streamData ? streamData.Discription : ''}</h1>
 
                     </div>
                 </div>
@@ -497,7 +501,7 @@ async function leaveStream(){
                          <div className="flex my-2" key={index}>
                             <Avatar name={msg.user} className="flex-shrink-0" size="sm"  
                       src={
-                        msg.avtarId ? `${CLOUDINARY_FETCH_URL}/${msg.avtarId}` : undefined
+                        msg.avatarId ? `${CLOUDINARY_FETCH_URL}/${msg.avatarId}` : undefined
                       }/>
                             <span className="text-small m-2">{msg.user}</span>
                             <span className="text-small text-default-400 m-2">{msg.message}</span>
