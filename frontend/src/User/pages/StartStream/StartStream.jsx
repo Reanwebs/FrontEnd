@@ -17,12 +17,13 @@ const StartStream = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading,setLoading] = useState(false)
     const userInfo  = useSelector((state) => state.auth.userInfo); 
+    console.log(userInfo,"user info")
     const [streamData,setStreamData] = useState({
         title:'',
         desciption:'',
         interest:'',
         thumbnail:'',
-        avatartId:userInfo.avatartId ? userInfo.avatartId : '',
+        avatartId:userInfo.avatarId ? userInfo.avatarId : '',
         userName:userInfo.userName
     })
    
@@ -56,7 +57,7 @@ const StartStream = ()=>{
            formData.append("upload_preset","reanconnect");
            const cloudRes = await axios.post("https://api.cloudinary.com/v1_1/dcv6mx1nk/image/upload",formData)
            console.log(cloudRes.data['public_id']);
-           await setStreamData({
+           setStreamData({
             ...streamData,
             thumbnail:cloudRes.data['public_id']
            })
@@ -70,6 +71,7 @@ const StartStream = ()=>{
             if(!streamData.title || !streamData.desciption || !streamData.interest) throw new Error("fill all fields")
             if(!selectedImage) throw new Error("please select a thumbnail for your stream")
             await addThumbnailHandler()
+        console.log(streamData,"stream data")
            const res = await streamStart(streamData).unwrap()
            console.log(res); 
            dispatch(setStreamState({status:true}))
