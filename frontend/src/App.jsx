@@ -31,7 +31,6 @@ function App() {
              <Route path='profile' element={<Profile/>}/>
              <Route path='schedule' element={<Schedule/>}/>
              <Route path='conference' element={<Conference/>}/>
-             <Route path='group' element={<Group/>}/>
              <Route path='messages'element={<Chat/>}/>
              <Route path='media-container/:id'element={<MediaContainer/>}/>
              <Route path='stream' element={<StartStream/>}/>

@@ -1,8 +1,8 @@
 import { useState,useEffect, useRef } from "react";
-// import AgoraRTM from "agora-rtm-sdk";
-// import { APP_ID } from "../../../utils/config/config";
-// import { useSelector } from 'react-redux';
-import { useGetLiveStreamsDataMutation } from "../../slices/api_slices/usersConferenceApi";
+import AgoraRTM from "agora-rtm-sdk";
+import { APP_ID } from "../../../utils/config/config";
+import { useSelector } from 'react-redux';
+import { useGetLiveStreamsDataMutation,useJoinStreamMutation } from "../../slices/api_slices/usersConferenceApi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setStreamState } from "../../slices/reducers/user_reducers/streamReducer";
@@ -12,6 +12,13 @@ import './RoomContainer.css'
 
 
 const RoomContainer = ()=>{
+
+  const [rooms,setRooms] = useState([])
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  
+
+  const [joinStream] = useJoinStreamMutation()
 
     // const userInfo  = useSelector((state) => state.auth.userInfo); 
    
@@ -24,13 +31,7 @@ const RoomContainer = ()=>{
    
 
 
-    // const RoomsCard = ()=>{
-    //     return (
-    //       rooms.map((room)=>
-
-    //       )
-    //     )
-    // }
+ 
     // useEffect(()=>{
     //    init()
     //   //  console.log(rooms,"roomssssssssss");
@@ -52,11 +53,11 @@ const RoomContainer = ()=>{
     //             const msgData = JSON.parse(message.text)
     //             console.log("messageData :",msgData);
     //             console.log("peerId :",peerId);
-    //             setRooms(msgData);
+    //             // setRooms(msgData);
 
     //             const count = await rtmClient.current.getChannelMemberCount([msgData.room])
     //             console.log("count of members!!!!!!!!!!!!!!!!",count);
-    //             // setRooms(count) 
+    //             setLoad(!load) 
                 
     //         } catch (error) {
     //             console.log(error);
@@ -73,12 +74,12 @@ const RoomContainer = ()=>{
     // }
 
 
-    const [rooms,setRooms] = useState([])
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+   
   
     async function joinStreamHandler(id){
       try {
+        const res = await joinStream({streamID:id})
+        console.log(res);
         dispatch(setStreamState({status:true}))
         navigate(`/live/${id}`)
       } catch (error) {
@@ -91,8 +92,8 @@ const RoomContainer = ()=>{
     async function getStreamsDataHandler(){
       try {
         const res = await getStreamsData().unwrap()
-        console.log(res,"response from streams");
-        setRooms(res)
+        console.log(res.Response,"response from streams");
+        setRooms(res.Response)
         
       } catch (error) {
         console.log(error);
@@ -113,21 +114,27 @@ const RoomContainer = ()=>{
           removeWrapper
           alt="Relaxing app background"
           className="z-0 w-full h-full object-cover"
-          src="../../../../streambgimage.jpg"
+          src={`${CLOUDINARY_FETCH_URL}/${room.ThubnailID}`}
         />
         <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
           <div className="flex flex-grow gap-2 items-center">
             <Image
               alt="Breathing app icon"
               className="rounded-full w-10 h-11 bg-black"
-              src="../../../../streambgimage.jpg"
+              src={room.AvatarID ?room.AvatarID : undefined }
             />
             <div className="flex flex-col">
-              <p className="text-tiny text-white/60">Ajith v</p>
-              <p className="text-tiny text-white/60">Some description</p>
+              <p className="text-tiny text-white/60">{room.UserName}</p>
+              <p className="text-tiny text-white/60">{room.Title}</p>
+              <p className="text-tiny text-white/60">{room.Discription}</p>
+
             </div>
           </div>
-          <Button radius="full" color="" size="sm">Join</Button>
+          <Button 
+           onClick={()=>{
+             joinStreamHandler(room.StreamID)
+           }}
+          radius="full" color="" size="sm">Join</Button>
         </CardFooter>
       </Card>
       </div>
@@ -143,14 +150,14 @@ const RoomContainer = ()=>{
         <div className="card_header">
          <h1 className="card_title">now streaming </h1>
         </div>
-        {rooms.length > 0
+        {rooms
         ? 
-        <div className="max-w-[900px] gap-2 grid grid-cols-12 grid-rows-2 px-8">
+        <div className="max-w-[900px] gap-2 grid grid-cols-2 grid-rows-2 px-8">
         <RoomCards/>  
         </div>
         :
         <div className="flex justify-center">
-           <h1 className="card_title">No Ongoing Streams</h1>
+           <h1 className="font-semibold text-2xl m-12">No Ongoing Streams</h1>
         </div>
        }
       
