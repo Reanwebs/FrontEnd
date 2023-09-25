@@ -106,6 +106,8 @@ const RoomContainer = ()=>{
 
     const RoomCards = ()=>{
       return(
+        rooms.map((room,idx)=>
+        <div key={idx}>
         <Card isFooterBlurred className="w-full h-[300px] col-span-12 sm:col-span-7 ">
         <Image
           removeWrapper
@@ -128,6 +130,9 @@ const RoomContainer = ()=>{
           <Button radius="full" color="" size="sm">Join</Button>
         </CardFooter>
       </Card>
+      </div>
+        )
+        
       )
     }
 
@@ -138,10 +143,17 @@ const RoomContainer = ()=>{
         <div className="card_header">
          <h1 className="card_title">now streaming </h1>
         </div>
-        
-       <div className="max-w-[900px] gap-2 grid grid-cols-12 grid-rows-2 px-8">
-          <RoomCards/>  
-          </div>
+        {rooms.length > 0
+        ? 
+        <div className="max-w-[900px] gap-2 grid grid-cols-12 grid-rows-2 px-8">
+        <RoomCards/>  
+        </div>
+        :
+        <div className="flex justify-center">
+           <h1 className="card_title">No Ongoing Streams</h1>
+        </div>
+       }
+      
        </div>
        </section>
         </>

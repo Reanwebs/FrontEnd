@@ -470,17 +470,19 @@ async function leaveStream(){
                 </div>
                 <div className="h-1/3 pt-12 pl-4">
                     <div className="flex">
-                    <Avatar name={streamData ? streamData.userName : ''} className="flex-shrink-0" size="lg" 
+                    <Avatar name={streamData ? streamData.UserName : ''} className="flex-shrink-0" size="lg" 
                     src={streamData 
                         && streamData.avtarId 
-                        ? `${CLOUDINARY_FETCH_URL}/${streamData.avtarId}`
+                        ? `${CLOUDINARY_FETCH_URL}/${streamData.AvtarId}`
                         : undefined
                     }
                     />
-                    <h1 className="font-bold m-2">{streamData ? streamData.userName : ''}</h1>
+                    <h1 className="font-bold m-2">{streamData ? streamData.UserName : ''}</h1>
                     </div>
                     <div className="ml-12">
-                    <h1 className="ml-2">{streamData ? streamData.description : ''}</h1>
+                    <h1 className="ml-2">{streamData ? streamData.Title : ''}</h1>
+                    <h1 className="ml-2">{streamData ? streamData.Description : ''}</h1>
+
                     </div>
                 </div>
                 </div>

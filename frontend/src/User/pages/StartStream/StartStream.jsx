@@ -19,10 +19,10 @@ const StartStream = ()=>{
     const userInfo  = useSelector((state) => state.auth.userInfo); 
     const [streamData,setStreamData] = useState({
         title:'',
-        desciption:'',
+        description:'',
         interest:'',
         thumbnail:'',
-        avatartId:userInfo.avatartId ? userInfo.avatartId : '',
+        avatarId:userInfo.avatarId ? userInfo.avatarId : '',
         userName:userInfo.userName
     })
    
@@ -73,10 +73,10 @@ const StartStream = ()=>{
            const thumbnail = await addThumbnailHandler()
            const data = {
             title:streamData.title,
-            desciption:streamData.desciption,
+            description:streamData.description,
             interest:streamData.interest,
             thumbnail:thumbnail,
-            avatartId:streamData.avatartId,
+            avatarId:streamData.avatarId,
             userName:streamData.userName
            }
            const res = await streamStart(data).unwrap()
