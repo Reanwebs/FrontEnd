@@ -17,6 +17,7 @@ const StartStream = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading,setLoading] = useState(false)
     const userInfo  = useSelector((state) => state.auth.userInfo); 
+    console.log(userInfo,"user info")
     const [streamData,setStreamData] = useState({
         title:'',
         description:'',
@@ -56,7 +57,7 @@ const StartStream = ()=>{
            formData.append("upload_preset","reanconnect");
            const cloudRes = await axios.post("https://api.cloudinary.com/v1_1/dcv6mx1nk/image/upload",formData)
            console.log(cloudRes.data['public_id']);
-           await setStreamData({
+           setStreamData({
             ...streamData,
             thumbnail:cloudRes.data['public_id']
            })
