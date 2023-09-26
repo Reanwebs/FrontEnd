@@ -12,6 +12,7 @@ import MediaContainer from './User/components/MediaContainer/MediaContainer'
 import LiveContainer from './User/components/LiveContainer/LiveContainer'
 import StartStream from './User/pages/StartStream/StartStream'
 import ParticipantContainer from './User/components/LiveContainer/liveContainerTemplate'
+import VideoUploadPage from './User/pages/VideoUploadPage/VideoUpload'
 
 import AdminLayout from './Admin/pages/AdminLayout'
 import AdminLogin from './Admin/pages/loginPage/AdminLogin'
@@ -36,6 +37,7 @@ function App() {
              <Route path='stream' element={<StartStream/>}/>
              <Route path='live/:id' element={<LiveContainer/>}/>
              <Route path='go/:id' element={<ParticipantContainer/>}/>
+             <Route path='upload' element={<VideoUploadPage/>}/>
 
            </Route>
         </Route>
