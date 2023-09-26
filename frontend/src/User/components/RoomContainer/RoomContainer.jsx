@@ -145,7 +145,7 @@ const RoomContainer = ()=>{
 
     return (
         <>
-       <section className="h-screen">
+       <section className="h-fit">
       <div className="m-4">
         <div className="card_header">
          <h1 className="card_title">now streaming </h1>
