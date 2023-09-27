@@ -74,7 +74,7 @@ const Group = () => {
 	    GroupName : Group.GroupName,   
 	    GroupAvatarID: Group.GroupAvatarID
     }
-    console.log(Group,"group")
+    setChatHistory([]);
     createGroupChatHandler(createChatReq)
     getGroupChatHandler(getChatReq)
     setSelectedGroup(Group);

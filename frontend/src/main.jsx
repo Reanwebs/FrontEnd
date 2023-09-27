@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     {/* <React.StrictMode>    */}
       <GoogleOAuthProvider clientId='42993781130-vbhpj9he4ij3s2uf7lerk03o07uf7o9o.apps.googleusercontent.com'>   
         <BrowserRouter>
-        <main className=" dark text-foreground bg-[#080219]">
+        <main className=" dark text-foreground bg-[#080219] ">
           <App />
           <ToastContainer/>
         </main>
