@@ -23,14 +23,30 @@ const createApiMutation = (builder,endpoint,url,method)=>{
       }),
     });
   };
+
+  const createApiQueryForId =(builder, endpoint, url) => {
+    return builder.mutation({
+      query: (data) => ({
+        url: `${STREAM_URL}/${url}`,
+        method: 'GET',
+        params: `?id=${data}`,
+      }),
+    });
+  };
   export const streamApiSlice = apiSlice.injectEndpoints({
     endpoints:(builder)=>({
      uploadVideo:createApiMutation(builder,'uploadVideo','upload','POST'),
-     getUserVideos:createApiGetQuery(builder,'getUserVideos','user-videos','GET')
+     getUserVideos:createApiGetQuery(builder,'getUserVideos','user-videos','GET'),
+     getStreamedVideos:createApiMutation(builder,'getStreamedVideos','list-all','GET'),
+     manageVideo:createApiMutation(builder,'manageVideo','archive-video','POST'),
+     getVideoDetailsById:createApiQueryForId(builder,'getVideoDetailsById','get-by-id','GET')
     })
   }) 
 
   export const {
     useUploadVideoMutation,
-    useGetUserVideosMutation
+    useGetUserVideosMutation,
+    useGetStreamedVideosMutation,
+    useManageVideoMutation,
+    useGetVideoDetailsByIdMutation
   } = streamApiSlice

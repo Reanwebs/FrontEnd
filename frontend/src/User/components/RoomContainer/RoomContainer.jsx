@@ -11,6 +11,7 @@ import { Card,CardFooter,CardHeader,Button,Image } from "@nextui-org/react";
 import './RoomContainer.css'
 
 
+
 const RoomContainer = ()=>{
 
   const [rooms,setRooms] = useState([])
@@ -121,7 +122,7 @@ const RoomContainer = ()=>{
             <Image
               alt="Breathing app icon"
               className="rounded-full w-10 h-11 bg-black"
-              src={room.AvatarID ?room.AvatarID : undefined }
+              src={room.AvatarID ?`${CLOUDINARY_FETCH_URL}/${room.AvatarID}` : undefined }
             />
             <div className="flex flex-col">
               <p className="text-tiny text-white/60">{room.UserName}</p>
@@ -152,7 +153,7 @@ const RoomContainer = ()=>{
         </div>
         {rooms
         ? 
-        <div className="max-w-[900px] gap-2 grid grid-cols-2 grid-rows-2 px-8">
+        <div className="flex px-8 overflow-y-auto stream_container">
         <RoomCards/>  
         </div>
         :

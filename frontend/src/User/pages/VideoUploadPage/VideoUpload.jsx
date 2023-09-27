@@ -80,7 +80,7 @@ const VideoUploadPage = ()=>{
             data.append("description",videoData.description)
             data.append("userName",videoData.userName)
             data.append("avatarId",videoData.avatarId)
-            data.append("thumbnail",cloudRes.data['public_id'])
+            data.append("thumbnailId",cloudRes.data['public_id'])
             data.append("interest",videoData.interest)
             const res = await uploadVideo(data).unwrap()
             console.log(res);

@@ -5,6 +5,7 @@ import axios from "axios";
 import {toast} from 'react-toastify'
 import { useCreateCommunityMutation ,useSearchUserMutation} from "../../slices/api_slices/usersCommunitySlice";
 import { useNavigate } from "react-router-dom";
+import { CLOUDINARY_UPLOAD_URL } from "../../../utils/config/config";
 
 
 const Create = () => {
@@ -62,7 +63,7 @@ const Create = () => {
         const formData = new FormData();
        formData.append("file",selectedImage);
        formData.append("upload_preset","reanconnect");
-       const cloudRes = await axios.post("https://api.cloudinary.com/v1_1/dcv6mx1nk/image/upload",formData)
+       const cloudRes = await axios.post(CLOUDINARY_UPLOAD_URL,formData)
        console.log(cloudRes,"cloud response");
        console.log(cloudRes.data['public_id']);
         setCommunity({
