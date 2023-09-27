@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useSelector } from 'react-redux';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -7,31 +7,49 @@ import { faSmile } from '@fortawesome/free-solid-svg-icons';
 const Public = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
   const userName = userInfo.userName;
+  const messageHistoryRef = useRef(null);
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const socket = new WebSocket(`ws://localhost:5053/ws/public`);
 
-  useEffect(() => {
-    socket.onmessage = (event) => {
-      const receivedMessage = event.data;
-      setChatHistory((prevHistory) => [
-        ...prevHistory,
-        { text: receivedMessage },
-      ]);
-    };
-  }, [socket]);
+  useEffect(()=>{
+    socket.addEventListener('message', handleReceivedMessage);
+  },[chatHistory])
+
+  const handleReceivedMessage = (event) => {
+    if (event.data.startsWith('{')) {
+      const receivedMessage = JSON.parse(event.data);
+      console.log(receivedMessage,"recieved message");
+        setChatHistory((prevHistory) => [
+            ...prevHistory,
+            {
+                user: receivedMessage.user,
+                text: receivedMessage.text,
+            },
+        ]);
+        scrollToBottom();
+    } else {
+      console.log("Received plain text message:", event.data);
+    }
+  };
+
 
   const handleSendMessage = () => {
     if (message.trim() === '') {
       return;
     }
-    socket.send(message);
+    const messageObject = {
+      user: userName,
+      text: message, 
+    };
+    socket.send(JSON.stringify(messageObject));
     setChatHistory((prevHistory) => [
       ...prevHistory,
       { user:userInfo.userName, text: message },
     ]);
     setMessage('');
+    scrollToBottom();
   };
 
   const handleKeyDown = (e) => {
@@ -41,8 +59,13 @@ const Public = () => {
   };
 
   const insertEmoji = (emoji) => {
-    console.log(emoji,"emoji")
     setMessage(message + emoji.native);
+  };
+
+  const scrollToBottom = () => {
+    if (messageHistoryRef.current) {
+      messageHistoryRef.current.scrollTop = messageHistoryRef.current.scrollHeight;
+    }
   };
 
   return (
@@ -53,13 +76,14 @@ const Public = () => {
         </div>
         <p>Let's Chat to the world</p>
       </div>
-      <div className="public-chat-box" onClick={() =>setShowEmojiPicker(false)}>
+      <div className="public-chat-box" onClick={() =>setShowEmojiPicker(false)} ref={messageHistoryRef}>
         {chatHistory.map((message, index) => (
-          <div
+        <div
           key={index}
           className={`message-bubble ${message.user === userInfo.userName ? 'sent-bubble' : 'received-bubble'}`}
-        >
-          {message.text}
+        > 
+          {message.user !== userInfo.userName && (<div className="message-user">{message.user}</div>)}
+          <div className="message-text">{message.text}</div>
         </div>
         ))}
       </div>

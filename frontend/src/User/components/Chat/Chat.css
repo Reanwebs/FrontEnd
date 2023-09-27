@@ -301,3 +301,10 @@ background-color: transparent;
 .user-info {
     background-color: #000;
 }
+
+.message-user {
+  font-weight:lighter; 
+  color: #555;
+  size: 1px;
+}
+
