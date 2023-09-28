@@ -16,10 +16,10 @@ const Conference =()=>{
     };
         return (
             <>
-              <div className="type-container">
+              <div className="type-container flex justify-center">
 
               <div
-                  className={`flex-item ${activeTab === 'join' ? 'active' : ''}`}
+                  className={`flex-item ${activeTab === 'join' ? 'active' : ''} ml-4` }
                   onClick={() => {
                     handleTabClick('join');
                   }}
@@ -28,14 +28,14 @@ const Conference =()=>{
                 </div>
 
                 <div
-                  className={`flex-item ${activeTab === 'private' ? 'active' : ''}`}
+                  className={`flex-item ${activeTab === 'private' ? 'active' : ''} ml-4`}
                   onClick={() => {
                     handleTabClick('private');
                   }}
                 >
                   <p>Start Private Conference</p>
                 </div>
-                <div
+                {/* <div
                   className={`flex-item ${activeTab === 'group' ? 'active' : ''}`}
                   onClick={() => {
                     handleTabClick('group');
@@ -50,7 +50,7 @@ const Conference =()=>{
                   }}
                 >
                   <p>Start Public Conference</p>
-                </div>
+                </div> */}
 
                 
               </div>
@@ -62,7 +62,7 @@ const Conference =()=>{
                 {activeTab === 'private' && <Private/>}
               </div>
         
-              <div className={`conference-body ${activeTab === 'group' ? 'active' : ''}`}>
+              {/* <div className={`conference-body ${activeTab === 'group' ? 'active' : ''}`}>
                 {activeTab === 'group' &&   <Group/>}
               </div>
         
@@ -72,7 +72,7 @@ const Conference =()=>{
 
               <div className={`conference-body ${activeTab === 'broadcast' ? 'active' : ''}`}>
                 {activeTab === 'broadcast' && <Broadcast/>}
-              </div>
+              </div> */}
             </>
         );
    

@@ -70,7 +70,7 @@ const Private = () => {
   const getInterestHandler = async ()=>{
     try {
       const res = await getInterest().unwrap();
-      setInterest(res.interests)
+      setInterest(res.Interests)
     } catch (error) {
       toast.error(error.data.message || error.message)
       
@@ -123,7 +123,7 @@ const Private = () => {
                 ))}
               </Select>
         </div>
-        <div className="m-4 ">
+        <div className="m-4 " hidden>
           <label>
             <Checkbox
               type="checkbox"

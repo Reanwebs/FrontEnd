@@ -33,6 +33,7 @@ export const userApliSlice = apiSlice.injectEndpoints({
     forgotPasswordValidateOtp:createApiMutation(builder,'forgotPasswordValidateOtp','forgot-pass-validate','POST'),
     forgotPasswordChangePassword:createApiMutation(builder,'forgotPasswordChangePassword','forgot-pass-reset','PATCH'),
     userGetInterests:createApiMutation(builder,'getInterests','get-interests','GET'),
+    getUserDetails:createApiMutation(builder,'getUserDetails','get-user-details','GET')
     
   })
 })
@@ -58,5 +59,6 @@ export const {
   useForgotPasswordValidateOtpMutation,
   useForgotPasswordChangePasswordMutation,
   useUserGetInterestsMutation,
+  useGetUserDetailsMutation
 } = userApliSlice
 
