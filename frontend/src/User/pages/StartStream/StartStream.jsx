@@ -43,7 +43,8 @@ const StartStream = ()=>{
       const getInterestHandler = async ()=>{
         try {
           const res = await getInterest().unwrap();
-          setInterest(res.interests)
+          console.log(res,"interesttssa");
+          setInterest(res.Interests)
         } catch (error) {
           toast.error(error.data.message || error.message)
           

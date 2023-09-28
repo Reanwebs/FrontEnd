@@ -16,14 +16,16 @@ const createApiMutation = (builder,endpoint,url,method)=>{
     endpoints:(builder)=>({
         createWallet:createApiMutation(builder,'createWallet','create-wallet','POST'),
         updateWallet:createApiMutation(builder,'updateWallet','update-wallet','PUT'),
-        rewardUser:createApiMutation(builder,'rewardUser','participent-reward','POST')
+        rewardUser:createApiMutation(builder,'rewardUser','participent-reward','POST'),
+        getWallet:createApiMutation(builder,'getWallet','get-wallet','GET')
     })
   })
 
   export const {
      useCreateWalletMutation,
      useUpdateWalletMutation,
-     useRewardUserMutation
+     useRewardUserMutation,
+     useGetWalletMutation
   }=
   monetizationApiSlice
 

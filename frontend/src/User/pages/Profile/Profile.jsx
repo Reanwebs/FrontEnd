@@ -15,6 +15,7 @@ import {Spinner} from "@nextui-org/react";
 import { CLOUDINARY_FETCH_URL,CLOUDINARY_UPLOAD_URL } from "../../../utils/config/config";
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 import { useNavigate } from "react-router-dom";
+import { useGetUserDetailsMutation } from "../../slices/api_slices/usersApiSlice";
 
 
 const Profile = ()=>{
@@ -29,8 +30,25 @@ const Profile = ()=>{
 
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
     const [deleteAvatar,{isLoading:deleteLoading}]=useDeleteAvatarMutation()
+    const [getUserDetails] = useGetUserDetailsMutation()
   
     const dispatch = useDispatch()
+
+
+    useEffect(()=>{
+
+        async function getUserDetailsHandler(){
+            try {
+                const res = await getUserDetails().unwrap()
+                console.log(res,"user details");
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getUserDetailsHandler()
+
+    },[])
 
 
    

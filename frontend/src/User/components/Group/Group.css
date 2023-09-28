@@ -123,7 +123,7 @@ select {
     margin-right: 5px;
 } */
   
-button {
+.button {
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;

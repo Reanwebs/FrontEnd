@@ -1,6 +1,6 @@
 .type-container {
     display: flex;
-    justify-content: space-between; 
+    justify-content: center; 
     background-color: transparent;
     padding: 20px; 
     margin-top: 1%;
