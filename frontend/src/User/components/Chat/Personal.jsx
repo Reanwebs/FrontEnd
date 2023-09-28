@@ -6,25 +6,38 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
+import getChat from '../../slices/api_slices/chatApiSlice';
+
 
 
 const Personal = () => {
+  const userAuthCookie = getCookie('user-auth');
   const userInfo = useSelector(state => state.auth.userInfo)
   const userName = userInfo.userName;
   const socket = new WebSocket(`ws://localhost:5053/ws`);
   const [selectedUser, setSelectedUser] = useState({}); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
-  const [getChat] = useGetChatMutation()
+  // const [getChat] = useGetChatMutation()
   const [createChat] = useCreateChatMutation()
   const [getChatHistory] = useGetChatHistoryMutation()
   const [users, setUser] = useState([])
   const messageHistoryRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
+  
+  function getCookie(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(`${cookieName}=`)) {
+        return cookie.substring(cookieName.length + 1);
+      }
+    }
+    return null;
+  }
 
   useEffect(()=>{
-    getChatHandler()
+    getChatHandler(userAuthCookie)
   },[])
 
   useEffect(()=>{
@@ -37,14 +50,14 @@ const Personal = () => {
       messageHistoryRef.current.scrollTop = messageHistoryRef.current.scrollHeight;
     }
   };
-  const getChatHandler = async ()=>{
+  const getChatHandler = async (userAuthCookie)=>{
      try {
-      const chatRes = await getChat()
-      console.log(chatRes);
-      setUser(chatRes.data)
-     } catch (error) {
+      const chatRes = await getChat(userAuthCookie)
+      console.log(chatRes,"response");
+      setUser(chatRes)
+    } catch (error) {
       console.log(error);
-     }
+    }
   }
 
   const createChatHandler = async (chatreq) => { 
