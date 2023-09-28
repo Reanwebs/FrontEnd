@@ -1,17 +1,58 @@
 import React, { useState } from "react";
-
+import { 
+  useJoinCommunityMutation,
+  useLeaveCommunityMutation
+} from '../../slices/api_slices/usersCommunitySlice';
 import {Card, CardHeader, CardBody, CardFooter, Avatar, Button} from "@nextui-org/react";
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
+import { useSelector } from 'react-redux';
+import {toast} from "react-toastify"
 
-export default function CommunityCard({communities}) {
-  const [isFollowed, setIsFollowed] = React.useState(false);
-   console.log(communities);
 
+export default function CommunityCard({communities,setStatus,status,choice}) {
+  console.log(status,"value statuss");
+
+  const [joinCommunity] = useJoinCommunityMutation();
+  const [leaveCommunity] = useLeaveCommunityMutation()
+  const userInfo = useSelector((state)=> state.auth.userInfo)
+
+  
+  const joinCommunityHandler = async (id)=>{
+    try {
+      const data = {
+        communityId:id,
+        message:`Hi I'm ${userInfo.userName}`
+      }
+      const res = await joinCommunity(data).unwrap()
+      setStatus(!status)
+      toast.success(res.message)
+      
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const leaveCommunityHandler = async (id)=>{
+    try {
+      const data = {
+        communityId:id,
+      }
+      const res = await leaveCommunity(data).unwrap()
+      setStatus(!status)
+      toast.success(res.message)
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   return (
     <>
     {communities.map((community)=>
-    <>
-        <Card className="max-w-[340px] m-2" key={community?.id}>
+    <>  
+       <div key={community?.id}>
+        <Card className="max-w-[340px] m-2" >
         <CardHeader className="justify-between">
           <div className="flex gap-5">
             <Avatar isBordered radius="full" name={community.communityName} size="md" 
@@ -39,15 +80,18 @@ export default function CommunityCard({communities}) {
             radius="full"
             size="sm"
             variant="bordered"
-            onPress={() => setIsFollowed(!isFollowed)}
+            onClick={()=>{
+              choice === "join" ? joinCommunityHandler(community.id) : leaveCommunityHandler(community.id)
+            }}
           >
-            Join
+            {choice}
           </Button>
           </div>
           </div>
          
         </CardFooter>
       </Card>
+      </div>
 
       </>
     )}
