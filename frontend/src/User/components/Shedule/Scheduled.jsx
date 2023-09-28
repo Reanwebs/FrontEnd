@@ -1,7 +1,8 @@
-import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Divider, Image} from "@nextui-org/react";
 import { useState,useEffect } from "react";
 import { useScheduledConferenceMutation } from "../../slices/api_slices/usersConferenceApi";
 import {toast} from 'react-toastify'
+import { Link } from "react-router-dom";
 
 
 const Scheduled =()=>{
@@ -18,7 +19,7 @@ const Scheduled =()=>{
     try {
       const data = await scheduledConference().unwrap();
       console.log(data,"oooooooooooooooooooo");
-      setScheduledData(data.data)
+      setScheduledData(data.ScheduledConference)
       console.log(scheduledData);
     } catch (error) {
       console.log(error);
@@ -41,10 +42,10 @@ const Scheduled =()=>{
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                  <p>Type : Private</p>
+                  <p>Type :Private</p>
                   <p>Interest: {data?.Interest}</p>
                   <p>Partcipant Limit: {data?.ParticipantLimit}</p>
-                  <p>Schedulr Id : {data?.ScheduleID}</p>
+                  <p>ScheduleID  : {data?.ScheduleID}</p>
                   <p>Chat : {data?.Chat}</p>
                   <p>Duration : {`${data?.Durations} mins`}</p>
                   <p>Date : {data?.date}</p>
@@ -52,7 +53,7 @@ const Scheduled =()=>{
                 </CardBody>
                 <Divider />
                 <CardFooter>
-                  <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">
+                  <Link color="primary" to={`/media-container/${data?.ScheduleID}`}>
                     Start Conference
                   </Link>
                 </CardFooter>

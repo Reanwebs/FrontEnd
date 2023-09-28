@@ -20,13 +20,7 @@ const Groups = () => {
       
     } catch (error) {
       console.log(error);
-      toast.warn(<div>
-        <p>User is trying to join.</p>
-        <Button color="primary" className='m-2' variant="flat" size='sm' >Accept</Button>
-        <Button color="primary"  variant="flat" size='sm'>Reject</Button>
-      </div>,{
-        autoClose:false
-      });
+      toast.error("error in fetching communities")
       
     }
   }
@@ -35,9 +29,38 @@ const Groups = () => {
 
   return (
    
-      <div className='h-screen'>
-        <div className='flex overflow-x-hidden justify-center whitespace-nowrap gap-4'>
-        <CommunityCard communities={communities}/>
+      <div className='h-fit'>
+        <div className=''>
+       <div className="m-4">
+         <div className="card_header">
+          <h1 className="card_title">Active Communities</h1>
+         </div>
+         {communities.length > 0 ?
+         <div className="flex px-8 overflow-y-auto stream_container">
+         <CommunityCard communities={communities}/>
+         </div>
+         :
+         <div className="flex justify-center">
+         <h1 className="font-semibold text-2xl m-12">No Active Communities</h1>
+         </div>
+         }
+        </div>
+        </div>
+        <div className=''>
+       <div className="m-4">
+         <div className="card_header">
+          <h1 className="card_title">Joined Communities</h1>
+         </div>
+         {communities.length > 0 ?
+         <div className="flex px-8 overflow-y-auto stream_container">
+         <CommunityCard communities={communities}/>
+         </div>
+         :
+         <div className="flex justify-center">
+         <h1 className="font-semibold text-2xl m-12">No Joined Communities</h1>
+         </div>
+         }
+        </div>
         </div>
        
       </div>

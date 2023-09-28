@@ -7,10 +7,11 @@ import React,{useState,useEffect} from "react";
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 import { useSearchUserMutation } from "../../slices/api_slices/usersCommunitySlice";
 import { useCreateChatMutation } from "../../slices/api_slices/chatApiSlice";
+import {BsCoin} from "react-icons/bs"
 
 
 
-export default function HomeNavbar({userInfo,logoutHandler}) {
+export default function HomeNavbar({userInfo,logoutHandler,coins}) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [searchValue,setSearchValue] = useState('')
@@ -43,6 +44,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
         setUsers([])
       }
     } catch (error) {
+      setUsers([])
        console.log(error);
     }
   }
@@ -67,7 +69,7 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
           {users.map((user)=>
             <div className="flex items-center justify-between  m-2"key={user.id}>
               <div className="flex">
-              <Avatar alt={user.userName} className="flex-shrink-0" size="md" src={userInfo.avatarId ?`${CLOUDINARY_FETCH_URL}/${user.avatarId}` : undefined} />
+              <Avatar alt={user.userName} className="flex-shrink-0" size="md" src={user.avatarId ?`${CLOUDINARY_FETCH_URL}/${user.avatarId}` : undefined} />
             <div className="flex items-center">
               <span className="text-small ml-2">{user.userName}</span>
             </div>
@@ -170,6 +172,9 @@ export default function HomeNavbar({userInfo,logoutHandler}) {
         
         <Button className="wallet-button" style={{ backgroundColor: 'transparent'}}>
           <p>Wallet</p>
+          <BsCoin color="#e27b05"/>
+          <p>{coins}</p>
+
         </Button>
           
         <Dropdown placement="bottom-end" className="dark text-foreground bg-background">

@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect ,lazy,Suspense} from "react";
 import { useSelector } from "react-redux";
 import {Avatar} from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -8,23 +8,54 @@ import UserNumberModal from "../ChangeNumberModal/ChangeNumberModal";
 import UserPasswordModal from "../ChangePasswordModal/ChangePasswordModal";
 import axios from "axios";
 import { useChangeAvatarMutation,useDeleteAvatarMutation } from "../../slices/api_slices/usersApiSlice";
-import { toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {Spinner} from "@nextui-org/react";
-import RecordedVideos from "../../components/UserFeed/UserFeed";
 import { CLOUDINARY_FETCH_URL,CLOUDINARY_UPLOAD_URL } from "../../../utils/config/config";
+import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
+import { useNavigate } from "react-router-dom";
+import { useGetUserDetailsMutation } from "../../slices/api_slices/usersApiSlice";
+
+
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
+    const userInfo  = useSelector((state) => state.auth.userInfo); 
+    const RecordedVideos = lazy(()=> import("../../components/UserFeed/UserFeed"))
+
+
+    
+    const navigate = useNavigate()
+
+
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
     const [deleteAvatar,{isLoading:deleteLoading}]=useDeleteAvatarMutation()
+    const [getUserDetails] = useGetUserDetailsMutation()
+  
     const dispatch = useDispatch()
 
+
+    useEffect(()=>{
+
+        async function getUserDetailsHandler(){
+            try {
+                const res = await getUserDetails().unwrap()
+                console.log(res,"user details");
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getUserDetailsHandler()
+
+    },[])
+
+
+   
     useEffect(()=>{
 
     },[selectedImage])
  
-     const userInfo  = useSelector((state) => state.auth.userInfo); 
 
      const addProfileImageHandler = async ()=>{
         try {
@@ -49,6 +80,9 @@ const Profile = ()=>{
         }
       }
 
+     
+
+      
       const removeAvatarHandler = async ()=>{
         try {
            const res = await deleteAvatar().unwrap()
@@ -66,6 +100,8 @@ const Profile = ()=>{
             toast.error(error?.message || error?.data?.message)
         }
     }
+
+   
     return (
      <>
      <section className="h-screen">
@@ -91,7 +127,7 @@ const Profile = ()=>{
                 </label>    
                 </div> 
             </div>
-             <div className="flex justify-center">
+             <div className=" justify-center">
                 {selectedImage &&
                 <>
                 <Button color="#01c8ef" onClick={()=>{
@@ -141,13 +177,15 @@ const Profile = ()=>{
             </>
             }
         </div>
-        
+        <Button color="primary" variant="bordered" onClick={()=>navigate('/upload')}>
+            Upload Video
+        </Button>
     </div>
-    
-    </section>
-    <section>
-    <div>
-          <RecordedVideos/> 
+    <div className="">
+        <Suspense fallback={<HomeSkeleton/>}>
+             <RecordedVideos/> 
+        </Suspense>
+          
      </div>
     </section>
     </>

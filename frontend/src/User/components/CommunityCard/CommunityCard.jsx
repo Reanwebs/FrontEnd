@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import {Card, CardHeader, CardBody, CardFooter, Avatar, Button} from "@nextui-org/react";
+import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 
 export default function CommunityCard({communities}) {
   const [isFollowed, setIsFollowed] = React.useState(false);
@@ -10,13 +11,13 @@ export default function CommunityCard({communities}) {
     <>
     {communities.map((community)=>
     <>
-        <Card className="max-w-[340px]" key={community?.id}>
+        <Card className="max-w-[340px] m-2" key={community?.id}>
         <CardHeader className="justify-between">
           <div className="flex gap-5">
             <Avatar isBordered radius="full" name={community.communityName} size="md" 
                 src={
                     community?.communityAvatar 
-                    && `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${community?.communityAvatar}` 
+                    && `${CLOUDINARY_FETCH_URL}/${community?.communityAvatar}` 
 
                     }/>
             <div className="flex flex-col gap-1 items-start justify-center">
@@ -26,22 +27,25 @@ export default function CommunityCard({communities}) {
           </div>
         </CardHeader>
         <CardFooter className="gap-3">
+          <div className="flex justify-between">
           <div className="flex gap-1">
             <p className="font-semibold text-default-400 text-small">{community.memberCount}</p>
             <p className="text-default-400 text-small">Memebers</p>
           </div>
-          <div className="">
+          <div className="flex justify-end">
           <Button
-            className={isFollowed ? "bg-transparent text-foreground border-default-200" : ""}
+            className= "bg-blue-700 text-foreground border-default-200 ml-16"
             color="primary"
             radius="full"
             size="sm"
-            variant={isFollowed ? "bordered" : "solid"}
+            variant="bordered"
             onPress={() => setIsFollowed(!isFollowed)}
           >
-            {isFollowed ? "Join" : "Exit"}
+            Join
           </Button>
           </div>
+          </div>
+         
         </CardFooter>
       </Card>
 

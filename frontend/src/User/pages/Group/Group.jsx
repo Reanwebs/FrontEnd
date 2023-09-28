@@ -1,8 +1,13 @@
 import "./Group.css"
-import CommunityHead from "../../components/Group/CommunityHead";
-import CommunityFeed from "../../components/Group/CommunityFeed";
-import ActiveCommunity from "../../components/Group/ActiveCommunity";
-import RecentFeed from "../../components/Group/RecentConferences";
+// import CommunityHead from "../../components/Group/CommunityHead";
+// import CommunityFeed from "../../components/Group/CommunityFeed";
+// import ActiveCommunity from "../../components/Group/ActiveCommunity";
+// import RecentFeed from "../../components/Group/RecentConferences";
+import Groups from "../../components/Group/Groups";
+import Create from "../../components/Group/Create";
+import {useNavigate} from "react-router-dom"
+import { useState } from "react";
+
 const Group =()=>{
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('communities'); 
@@ -15,7 +20,8 @@ const Group =()=>{
         <>
         <div className="h-screen">
          <div className="type-container justify-center ">
-          <div className={`flex-item ${activeTab === 'communities' ? 'active' : ''} mx-12`}
+          <div   className={`flex-item ${activeTab === 'communities' ? 'active' : ''} mx-12`}
+                 style={{cursor:'pointer'}}
                   onClick={() => {
                     handleTabClick('communities');
                   }}>
@@ -23,6 +29,7 @@ const Group =()=>{
           </div >
 
           <div className={`flex-item ${activeTab === 'create' ? 'active' : ''} mx-12`}
+                 style={{cursor:'pointer'}}
                   onClick={() => {
                     handleTabClick('create');
                   }}>
