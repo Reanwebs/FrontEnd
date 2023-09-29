@@ -8,13 +8,14 @@ import { useNavigate ,Navigate, Outlet} from "react-router-dom";
 import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
+import { Cookies } from "react-cookie";
 
 
 
 const UserPrivateRoute  = ()=>{
+    const cookie = new Cookies()
+    const authCookie = cookie.get("user-auth")
     const userInfo  = useSelector((state) => state.auth.userInfo); 
-    const cookie = document.cookie;
-    console.log(cookie,"cookies");
     const [logOut,{isLoading}] = useLogoutMutation()
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -22,8 +23,7 @@ const UserPrivateRoute  = ()=>{
     const [getWallet] = useGetWalletMutation()
     const [status,setStatus] = useState(false)
     const [coins,setCoins] = useState('')
-    
-   
+
 
     useEffect(()=>{
         vaidateUserStatus();
@@ -32,6 +32,11 @@ const UserPrivateRoute  = ()=>{
 
     const vaidateUserStatus = async ()=>{
         try {
+            if(!authCookie ){
+               dispatch(removeCredentials());
+               setStatus(!status)
+               navigate('/')
+            }
             if(userInfo){
                 const res = await vaidateUser({email:userInfo.email}).unwrap();
                 if(res.isBlocked){
@@ -41,7 +46,6 @@ const UserPrivateRoute  = ()=>{
                     navigate('/')
                 }
             }
-            
         } catch (err) {
             toast.error(err.message)
         }

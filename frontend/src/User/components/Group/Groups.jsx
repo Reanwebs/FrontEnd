@@ -36,6 +36,8 @@ const Groups = () => {
      const res = await getCommunity().unwrap();
      if(res.community){
       setCommunities(res.community)
+     }else{
+      setCommunities([])
      }
     } catch (error) {
       console.log(error);
@@ -49,7 +51,10 @@ const Groups = () => {
       const res = await joinedCommunity().unwrap()
       if(res.community){
         setJoinedCommunities(res.community)
+      }else{
+        setJoinedCommunities([])
       }
+      
     } catch (error) {
       console.log(error);
     }
