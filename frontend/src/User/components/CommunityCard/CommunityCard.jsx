@@ -7,14 +7,19 @@ import {Card, CardHeader, CardBody, CardFooter, Avatar, Button} from "@nextui-or
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 import { useSelector } from 'react-redux';
 import {toast} from "react-toastify"
+import { RingLoader } from 'react-spinners';
+import { useNavigate } from "react-router-dom";
+
 
 
 export default function CommunityCard({communities,setStatus,status,choice}) {
-  console.log(status,"value statuss");
+  
 
-  const [joinCommunity] = useJoinCommunityMutation();
-  const [leaveCommunity] = useLeaveCommunityMutation()
+  const [joinCommunity,{isLoading:joinLoading}] = useJoinCommunityMutation();
+  const [leaveCommunity,{isLoading:leaveLoading}] = useLeaveCommunityMutation()
   const userInfo = useSelector((state)=> state.auth.userInfo)
+
+  const navigate = useNavigate()
 
   
   const joinCommunityHandler = async (id)=>{
@@ -49,9 +54,20 @@ export default function CommunityCard({communities,setStatus,status,choice}) {
   
   return (
     <>
-    {communities.map((community)=>
+      {joinLoading||leaveLoading ? <div className="w-full flex justify-center h-200ox">
+            <div className="">
+              <RingLoader color="#1bacbf"/>
+            </div>
+          </div>
+         :(
+    communities.map((community,idx)=>
     <>  
-       <div key={community?.id}>
+       <div key={community.communityName}
+       style={{cursor:'pointer'}}
+       onClick={()=>{
+        navigate(`/community/${community.id}`)
+        }}
+       >
         <Card className="max-w-[340px] m-2" >
         <CardHeader className="justify-between">
           <div className="flex gap-5">
@@ -73,19 +89,19 @@ export default function CommunityCard({communities,setStatus,status,choice}) {
             <p className="font-semibold text-default-400 text-small">{community.memberCount}</p>
             <p className="text-default-400 text-small">Memebers</p>
           </div>
-          <div className="flex justify-end">
-          <Button
-            className= "bg-blue-700 text-foreground border-default-200 ml-16"
-            color="primary"
-            radius="full"
-            size="sm"
-            variant="bordered"
-            onClick={()=>{
-              choice === "join" ? joinCommunityHandler(community.id) : leaveCommunityHandler(community.id)
-            }}
-          >
-            {choice}
-          </Button>
+          <div className="flex flex-end ">
+                <Button
+                className= "bg-blue-700 text-foreground border-default-200 ml-16"
+                color="primary"
+                radius="full"
+                size="sm"
+                variant="bordered"
+                onClick={()=>{
+                  choice === "join" ? joinCommunityHandler(community.id) : leaveCommunityHandler(community.id)
+                }}
+              >
+                {choice}
+              </Button>
           </div>
           </div>
          
@@ -94,6 +110,7 @@ export default function CommunityCard({communities,setStatus,status,choice}) {
       </div>
 
       </>
+    )
     )}
     </>
   );

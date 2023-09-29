@@ -5,13 +5,16 @@ import { useNavigate ,Navigate,Outlet} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {removeCredentials} from "../../slices/reducers/adminAuthSlice"
 import { toast } from "react-toastify";
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import Sidebar from "../../components/SideBar/SideBar";
 import './AdminPrivateRoute.scss';
+import { Cookies } from "react-cookie";
 
 
 const AdminHome = ()=>{
     const adminInfo = useSelector((state)=> state.admin.adminInfo)
+    const cookies = new Cookies()
+    const adminAuth = cookies.get('admin-auth')
     const [logout] = useAdminLogoutMutation()
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -27,6 +30,14 @@ const AdminHome = ()=>{
   const handleToggleSidebar = (value) => {
     setToggled(value);
   };
+
+  useEffect(()=>{
+    if(!adminAuth){
+      dispatch(removeCredentials())
+      navigate('/admin')
+    }
+  },[])
+
     async function logoutHandler(){
         try {
             const res = await logout()

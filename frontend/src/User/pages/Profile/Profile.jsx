@@ -22,6 +22,7 @@ const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const userInfo  = useSelector((state) => state.auth.userInfo); 
     const RecordedVideos = lazy(()=> import("../../components/UserFeed/UserFeed"))
+    const [loading,setLoading] = useState(false)
 
 
     
@@ -59,13 +60,12 @@ const Profile = ()=>{
 
      const addProfileImageHandler = async ()=>{
         try {
+            setLoading(true)
             const formData = new FormData();
            formData.append("file",selectedImage);
            formData.append("upload_preset","reanconnect");
            const cloudRes = await axios.post(CLOUDINARY_UPLOAD_URL,formData)
-           console.log(cloudRes.data['public_id']);
            const res = await changeAvatar({avatarId:cloudRes.data['public_id']}).unwrap()
-            console.log(res);
             const data = {
                 userName:res.username,
                 email:res.email,
@@ -74,7 +74,8 @@ const Profile = ()=>{
               }
             dispatch(setCredentials({ ...data }));
             setSelectedImage(null)
-            toast.success(res.message)    
+            toast.success(res.message)   
+            setLoading(false) 
         } catch (error) {
             toast.error(error?.message || error?.data?.message)
         }
@@ -86,7 +87,6 @@ const Profile = ()=>{
       const removeAvatarHandler = async ()=>{
         try {
            const res = await deleteAvatar().unwrap()
-            console.log(res);
             const data = {
                 userName:res.username,
                 email:res.email,
@@ -105,7 +105,7 @@ const Profile = ()=>{
     return (
      <>
      <section className="h-screen">
-        <div className="profile-container bg-gray-800 bg-opacity-10 m-12" >
+        <div className="bg-gray-800 bg-opacity-10 m-12" >
         <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-max mt-12 ">
             <div className="md:flex justify-center items-center">
                 <div className="md:shrink-0 relative mt-3">
@@ -127,7 +127,7 @@ const Profile = ()=>{
                 </label>    
                 </div> 
             </div>
-             <div className=" justify-center">
+             <div className="justify-center">
                 {selectedImage &&
                 <>
                 <Button color="#01c8ef" onClick={()=>{
@@ -147,7 +147,7 @@ const Profile = ()=>{
                 <Button color="#db2777" onClick={()=>{
                     removeAvatarHandler()
                 }}  variant="flat" style={{ color: "#db2777" }}
-                isLoading={ deleteLoading ? <Spinner /> : false}
+                isLoading={ loading ? <Spinner /> : false}
                 >delete</Button>
                  }
                 </div>

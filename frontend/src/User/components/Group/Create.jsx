@@ -20,8 +20,9 @@ const Create = () => {
   const [user,setUser] = useState('')
 
   const [selectedImage,setSelectedImage] = useState(null)
-  const [createCommunity,{isLoading}] = useCreateCommunityMutation()
+  const [createCommunity] = useCreateCommunityMutation()
   const [searchUser]  = useSearchUserMutation()
+  const [loading,setLoading] = useState(false)
   
 
   const searchUserhandler = async ()=>{
@@ -37,11 +38,21 @@ const Create = () => {
  
   const createCommunityHandler = async()=>{
     try {
+      setLoading(true)
       if(!community.communityName || !community.description || !community.joinedType) throw new Error('please fill all fields')
+      let communityImage=''
       if(selectedImage){
-        await addCommunityImageHandler();  
+        communityImage= await addCommunityImageHandler();  
       }
-      const res = await createCommunity(community).unwrap();
+     
+      const data ={
+        communityImage:communityImage,
+        communityName:community.communityName,
+        description:community.description,
+        joinedType:community.joinedType,
+        members:community.members
+      }
+      const res = await createCommunity(data).unwrap();
       toast.success(res.message)
       setCommunity({
         communityImage:'',
@@ -51,9 +62,11 @@ const Create = () => {
         members:[]
       })
       setSelectedImage(null)
+      setLoading(false)
     } catch (error) {
       toast.error(error?.message || error?.data?.message)
       console.log(error);
+      setLoading(false)
       
     }
   }
@@ -66,12 +79,9 @@ const Create = () => {
        const cloudRes = await axios.post(CLOUDINARY_UPLOAD_URL,formData)
        console.log(cloudRes,"cloud response");
        console.log(cloudRes.data['public_id']);
-        setCommunity({
-        ...community,
-        communityImage:cloudRes.data['public_id']
-       })
+       return cloudRes.data['public_id'];
     } catch (error) {
-
+        
         toast.error(error?.message || error?.data?.message)
     }
   }
@@ -104,7 +114,6 @@ const Create = () => {
                 {selectedImage &&
                 <>
                 <Button color="default" onClick={()=>{
-                    console.log(selectedImage);
                     setSelectedImage(null)
                 }} 
                 variant="#db2777"
@@ -183,7 +192,7 @@ const Create = () => {
               />          
             </div> */}
             <div className="m-2 items-center">
-              <Button color="primary"  variant="flat" onClick={createCommunityHandler} isLoading={isLoading}>
+              <Button color="primary"  variant="flat" onClick={createCommunityHandler} isLoading={loading}>
                 Create
               </Button>
             </div>
