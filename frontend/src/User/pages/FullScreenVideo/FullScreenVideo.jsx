@@ -83,10 +83,11 @@ const FullScreenVideo = ()=>{
         async function toggleStarHandler(){
           try {
             const data = {
-              starred:videos.isStarred ? videos.isStarred : false,
+              starred:videos.isStarred ? videos.isStarred : true,
               userName:userInfo.userName,
               videoId:videos.VideoId.toString()
             }
+            console.log(data,"hhhhhhhhhhhhhhhhh");
              await toggleStar(data).unwrap()
             setIsStarred(!isStarred)
           } catch (error) {

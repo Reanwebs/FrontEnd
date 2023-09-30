@@ -271,49 +271,34 @@ h2{
 
 /* Why Choose */
 
-.why-choose {
+.why-choose{
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-style: normal;
   font-weight: bolder;
-  background-color: transparent;
-  color: white;
-  padding: 40px;
-  border-radius: 10px;
-  text-align: center;
+  background-color: transparent; 
+  color: #fff; 
+  padding: 40px; 
+  border-radius: 10px; 
+  text-align: center; 
 }
 
 .why-choose h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: 28px; 
+  margin-bottom: 20px; 
 }
 
 .why-choose ul {
-  list-style-type: none;
-  padding: 0;
+  list-style-type: none; 
+  padding: 0; 
 }
 
 .why-choose li {
-  display: flex;
-  align-items: center; 
-  margin-bottom: 15px;
-  background-color: #080219; 
-  border-radius: 10px; 
-  padding: 15px; 
-  transition: background-color 0.3s ease; 
+  margin-bottom: 25px; 
 }
 
 .why-choose li span {
-  font-size: 24px;
-  margin-right: 10px;
-}
-
-.why-choose li:hover {
-  background-color: #101b37;
-  border-radius: 5px;
-}
-
-.why-choose li p {
-  margin: 0;
+  font-size: 24px; 
+  margin-right: 10px; 
 }
 
 
@@ -343,7 +328,7 @@ h2{
 }
 
 .why-right-choice li {
-  margin-bottom: 15px; 
+  margin-bottom: 25px; 
 }
 
 .why-right-choice li span {
