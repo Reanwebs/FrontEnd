@@ -26,10 +26,10 @@ const createApiMutation = (builder,endpoint,url,method)=>{
 
   const createApiQueryForId =(builder, endpoint, url) => {
     return builder.mutation({
-      query: (data) => ({
+      query: ({id,userName}) => ({
         url: `${STREAM_URL}/${url}`,
         method: 'GET',
-        params: `?id=${data}`,
+        params: `?id=${id}&userName=${userName}`,
       }),
     });
   };

@@ -31,8 +31,10 @@ const UserPrivateRoute  = ()=>{
     },[status])
 
     const vaidateUserStatus = async ()=>{
+        console.log("ok i was called !!!!!!!!out side auth!!!! cookie");
         try {
             if(!authCookie ){
+               console.log("ok i was called in side auth cookie");
                dispatch(removeCredentials());
                setStatus(!status)
                navigate('/')
@@ -74,7 +76,7 @@ const UserPrivateRoute  = ()=>{
         }
 
     return (
-       userInfo 
+       userInfo && authCookie
        ?(
         <>  
         <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} coins={coins} />
