@@ -14,6 +14,7 @@ import StartStream from './User/pages/StartStream/StartStream'
 import ParticipantContainer from './User/components/LiveContainer/liveContainerTemplate'
 import VideoUploadPage from './User/pages/VideoUploadPage/VideoUpload'
 import FullScreenVideo from './User/pages/FullScreenVideo/FullScreenVideo'
+import CommunityDetail from './User/components/CommunityDetail/CommunityDetail'
 
 import AdminLayout from './Admin/pages/AdminLayout'
 import AdminLogin from './Admin/pages/loginPage/AdminLogin'
@@ -41,6 +42,8 @@ function App() {
              <Route path='go/:id' element={<ParticipantContainer/>}/>
              <Route path='upload' element={<VideoUploadPage/>}/>
              <Route path='video/:id'element={<FullScreenVideo/>} />
+             <Route path='community/:id'element={<CommunityDetail/>} />
+
 
            </Route>
         </Route>

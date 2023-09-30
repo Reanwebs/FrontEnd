@@ -11,12 +11,12 @@ const createApiMutation = (builder,endpoint,url,method)=>{
     })
   }
 
- const createApiGetQuery = (builder, endpoint, url) => {
+ const createApiGetQuery = (builder, endpoint, url,params) => {
     return builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/${url}`,
         method: 'GET',
-        params: `?userName=${data}`,
+        params: `${params}${data}`,
       }),
     });
   };
@@ -25,7 +25,13 @@ const createApiMutation = (builder,endpoint,url,method)=>{
     endpoints:(builder)=>({
         createCommunity:createApiMutation(builder,'createCommunity','create-community','POST'),
         getAllActiveCommunity:createApiMutation(builder,'getAllActiveCommunity','get-active-community','GET'),
-        searchUser:createApiGetQuery(builder,'searchUser','get-user-by-name')
+        searchUser:createApiGetQuery(builder,'searchUser','get-user-by-name','?userName='),
+        getUserJoinedCommunity:createApiMutation(builder,'getUserJoinedCommunity','get-joined-community','GET'),
+        joinCommunity:createApiMutation(builder,'joinCommunity','join-community','PATCH'),
+        leaveCommunity:createApiMutation(builder,'leaveCommunity','leave-community','PATCH'),
+        searchCommunity:createApiGetQuery(builder,'searchCommunity','search-community','?communityName='),
+        getCommunityDetail:createApiGetQuery(builder,'getCommunityDetail','get-community-by-id','?communityId=')
+
     })
     
   })
@@ -33,5 +39,10 @@ const createApiMutation = (builder,endpoint,url,method)=>{
   export const {
     useCreateCommunityMutation,
     useGetAllActiveCommunityMutation,
-    useSearchUserMutation
+    useSearchUserMutation,
+    useGetUserJoinedCommunityMutation,
+    useJoinCommunityMutation,
+    useLeaveCommunityMutation,
+    useSearchCommunityMutation,
+    useGetCommunityDetailMutation
 } = userCommunitySlice

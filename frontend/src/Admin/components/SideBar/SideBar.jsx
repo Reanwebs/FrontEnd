@@ -73,9 +73,9 @@ const Sidebar = ({
           <MenuItem icon={<BsVectorPen />}>
            Interests <NavLink to="/admin/interests" />
           </MenuItem>
-          {/* <MenuItem icon={< FaUsers />}>
+          <MenuItem icon={< FaUsers />}>
            Communities <NavLink to="/admin/community" />
-          </MenuItem> */}
+          </MenuItem>
         </Menu>
       </SidebarContent>
     </ProSidebar>

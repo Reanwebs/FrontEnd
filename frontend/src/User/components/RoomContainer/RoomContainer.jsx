@@ -109,19 +109,19 @@ const RoomContainer = ()=>{
     const RoomCards = ()=>{
       return(
         rooms.map((room,idx)=>
-        <div key={idx}>
-        <Card isFooterBlurred className="w-full h-[300px] col-span-12 sm:col-span-7 ">
+        <div key={idx} className="ml-4">
+        <Card isFooterBlurred className="w-[380px] h-[300px] col-span-12 sm:col-span-7 ">
         <Image
           removeWrapper
           alt="Relaxing app background"
-          className="z-0 w-full h-full object-cover"
+          className="z-0 object-fit"
           src={`${CLOUDINARY_FETCH_URL}/${room.ThubnailID}`}
         />
         <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100">
           <div className="flex flex-grow gap-2 items-center">
             <Image
               alt="Breathing app icon"
-              className="rounded-full w-10 h-11 bg-black"
+              className="rounded-full w-10 h-11 bg-black "
               src={room.AvatarID ?`${CLOUDINARY_FETCH_URL}/${room.AvatarID}` : undefined }
             />
             <div className="flex flex-col">
