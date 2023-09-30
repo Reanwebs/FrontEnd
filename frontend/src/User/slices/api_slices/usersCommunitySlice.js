@@ -30,7 +30,10 @@ const createApiMutation = (builder,endpoint,url,method)=>{
         joinCommunity:createApiMutation(builder,'joinCommunity','join-community','PATCH'),
         leaveCommunity:createApiMutation(builder,'leaveCommunity','leave-community','PATCH'),
         searchCommunity:createApiGetQuery(builder,'searchCommunity','search-community','?communityName='),
-        getCommunityDetail:createApiGetQuery(builder,'getCommunityDetail','get-community-by-id','?communityId=')
+        getCommunityDetail:createApiGetQuery(builder,'getCommunityDetail','get-community-by-id','?communityId='),
+        removeMember:createApiMutation(builder,'removeMember','remove-member','PATCH'),
+        addMember:createApiMutation(builder,'addMember','add-member','POST'),
+        deleteCommunity:createApiMutation(builder,'deleteCommunity','delete-community','PATCH')
 
     })
     
@@ -44,5 +47,8 @@ const createApiMutation = (builder,endpoint,url,method)=>{
     useJoinCommunityMutation,
     useLeaveCommunityMutation,
     useSearchCommunityMutation,
-    useGetCommunityDetailMutation
+    useGetCommunityDetailMutation,
+    useRemoveMemberMutation,
+    useAddMemberMutation,
+    useDeleteCommunityMutation
 } = userCommunitySlice

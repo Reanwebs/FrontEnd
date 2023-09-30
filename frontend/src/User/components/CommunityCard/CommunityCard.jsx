@@ -3,7 +3,7 @@ import {
   useJoinCommunityMutation,
   useLeaveCommunityMutation
 } from '../../slices/api_slices/usersCommunitySlice';
-import {Card, CardHeader, CardBody, CardFooter, Avatar, Button} from "@nextui-org/react";
+import {Card, CardHeader, Chip, CardFooter, Avatar, Button} from "@nextui-org/react";
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 import { useSelector } from 'react-redux';
 import {toast} from "react-toastify"
@@ -62,7 +62,7 @@ export default function CommunityCard({communities,setStatus,status,choice}) {
          :(
     communities.map((community,idx)=>
     <>  
-       <div key={community.communityName}
+       <div key={community.id}
        style={{cursor:'pointer'}}
        onClick={()=>{
         navigate(`/community/${community.id}`)
@@ -90,6 +90,9 @@ export default function CommunityCard({communities,setStatus,status,choice}) {
             <p className="text-default-400 text-small">Memebers</p>
           </div>
           <div className="flex flex-end ">
+              {community?.isAdmin ? 
+               <Chip color="success" className="ml-12 sm:ml-4 md:ml-6" variant="bordered">Admin</Chip>
+            :
                 <Button
                 className= "bg-blue-700 text-foreground border-default-200 ml-16"
                 color="primary"
@@ -102,6 +105,8 @@ export default function CommunityCard({communities,setStatus,status,choice}) {
               >
                 {choice}
               </Button>
+              }
+                
           </div>
           </div>
          
