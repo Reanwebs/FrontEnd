@@ -187,7 +187,15 @@ const Personal = () => {
               >
                 <div className="userlist-container" onClick={() =>setShowEmojiPicker(false)}>
                   <div className="user-avatar">
-                    <img src={user?.AvatarID && `${CLOUDINARY_FETCH_URL}/${user.AvatarID}`} alt={`avatar`} />
+                    {user.AvatarID ? (
+                      <img src={`${CLOUDINARY_FETCH_URL}/${user.AvatarID}`} alt={`avatar`} 
+                      onError={(e) => {
+                        e.target.src = 'default-avatar.jpg';
+                      }}
+                      />
+                    ) : (
+                      <img src="default-avatar.jpg" alt="Default Avatar" />
+                    )}
                   </div>
                   <div className="user-info">
                     <span className="user-name">{user.RecipientName}</span>
@@ -209,7 +217,13 @@ const Personal = () => {
           <div className='selected-chat-box'>
             <div className='chat-box-head'>
             <div className="user-avatar">
-                    <img src={selectedUser?.AvatarID && `${CLOUDINARY_FETCH_URL}/${selectedUser.AvatarID}`} alt={`avatar`} />
+            <img
+              src={selectedUser?.AvatarID ? `${CLOUDINARY_FETCH_URL}/${selectedUser.AvatarID}` : 'default-avatar.jpg'}
+              alt={`avatar`}
+              onError={(e) => {
+                e.target.src = 'default-avatar.jpg';
+              }}
+            />
             </div>
             <div>
             {selectedUser.RecipientName}

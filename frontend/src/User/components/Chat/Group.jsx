@@ -145,7 +145,11 @@ const Group = () => {
             >
               <div className="userlist-container" onClick={() =>setShowEmojiPicker(false)}>
                   <div className="user-avatar">
-                    <img src={Group?.AvatarID && `${CLOUDINARY_FETCH_URL}/${Group.AvatarID}`} alt={`avatar`} />
+                   {Group.AvatarID ? (
+                      <img src={`${CLOUDINARY_FETCH_URL}/${Group.AvatarID}`} alt={`avatar`} />
+                    ) : (
+                      <img src="default-group-avatar.jpg" alt="Default Avatar" />
+                    )}
                   </div>
                   <div className="user-info">
                     <span className="user-name">{Group.GroupID}</span>
@@ -165,7 +169,13 @@ const Group = () => {
           <div className='selected-chat-box'>
             <div className='chat-box-head'>
             <div className="user-avatar">
-                    <img src={selectedGroup?.AvatarID && `${CLOUDINARY_FETCH_URL}/${selectedGroup.AvatarID}`} alt={`avatar`} />
+              <img 
+              src={selectedGroup?.AvatarID ? `${CLOUDINARY_FETCH_URL}/${selectedGroup.AvatarID}` : 'default-group-avatar.jpg'}
+              alt={`avatar`}
+              onError={(e) => {
+                e.target.src = 'default-group-avatar.jpg';
+              }}
+              />
             </div>
             <div>
             {selectedGroup.GroupID}
@@ -187,15 +197,18 @@ const Group = () => {
             </div>
             <div className="message-input">
                <button className="add-icon-button"onClick={() =>setShowEmojiPicker(!showEmojiPicker)}><FontAwesomeIcon icon={faSmile} /></button>
-               <div className="emoji-picker-container">
-                  {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
-               </div>
+                {selectedGroup.Permission && (
+                  <div className="emoji-picker-container">
+                    {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
+                  </div>
+                )}
                <input className='message-input-field'
                 type="text"
-                placeholder="Type your message..."
+                placeholder={selectedGroup.Permission? "Type your message...": "You can't send messages here."}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
+                disabled={!selectedGroup.Permission}
                />
                <button className="message-send-button"onClick={handleSendMessage}>Send</button>
             </div>           
