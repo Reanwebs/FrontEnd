@@ -50,7 +50,7 @@ const AdminHome = ()=>{
     }
 
     return (
-        adminInfo ? (
+        adminInfo && adminAuth ? (
             <>
             <AdminHomeNavbar adminInfo={adminInfo} logoutHandler={logoutHandler} />
             <div className={`app ${toggled ? 'toggled' : ''}`}>

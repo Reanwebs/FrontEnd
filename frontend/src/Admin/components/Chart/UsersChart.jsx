@@ -11,7 +11,6 @@ const UsersChart = ()=>{
     useEffect(() => {
         const getAllUsers = async () => {
           const data = await getUsers().unwrap()
-          console.log(data,"datass");
           if(data){
             const userData = data?.users
             let Active = 0
