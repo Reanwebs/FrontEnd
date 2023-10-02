@@ -40,7 +40,8 @@ const createApiMutation = (builder,endpoint,url,method)=>{
      getStreamedVideos:createApiMutation(builder,'getStreamedVideos','list-all','GET'),
      manageVideo:createApiMutation(builder,'manageVideo','archive-video','POST'),
      getVideoDetailsById:createApiQueryForId(builder,'getVideoDetailsById','get-by-id','GET'),
-     toggleStar:createApiMutation(builder,'toggleStar','star','PATCH')
+     toggleStar:createApiMutation(builder,'toggleStar','star','PATCH'),
+     reportVideo:createApiMutation(builder,'reportVideo','report-video','PUT')
     })
   }) 
 
@@ -50,5 +51,6 @@ const createApiMutation = (builder,endpoint,url,method)=>{
     useGetStreamedVideosMutation,
     useManageVideoMutation,
     useGetVideoDetailsByIdMutation,
-    useToggleStarMutation
+    useToggleStarMutation,
+    useReportVideoMutation
   } = streamApiSlice

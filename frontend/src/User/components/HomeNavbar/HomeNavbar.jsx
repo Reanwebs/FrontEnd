@@ -251,7 +251,7 @@ async function searchCommunityHandler() {
         </Button> 
         </NavbarItem>   
         
-        <Button className="wallet-button" style={{ backgroundColor: 'transparent'}}>
+        <Button className="wallet-button" style={{ backgroundColor: 'transparent'}} onClick={()=>navigate('/wallet')}>
           <p>Wallet</p>
           <BsCoin color="#e27b05"/>
           <p>{coins}</p>

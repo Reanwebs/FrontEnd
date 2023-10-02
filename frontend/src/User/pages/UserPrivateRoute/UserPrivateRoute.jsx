@@ -9,6 +9,7 @@ import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice"
 import {  useDispatch } from 'react-redux';
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 import { Cookies } from "react-cookie";
+import Footer from "../../components/Footer/Footer";
 
 
 
@@ -80,9 +81,8 @@ const UserPrivateRoute  = ()=>{
        ?(
         <>  
         <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} coins={coins} />
-        <div className="h-fit">
         <Outlet />
-        </div>
+        <Footer/>
        
         </>
        )

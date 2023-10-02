@@ -13,7 +13,7 @@ import {
   FaUsers
 } from 'react-icons/fa';
 
-import {BsFillPersonFill,BsVectorPen} from 'react-icons/bs'
+import {BsFillPersonFill,BsVectorPen,BsExclamationTriangle} from 'react-icons/bs'
 import './SideBar.css'
 import { useState } from 'react';
 
@@ -75,6 +75,9 @@ const Sidebar = ({
           </MenuItem>
           <MenuItem icon={< FaUsers />}>
            Communities <NavLink to="/admin/community" />
+          </MenuItem>
+          <MenuItem icon={< BsExclamationTriangle />}>
+           Reports <NavLink to="/admin/report" />
           </MenuItem>
         </Menu>
       </SidebarContent>

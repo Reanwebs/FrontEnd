@@ -22,7 +22,8 @@ function GoogleAuth(){
         email:res.email,
         phoneNumber:res.phoneNumber,
         isGooleLogin:true,
-        avatarId:res?.avatarId
+        avatarId:res?.avatarId,
+        referralCode:res?.referralCode
       }
       dispatch(setCredentials({ ...data }));
       navigate('/home')
