@@ -60,7 +60,8 @@ export default function LoginModal() {
           userName:res.username,
           email:res.email,
           phoneNumber:res.phoneNumber,
-          avatarId:res?.avatarId
+          avatarId:res?.avatarId,
+          referralCode:res?.referralCode
         }
         dispatch(setCredentials({ ...data }));
         navigate('/home')

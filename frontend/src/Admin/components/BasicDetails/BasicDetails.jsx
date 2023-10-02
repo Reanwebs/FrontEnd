@@ -30,7 +30,7 @@ const BasicDetails = ()=>{
         getCount()
     },[])
     return(
-        <div className="flex flex-wrap  mb-4">
+        <div className="flex flex-wrap justify-center mb-4">
      
         <div className="md:w-1/2 lg:w-1/4 w-full p-2">
           <div className="shadow-md flex  items-center justify-evenly h-16 rounded bg-gray-100 dark:bg-gray-800">

@@ -89,7 +89,7 @@ const CommunityTable = ()=>{
                     <td className="px-6 py-4">
                       {x.communityName}
                     </td>
-                    <td className="px-6 py-4">{x.communtyAdmin}</td>
+                    <td className="px-6 py-4">{x.communityAdmin}</td>
                     <td className="px-6 py-4">{x.memberCount}</td>
                     <td className="px-6 py-4">
                         <Chip className="capitalize"  color={x.isActive ? "success" : "danger"} size="sm" variant="flat">
