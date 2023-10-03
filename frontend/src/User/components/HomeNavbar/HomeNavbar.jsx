@@ -22,6 +22,9 @@ export default function HomeNavbar({userInfo,logoutHandler,coins}) {
   const [communities,setCommunities] = useState([])
 
   const userName = userInfo.userName;
+
+
+ 
   
 
 
@@ -176,8 +179,10 @@ async function searchCommunityHandler() {
 
 
   return (
+  
     <Navbar className="home-navbar" isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-
+     
+      
       <NavbarContent className="md:hidden" justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
@@ -245,7 +250,8 @@ async function searchCommunityHandler() {
       <NavbarContent className="hidden md:flex items-center gap-12" as="div" justify="center"> 
       <NavbarItem>
         <Button color="primary" variant="bordered" onClick={()=>{
-          navigate('/stream')
+          // navigate('/stream')
+          setIsModalOpen(!isModalOpen)
         }}>
           Stream Now
         </Button> 
@@ -306,6 +312,6 @@ async function searchCommunityHandler() {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
-    </Navbar>
+    </Navbar> 
   );
 }
