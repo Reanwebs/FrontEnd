@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { Button ,Select,SelectItem,Input,Textarea,Checkbox} from "@nextui-org/react";
 import { useUserGetInterestsMutation } from "../../slices/api_slices/usersApiSlice";
 import { toast } from "react-toastify";
-import Options from '../Options/Options';
 
 
 
@@ -43,6 +42,9 @@ const Private = () => {
       if(!formData.title || !formData.description || !formData.interest || !formData.participantlimit){
         throw new Error('please enter all fileds')
       }
+      if(formData.participantlimit < 2){
+        throw new Error('participant limit must be greater that 1')
+      }
       const data = {
         title:formData.title,
         description:formData.description,
@@ -68,7 +70,7 @@ const Private = () => {
   const getInterestHandler = async ()=>{
     try {
       const res = await getInterest().unwrap();
-      setInterest(res.interests)
+      setInterest(res.Interests)
     } catch (error) {
       toast.error(error.data.message || error.message)
       
@@ -78,8 +80,6 @@ const Private = () => {
   
 
   return (
-    
-    
     <div className="flex flex-col items-center m-4">
       {!conferenceID ?
       <>
@@ -111,7 +111,7 @@ const Private = () => {
           <Select
             isRequired
             label='interests'
-            placeholder='select an interes'
+            placeholder='select an interest'
             className="w-full"
             onChange={handleChange}
             name='interest'
@@ -123,7 +123,7 @@ const Private = () => {
                 ))}
               </Select>
         </div>
-        <div className="m-4 ">
+        <div className="m-4 " hidden>
           <label>
             <Checkbox
               type="checkbox"
@@ -173,8 +173,6 @@ const Private = () => {
           </div>
 
       </>
-          
-
       }
       
     </div>

@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect ,lazy,Suspense} from "react";
 import { useSelector } from "react-redux";
 import {Avatar} from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -8,33 +8,65 @@ import UserNumberModal from "../ChangeNumberModal/ChangeNumberModal";
 import UserPasswordModal from "../ChangePasswordModal/ChangePasswordModal";
 import axios from "axios";
 import { useChangeAvatarMutation,useDeleteAvatarMutation } from "../../slices/api_slices/usersApiSlice";
-import { toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {Spinner} from "@nextui-org/react";
-import RecordedVideos from "../../components/UserFeed/UserFeed";
-import "./Profile.css"
+import { CLOUDINARY_FETCH_URL,CLOUDINARY_UPLOAD_URL } from "../../../utils/config/config";
+import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
+import { useNavigate } from "react-router-dom";
+import { useGetUserDetailsMutation } from "../../slices/api_slices/usersApiSlice";
+
+
+
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
+    const userInfo  = useSelector((state) => state.auth.userInfo); 
+    const RecordedVideos = lazy(()=> import("../../components/UserFeed/UserFeed"))
+    const [loading,setLoading] = useState(false)
+
+
+    
+    const navigate = useNavigate()
+
+
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
     const [deleteAvatar,{isLoading:deleteLoading}]=useDeleteAvatarMutation()
+    const [getUserDetails] = useGetUserDetailsMutation()
+  
     const dispatch = useDispatch()
 
+
+    useEffect(()=>{
+
+        async function getUserDetailsHandler(){
+            try {
+                const res = await getUserDetails().unwrap()
+                console.log(res,"user details");
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getUserDetailsHandler()
+
+    },[])
+
+
+   
     useEffect(()=>{
 
     },[selectedImage])
  
-     const userInfo  = useSelector((state) => state.auth.userInfo); 
 
      const addProfileImageHandler = async ()=>{
         try {
+            setLoading(true)
             const formData = new FormData();
            formData.append("file",selectedImage);
            formData.append("upload_preset","reanconnect");
-           const cloudRes = await axios.post("https://api.cloudinary.com/v1_1/dcv6mx1nk/image/upload",formData)
-           console.log(cloudRes.data['public_id']);
+           const cloudRes = await axios.post(CLOUDINARY_UPLOAD_URL,formData)
            const res = await changeAvatar({avatarId:cloudRes.data['public_id']}).unwrap()
-            console.log(res);
             const data = {
                 userName:res.username,
                 email:res.email,
@@ -43,16 +75,19 @@ const Profile = ()=>{
               }
             dispatch(setCredentials({ ...data }));
             setSelectedImage(null)
-            toast.success(res.message)    
+            toast.success(res.message)   
+            setLoading(false) 
         } catch (error) {
             toast.error(error?.message || error?.data?.message)
         }
       }
 
+     
+
+      
       const removeAvatarHandler = async ()=>{
         try {
            const res = await deleteAvatar().unwrap()
-            console.log(res);
             const data = {
                 userName:res.username,
                 email:res.email,
@@ -66,10 +101,12 @@ const Profile = ()=>{
             toast.error(error?.message || error?.data?.message)
         }
     }
+
+   
     return (
      <>
      <section className="h-screen">
-        <div className="profile-container bg-gray-800 bg-opacity-10 m-12" >
+        <div className="bg-gray-800 bg-opacity-10 m-12" >
         <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-max mt-12 ">
             <div className="md:flex justify-center items-center">
                 <div className="md:shrink-0 relative mt-3">
@@ -84,14 +121,14 @@ const Profile = ()=>{
                                 selectedImage
                                 ? URL.createObjectURL(selectedImage)
                                 : userInfo.avatarId
-                                ? `https://res.cloudinary.com/dcv6mx1nk/image/upload/v1693938021/${userInfo.avatarId}`
+                                ? `${CLOUDINARY_FETCH_URL}/${userInfo.avatarId}`
                                 : undefined 
                             } className="w-20 h-20 text-large"
                         />
                 </label>    
                 </div> 
             </div>
-             <div className="flex justify-center">
+             <div className="justify-center">
                 {selectedImage &&
                 <>
                 <Button color="#01c8ef" onClick={()=>{
@@ -111,7 +148,7 @@ const Profile = ()=>{
                 <Button color="#db2777" onClick={()=>{
                     removeAvatarHandler()
                 }}  variant="flat" style={{ color: "#db2777" }}
-                isLoading={ deleteLoading ? <Spinner /> : false}
+                isLoading={ loading ? <Spinner /> : false}
                 >delete</Button>
                  }
                 </div>
@@ -141,13 +178,15 @@ const Profile = ()=>{
             </>
             }
         </div>
-        
+        <Button color="primary" variant="bordered" onClick={()=>navigate('/upload')}>
+            Upload Video
+        </Button>
     </div>
-    
-    </section>
-    <section>
-    <div>
-          <RecordedVideos/> 
+    <div className="">
+        <Suspense fallback={<HomeSkeleton/>}>
+             <RecordedVideos/> 
+        </Suspense>
+          
      </div>
     </section>
     </>

@@ -20,7 +20,9 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         manageInterest:createApiMutation(builder,'manageInterest','manage-inetrest','PATCH'),
         addInterest:createApiMutation(builder,'addInterest','add-interest','POST'),
         getUsers:createApiMutation(builder,'getUsers','get-users','GET'),
-        getInterests:createApiMutation(builder,'getInterests','get-interest','GET')
+        getInterests:createApiMutation(builder,'getInterests','get-interest','GET'),
+        getAllCommunities:createApiMutation(builder,'getAllCommunities','get-all-community','GET'),
+        manageCommunity:createApiMutation(builder,'manageCommunity','manage-community','POST'),
     })
 })
 
@@ -31,7 +33,9 @@ useManageUserMutation,
 useGetUsersMutation,
 useGetInterestsMutation,
 useManageInterestMutation,
-useAddInterestMutation
+useManageCommunityMutation,
+useAddInterestMutation,
+useGetAllCommunitiesMutation,
 } = adminApiSlice
 
 

@@ -2,28 +2,44 @@ import { useEffect,useState } from "react";
 import HomeNavbar from "../../components/HomeNavbar/HomeNavbar";
 import { useSelector } from 'react-redux';
 import { useLogoutMutation,useValidateUserStatusMutation } from "../../slices/api_slices/usersApiSlice";
+import { useGetWalletMutation } from "../../slices/api_slices/userMonetizationApiSlice";
 import {toast} from "react-toastify"
 import { useNavigate ,Navigate, Outlet} from "react-router-dom";
 import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
+import { Cookies } from "react-cookie";
+import Footer from "../../components/Footer/Footer";
+
 
 
 const UserPrivateRoute  = ()=>{
+    const cookie = new Cookies()
+    const authCookie = cookie.get("user-auth")
     const userInfo  = useSelector((state) => state.auth.userInfo); 
     const [logOut,{isLoading}] = useLogoutMutation()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [vaidateUser] = useValidateUserStatusMutation()
+    const [getWallet] = useGetWalletMutation()
     const [status,setStatus] = useState(false)
-   
+    const [coins,setCoins] = useState('')
+
 
     useEffect(()=>{
         vaidateUserStatus();
+        getWalletHandler()
     },[status])
 
     const vaidateUserStatus = async ()=>{
+        console.log("ok i was called !!!!!!!!out side auth!!!! cookie");
         try {
+            if(!authCookie ){
+               console.log("ok i was called in side auth cookie");
+               dispatch(removeCredentials());
+               setStatus(!status)
+               navigate('/')
+            }
             if(userInfo){
                 const res = await vaidateUser({email:userInfo.email}).unwrap();
                 if(res.isBlocked){
@@ -33,7 +49,6 @@ const UserPrivateRoute  = ()=>{
                     navigate('/')
                 }
             }
-            
         } catch (err) {
             toast.error(err.message)
         }
@@ -50,14 +65,24 @@ const UserPrivateRoute  = ()=>{
                 toast.error(err.message)
             }
         }
+
+        const getWalletHandler =async ()=>{
+            try {
+                const res = await getWallet().unwrap()
+                console.log(res,"user wallet data");
+                setCoins(res.Coins)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
     return (
-       userInfo 
+       userInfo && authCookie
        ?(
         <>  
-        <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} />
-        <div className="h-fit">
+        <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} coins={coins} />
         <Outlet />
-        </div>
+        <Footer/>
        
         </>
        )

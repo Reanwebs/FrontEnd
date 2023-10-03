@@ -3,6 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Chec
 import {  numberValidation, emailValidation, passwordValidation, otpValidation,cPasswordValidation} from "../../../utils/validation/useFormValidation";
 import {toast} from 'react-toastify'
 import { useRegisterMutation , useRequestOtpMutation ,useValidUserNameMutation,useResendOtpMutation} from "../../slices/api_slices/usersApiSlice";
+import { useCreateWalletMutation,useUpdateWalletMutation } from "../../slices/api_slices/userMonetizationApiSlice";
 import { useResendOtp } from "../../../utils/helperFunctions/useResendOtp";
 
 export default function SignupModal() {
@@ -41,6 +42,8 @@ export default function SignupModal() {
   const [requestOtp,{isLoading:otpLoading}] = useRequestOtpMutation();
   const [register,{isLoading:registerLoading}] = useRegisterMutation();
   const [resendOtp,{isLoading:resendOtpLoading}] = useResendOtpMutation()
+  const [createWallet] = useCreateWalletMutation();
+  const [updateWallet] = useUpdateWalletMutation()
 
 async function checkUserName(){
 
@@ -120,6 +123,7 @@ async function resendOtpHandler(){
     console.log(res);
 
   }catch(err){
+    toast.error(err?.data?.message || err?.message)
 
   }
 }
@@ -139,8 +143,21 @@ async function signupHandler(){
         otp :user.otp  
       }
       const res = await register(data).unwrap()
+      console.log(res,"res for signup");
+        await createWallet({userID:res.userId}).unwrap()
+  
+        if(res.reward){
+          const wallet = {
+            reason:"referral",
+            type:"credit",
+            userID:res.recipientId,
+            userName:res.recipientName
+          }
+          await updateWallet(wallet).unwrap()
+        }
       toast.success("account created successfully")
       toast.success("please login to continue")
+
       onClose()
       setUser({
         userName:'',

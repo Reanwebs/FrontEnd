@@ -1,20 +1,130 @@
-import React, { useState } from 'react';
-import "./Chat.css"
+import React, { useState,useEffect,useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { useGetChatMutation,useCreateChatMutation,useGetChatHistoryMutation} from '../../slices/api_slices/chatApiSlice';
+import {CLOUDINARY_FETCH_URL} from '../../../utils/config/config'
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSmile } from '@fortawesome/free-solid-svg-icons';
+import getChat from '../../slices/api_slices/chatApiSlice';
+
+
 
 const Personal = () => {
-  const [selectedUser, setSelectedUser] = useState(null); 
+  const userAuthCookie = getCookie('user-auth');
+  const userInfo = useSelector(state => state.auth.userInfo)
+  const userName = userInfo.userName;
+  const socket = new WebSocket(`ws://localhost:5053/ws`);
+  const [selectedUser, setSelectedUser] = useState({}); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
+  // const [getChat] = useGetChatMutation()
+  const [createChat] = useCreateChatMutation()
+  const [getChatHistory] = useGetChatHistoryMutation()
+  const [users, setUser] = useState([])
+  const messageHistoryRef = useRef(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  
+  function getCookie(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(`${cookieName}=`)) {
+        return cookie.substring(cookieName.length + 1);
+      }
+    }
+    return null;
+  }
 
-  const users = [
-    { id: 1, name: 'User 1' },
-    { id: 2, name: 'User 2' },
-    { id: 3, name: 'User 3' },
-  ];
+  useEffect(()=>{
+    getChatHandler(userAuthCookie)
+  },[])
+
+  useEffect(()=>{
+    socket.addEventListener('message', handleReceivedMessage);
+  },[chatHistory])
+
+  
+  const scrollToBottom = () => {
+    if (messageHistoryRef.current) {
+      messageHistoryRef.current.scrollTop = messageHistoryRef.current.scrollHeight;
+    }
+  };
+  const getChatHandler = async (userAuthCookie)=>{
+     try {
+      const chatRes = await getChat(userAuthCookie)
+      console.log(chatRes,"response");
+      setUser(chatRes)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const createChatHandler = async (chatreq) => { 
+    try {
+      const res = await createChat(chatreq); 
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getChatHistoryHandler = async (chatreq)=>{
+    try{
+      const res = await getChatHistory(chatreq)
+      console.log(res)
+      const mappedMessages = res.data.messages.map((message) => ({
+        user: message.UserName,
+        text: message.Text,
+      }));
+      setChatHistory([]);
+      setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
+      scrollToBottom();
+    }catch (error){
+      console.log(error)
+    }
+  }
+  
 
   const handleUserClick = (user) => {
+    const chatreq={
+      UserName : userName,
+      RecipientID: user.RecipientID
+    }
+    setChatHistory([]);
+    createChatHandler(chatreq)
+    getChatHistoryHandler(chatreq)
     setSelectedUser(user);
+    scrollToBottom();
     
+  };
+
+  const [online, setOnline] = useState(false);
+
+  
+
+  const handleReceivedMessage = (event) => {
+    if (event.data.startsWith('{')) {
+      const receivedMessage = JSON.parse(event.data);
+      console.log(receivedMessage,"recieved message");
+      
+      if (receivedMessage.type === "onlineStatus") {
+        const isOnline = receivedMessage.online;
+        setOnline(isOnline)
+      } else {
+        setChatHistory((prevHistory) => [
+            ...prevHistory,
+            {
+                user: receivedMessage.sender,
+                text: receivedMessage.text,
+            },
+        ]);
+        setOnline(true)
+        scrollToBottom();
+      }
+    } else {
+      console.log("Received plain text message:", event.data);
+    }
   };
 
 
@@ -22,53 +132,118 @@ const Personal = () => {
     if (message.trim() === '') {
       return; 
     }
-
-
+    
+    const messageObject = {
+      user: userName,
+      text: message,
+      recipient: selectedUser.RecipientID, 
+    };
+  
+    socket.send(JSON.stringify(messageObject));
+    
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { user: selectedUser, text: message },
+      { user: userInfo.userName, text: message},
     ]);
 
-  
+    const updatedUsers = users.filter((user) => user.RecipientID !== selectedUser.RecipientID);
+    setUser([users.find((user) => user.RecipientID === selectedUser.RecipientID), ...updatedUsers]);
+
+    scrollToBottom();
     setMessage('');
   };
 
+  const [isUserListOpen, setIsUserListOpen] = useState(false);
+  const toggleUserList = () => {
+    setIsUserListOpen(!isUserListOpen);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
+
+  const insertEmoji = (emoji) => {
+    console.log(emoji,"emoji")
+    setMessage(message + emoji.native);
+  };
+
+
   return (
     <div className="chat-container">
-      <div className="users-list">
-        <ul>
-          {users.map((user) => (
-            <li
-              key={user.id}
-              onClick={() => handleUserClick(user)}
-              className={selectedUser && selectedUser.id === user.id ? 'active' : ''}
-            >
-              {user.name}
-            </li>
-          ))}
-        </ul>
-      </div>
+      
+      <div className="users-list" onClick={() =>setShowEmojiPicker(false)}>
+          <div className='users-list-head'>
+          <button className="toggle-button" onClick={toggleUserList}>User List</button>
+          </div>
+   
+          <ul className={isUserListOpen ? 'open' : ''}>
+            {users !== null && users.map((user, index) => (
+              <li
+                key={index}
+                onClick={() => handleUserClick(user)}
+                className={selectedUser.RecipientName === user.RecipientName  ? 'active' : ''}
+              >
+                <div className="userlist-container" onClick={() =>setShowEmojiPicker(false)}>
+                  <div className="user-avatar">
+                    <img src={user?.AvatarID && `${CLOUDINARY_FETCH_URL}/${user.AvatarID}`} alt={`avatar`} />
+                  </div>
+                  <div className="user-info">
+                    <span className="user-name">{user.RecipientName}</span>
+                    <span className="last-seen">{user.lastSeen}</span>
+                    {user.unseenMessages > 0 && (
+                      <span className="unseen-messages">{user.unseenMessages} New</span>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
     
       <div className="chat-box">
-        {selectedUser ? (
-          <div>
-            <h2>Chat with {selectedUser.name}</h2>
-            <div className="message-history">
-              {chatHistory.map((message, index) => (
-                <div key={index} className="message">
-                  <strong>{message.user.name}:</strong> {message.text}
-                </div>
-              ))}
+        {selectedUser.RecipientName ? (
+        
+          <div className='selected-chat-box'>
+            <div className='chat-box-head'>
+            <div className="user-avatar">
+                    <img src={selectedUser?.AvatarID && `${CLOUDINARY_FETCH_URL}/${selectedUser.AvatarID}`} alt={`avatar`} />
+            </div>
+            <div>
+            {selectedUser.RecipientName}
+            <h6 style={{ color: 'grey' }}>{online ? "Online" : "Offline"}</h6>
+            </div>
+              
+            </div>
+
+            <div className="message-history" ref={messageHistoryRef} onClick={() =>setShowEmojiPicker(false)}>
+            {chatHistory.map((message, index) => (
+              
+              <div
+                key={index}
+                className={`message-bubble ${message.user === userInfo.userName ? 'sent-bubble' : 'received-bubble'}`}
+              >
+                {message.text}
+              </div>
+              
+            ))}
             </div>
             <div className="message-input">
-              <input
+              <button className="add-icon-button"onClick={() =>setShowEmojiPicker(!showEmojiPicker)}><FontAwesomeIcon icon={faSmile} /></button>
+              <div className="emoji-picker-container">
+                  {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
+              </div>
+              <input className='message-input-field'
                 type="text"
                 placeholder="Type your message..."
                 value={message}
+                onClick={() =>setShowEmojiPicker(false)}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
-              <button onClick={handleSendMessage}>Send</button>
+              <button className="message-send-button"onClick={handleSendMessage}>Send</button>
             </div>
             
           </div>

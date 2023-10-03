@@ -22,7 +22,8 @@ function GoogleAuth(){
         email:res.email,
         phoneNumber:res.phoneNumber,
         isGooleLogin:true,
-        avatarId:res?.avatarId
+        avatarId:res?.avatarId,
+        referralCode:res?.referralCode
       }
       dispatch(setCredentials({ ...data }));
       navigate('/home')
@@ -46,7 +47,6 @@ function GoogleAuth(){
             type="standard"
             ux_mode="popup"
               onSuccess={(response) => {
-                console.log(response);
                 googleLoginHandler(response.credential)
               }}
             />

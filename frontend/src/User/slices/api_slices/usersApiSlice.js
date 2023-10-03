@@ -29,7 +29,12 @@ export const userApliSlice = apiSlice.injectEndpoints({
     changePassword:createApiMutation(builder,'changePassword','change-password','PATCH'),
     changeAvatar:createApiMutation(builder,'changeAvatar','change-avatar','PATCH'),
     deleteAvatar:createApiMutation(builder,'deleteAvatar','delete-avatar','PATCH'),
-    userGetInterests:createApiMutation(builder,'getInterests','get-interests','GET')
+    forgotPasswordGetOtp:createApiMutation(builder,'forgotPasswordGetOtp','forgot-pass-otp','POST'),
+    forgotPasswordValidateOtp:createApiMutation(builder,'forgotPasswordValidateOtp','forgot-pass-validate','POST'),
+    forgotPasswordChangePassword:createApiMutation(builder,'forgotPasswordChangePassword','forgot-pass-reset','PATCH'),
+    userGetInterests:createApiMutation(builder,'getInterests','get-interests','GET'),
+    getUserDetails:createApiMutation(builder,'getUserDetails','get-user-details','GET'),
+    
   })
 })
 
@@ -50,6 +55,10 @@ export const {
   useChangePasswordMutation,
   useChangeAvatarMutation,
   useDeleteAvatarMutation,
-  useUserGetInterestsMutation
+  useForgotPasswordGetOtpMutation,
+  useForgotPasswordValidateOtpMutation,
+  useForgotPasswordChangePasswordMutation,
+  useUserGetInterestsMutation,
+  useGetUserDetailsMutation,
 } = userApliSlice
 

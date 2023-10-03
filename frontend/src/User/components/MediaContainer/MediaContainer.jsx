@@ -6,6 +6,7 @@ import MediaController from "../MediaController/MediaController";
 import {toast} from 'react-toastify'
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import { APP_ID } from "../../../utils/config/config";
 
 
 
@@ -26,7 +27,7 @@ const MediaContainer = ()=>{
 
     const token = null;
     const uid = String(Math.floor(Math.random() * 10000));
-    // const uid = userInfo.userName
+    
 
   
 
@@ -38,7 +39,7 @@ const MediaContainer = ()=>{
         ]
     }
 
-    const APP_ID = "69a825afcede4da68c9fdad51b124b64"
+    // const APP_ID = "69a825afcede4da68c9fdad51b124b64"
 
     let constraints ={
         video:{
@@ -71,8 +72,6 @@ const MediaContainer = ()=>{
 
             client.current.on('MessageFromPeer',handleMessageFromPeer)
 
-
-
             const stream = await navigator.mediaDevices.getUserMedia(constraints)
             localStreamRef.current.srcObject = stream
             
@@ -83,6 +82,7 @@ const MediaContainer = ()=>{
     }
 
     const handleUserLeft = (MemberId)=>{
+        console.log(MemberId);
         remoteStreamRef.current.style.display = 'none'
         toast.success(`user left meeting`)
     }
@@ -108,6 +108,7 @@ const MediaContainer = ()=>{
     }
 
     const handleUserJoined = async (MemberId)=>{
+        toast.success(`${MemberId}`)
         await createOffer(MemberId)
         // console.log('a new user joined the channel',MemberId);
 
@@ -123,8 +124,6 @@ const MediaContainer = ()=>{
             remoteStreamRef.current.style.display = 'block';
 
             localStreamRef.current.classList.add('smallFrame')
-
-        
 
             if(!localStreamRef.current.srcObject){
                 const stream = await navigator.mediaDevices.getUserMedia(constraints)
@@ -253,8 +252,8 @@ const MediaContainer = ()=>{
     return(
      <>
      <div id="videos">
-        <video  ref={localStreamRef} className="video-player" id="user-1" autoPlay playsInline ></video>
-        <video  ref={remoteStreamRef} className="video-player" id="user-2" autoPlay playsInline ></video>
+        <video  ref={localStreamRef} className="media-player" id="user-1" autoPlay playsInline ></video>
+        <video  ref={remoteStreamRef} className="media-player" id="user-2" autoPlay playsInline ></video>
         <MediaController toggleVideo={toggleVideo} toggleAudio={toggleAudio} hangup={hangup} screenShare={screenShare}/>
       </div>
      
