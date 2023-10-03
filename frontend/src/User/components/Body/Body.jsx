@@ -1,9 +1,7 @@
 import Video from "../../components/Video/Video"
-// import image from "../../../../public/vrdraw"
 
 import "./Body.css"
 import "./Body.scss"
-import { Button } from "@nextui-org/react";
 
 const Body = () => {
   
@@ -39,7 +37,7 @@ const Body = () => {
         
         <div className="intro-text">
           <div className="image-container">
-             <img src="/vrdraw.jpg" alt="img" />
+             <img src="https://res.cloudinary.com/dcv6mx1nk/image/upload/v1696308922/profile/fwbb1xkkfqwrp1bpqd9p.jpg" alt="img" />
           </div>
           <div className="text-container">
             <p>Are you ready to experience a new era of online communication? Look no further! Rean Connect is your gateway to seamless video conferencing, dynamic group interactions, and a hub for like-minded individuals to connect.</p>

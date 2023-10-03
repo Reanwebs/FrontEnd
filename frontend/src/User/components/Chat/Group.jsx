@@ -6,6 +6,7 @@ import Picker from '@emoji-mart/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
 import { useGetGroupMutation, useCreateGroupChatMutation,useGetGroupChatMutation,} from '../../slices/api_slices/chatApiSlice';
+import { CLOUDINARY_FETCH_URL } from '../../../utils/config/config';
 const Group = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
   const userName = userInfo.userName;

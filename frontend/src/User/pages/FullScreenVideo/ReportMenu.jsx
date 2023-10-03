@@ -1,13 +1,11 @@
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
 import { useReportVideoMutation } from "../../slices/api_slices/videoStreamApiSlice";
-import { useReportVideoBuUserMutation } from "../../slices/api_slices/usersApiSlice";
 
 
 
 function Report({id,setShowReport}) {
 
-    // const [reportVideo] = useReportVideoMutation()
-    const [reportVideo] = useReportVideoBuUserMutation()
+    const [reportVideo] = useReportVideoMutation()
 
     async function reportVideoHandler(reason){
         try {

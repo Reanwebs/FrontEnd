@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetUserDetailsMutation } from "../../slices/api_slices/usersApiSlice";
 
 
+
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const userInfo  = useSelector((state) => state.auth.userInfo); 

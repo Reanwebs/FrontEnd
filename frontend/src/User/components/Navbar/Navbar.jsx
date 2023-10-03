@@ -1,8 +1,6 @@
-import React from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button,useDisclosure} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem,} from "@nextui-org/react";
 import LoginModal from "../../pages/LoginModal/LoginModal";
 import SignupModal from "../../pages/SignupModal/SignupModal";
-import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
 import "./Navbar.css"
 
 export default function Header(){
@@ -11,7 +9,7 @@ export default function Header(){
       <Navbar >
       <NavbarBrand > 
       <p className="font-bold text-inherit"  style={{ color: "#01c8ef" }}>REAN C</p>
-      <img src="/logo1.png" alt="connect" width="12.5" height="15" />
+      <img src="https://res.cloudinary.com/dcv6mx1nk/image/upload/v1696310324/profile/goccrwzn0ylnttqnmcnb.png" alt="connect" width="12.5" height="15" />
       <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>NNECT</p>
       </NavbarBrand>
       <NavbarContent justify="end" >

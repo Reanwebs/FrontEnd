@@ -193,7 +193,7 @@ async function searchCommunityHandler() {
           navigate('/home')
         }}>
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
-        <img src="/reanicons.png" alt="connect" width="13" height="13" />
+        <img src="https://res.cloudinary.com/dcv6mx1nk/image/upload/v1696310384/profile/qhckavjubdpau8qfxi7x.png" alt="connect" width="13" height="13" />
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>NNECT</p>
         </NavbarBrand>
         <NavbarItem className="navbar-links">
