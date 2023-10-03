@@ -8,7 +8,7 @@ const StreamContainer = lazy(()=> import("../../components/StreamedVideos/Stream
 
 const Home = ()=>{
     return (
-        <div className='h-screen'>
+        <div className='h-screen w-full'>
             <Suspense fallback={<HomeSkeleton/>}>
                 <RoomContainer/>
             </Suspense>

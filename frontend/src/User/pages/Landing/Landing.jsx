@@ -2,6 +2,7 @@ import Header from "../../components/Navbar/Navbar";
 import { Navigate,useNavigate } from "react-router-dom";
 import {useSelector} from "react-redux"
 import Body from "../../components/Body/Body"
+import Footer from "../../components/Footer/Footer";
 
 
 
@@ -16,6 +17,7 @@ const Landing = ()=>{
           <>
           <Header/>
           <Body/>
+          <Footer/>
         </>
         }       
         </>
