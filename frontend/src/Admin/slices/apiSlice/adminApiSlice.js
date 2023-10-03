@@ -23,8 +23,6 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         getInterests:createApiMutation(builder,'getInterests','get-interest','GET'),
         getAllCommunities:createApiMutation(builder,'getAllCommunities','get-all-community','GET'),
         manageCommunity:createApiMutation(builder,'manageCommunity','manage-community','POST'),
-        blockVideo:createApiMutation(builder,'blockVideo','block-video','PATCH'),
-        getReportedVideos:createApiMutation(builder,'getReportedVideos','get-reported-videos','GET')
     })
 })
 
@@ -38,8 +36,6 @@ useManageInterestMutation,
 useManageCommunityMutation,
 useAddInterestMutation,
 useGetAllCommunitiesMutation,
-useBlockVideoMutation,
-useGetReportedVideosMutation
 } = adminApiSlice
 
 

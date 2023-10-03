@@ -10,7 +10,7 @@ import { CheckIcon } from '../../components/CheckIcon/CheckIcon'
 import { Avatar} from "@nextui-org/react";
 import { useGetStreamDataByIdMutation,useExitStreamMutation,useStopStreamMutation } from "../../slices/api_slices/usersConferenceApi";
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
-import { setStreamState,removeStreamState } from "../../slices/reducers/user_reducers/streamReducer";
+import { removeStreamState } from "../../slices/reducers/user_reducers/streamReducer";
 
 
 
@@ -32,7 +32,6 @@ const channel = useRef(null);
 const [message,setMessage] = useState('')
 const [messages,setMessages]=useState([])
 const [participant,setParticipants] = useState([])
-const localChannel = useRef(null)
 const [showControls,setShowControls] = useState(false)
 const [active,setActive] = useState({
     camera:false,
@@ -93,24 +92,7 @@ async function init(){
 
        await getChanneldetails()
 
-    //    localChannel.current=rtmClient.current.createChannel('lobby')
-    //    await localChannel.current.join()
-
-
-    //    localChannel.current.on('MemberJoined',async (memberId)=>{
-           
-    //       const participants = await channel.current.getMembers()
-    //       console.log(participants,"paticipantssss");
-          
-    //       if(participants[0] === userInfo.userName){
-    //         const lobbyMembers = await localChannel.current.getMembers()
-    //         // console.log("lobbymemebrrssss:",lobbyMembers,);
-    //         for(let i=0;i<lobbyMembers.length; i++){
-    //             rtmClient.current.sendMessageToPeer({text:JSON.stringify({'room':id,'type':'room_added','members':participants.length})},lobbyMembers[i])
-    //         }
-    //       }
-          
-    //    })
+   
 
        channel.current.on('MemberJoined',async (memberId)=>{
          await  handleMemeberJoined(memberId,"joined")
@@ -398,7 +380,7 @@ async function leaveStream(){
                 <div
                     className="h-screen bg-cover bg-center container relative"
                     style={{
-                    backgroundImage: `url("../../../../streambgimage.jpg")`
+                    backgroundImage: `url("https://res.cloudinary.com/dcv6mx1nk/image/upload/v1696309614/profile/muqzdndfqgn3zn3mtam5.jpg")`
                     }}
                 >
                     <div id='video-stream' className="player-container">

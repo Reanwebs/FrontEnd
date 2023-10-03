@@ -1,12 +1,13 @@
-import {useRef,useEffect,useState} from 'react';
-import {S3Client, GetObjectCommand} from "@aws-sdk/client-s3";
+import {useEffect,useState} from 'react';
+import { GetObjectCommand} from "@aws-sdk/client-s3";
 import {getSignedUrl} from "@aws-sdk/s3-request-presigner"
-import { AWS_SECRET_KEY,AWS_ACCESS_KEY,BUCKET_NAME } from '../../../utils/config/config';
+import { BUCKET_NAME } from '../../../utils/config/config';
 import { useGetUserVideosMutation ,useManageVideoMutation} from '../../slices/api_slices/videoStreamApiSlice';
 import { useSelector } from 'react-redux';
 import { RingLoader } from 'react-spinners';
 import { Card,Button } from '@nextui-org/react';
 import { CLOUDINARY_FETCH_URL } from '../../../utils/config/config';
+import s3 from '../../../utils/s3SetUp/bucket'
 
 
 
@@ -30,7 +31,7 @@ function RecordedVideos() {
       console.log(res.videos);
       const videosWithUrl = res.videos.map((video) => ({
         ...video,
-        url: '', // Initialize the 'url' field
+        url: '', 
       }));
       setVideos(videosWithUrl)
       console.log(videosWithUrl,"with url");
@@ -46,18 +47,9 @@ function RecordedVideos() {
   useEffect(()=>{
     async function init(){
       try {
-       const s3 = new S3Client({
-        credentials: {
-          accessKeyId: AWS_ACCESS_KEY,
-          secretAccessKey:AWS_SECRET_KEY,
-        },
-        region: 'ap-south-1', // Set your AWS region
-      });
-     
-      const bucketName = BUCKET_NAME;
       const videosWithSignedUrls = await Promise.all(
         videos.map(async (video) => {
-          const command = new GetObjectCommand({ Bucket: bucketName, Key: video.S3Path });
+          const command = new GetObjectCommand({ Bucket: BUCKET_NAME, Key: video.S3Path });
           const url = await getSignedUrl(s3, command, { expiresIn: 15 * 60 });
           return {
             ...video,

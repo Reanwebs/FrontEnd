@@ -1,14 +1,13 @@
-import { useBlockVideoMutation } from "../../slices/apiSlice/adminApiSlice"
-import { useGetVideoDetailsByIdMutation } from "../../../User/slices/api_slices/videoStreamApiSlice"
+import { useGetVideoDetailsByIdMutation ,useBlockVideoMutation} from "../../../User/slices/api_slices/videoStreamApiSlice"
 import {  useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import {S3Client, GetObjectCommand} from "@aws-sdk/client-s3";
+import {GetObjectCommand} from "@aws-sdk/client-s3";
 import {getSignedUrl} from "@aws-sdk/s3-request-presigner"
-import { AWS_SECRET_KEY,AWS_ACCESS_KEY,BUCKET_NAME } from "../../../utils/config/config";
+import {BUCKET_NAME } from "../../../utils/config/config";
 import { RingLoader } from 'react-spinners';
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 import { Avatar, Button } from "@nextui-org/react";
+import s3 from "../../../utils/s3SetUp/bucket"
 
 
 
@@ -51,17 +50,8 @@ const ViewVideo = ()=>{
 
       async function init(){
         try {
-         const s3 = new S3Client({
-          credentials: {
-            accessKeyId: AWS_ACCESS_KEY,
-            secretAccessKey:AWS_SECRET_KEY,
-          },
-          region: 'ap-south-1', // Set your AWS region
-        });
-       
-        const bucketName = BUCKET_NAME;
         if(videos.S3Path){
-          const command = new GetObjectCommand({ Bucket: bucketName, Key:videos.S3Path});
+          const command = new GetObjectCommand({ Bucket: BUCKET_NAME, Key:videos.S3Path});
           const url = await getSignedUrl(s3, command, { expiresIn: 15 * 60 });
              
               setVideos({

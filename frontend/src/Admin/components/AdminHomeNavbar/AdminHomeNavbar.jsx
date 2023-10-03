@@ -10,24 +10,11 @@ export default function AdminHomeNavbar({adminInfo,logoutHandler}) {
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
-        <img src="/reanicons.png" alt="connect" width="13" height="13" />
+        <img src="https://res.cloudinary.com/dcv6mx1nk/image/upload/v1696310384/profile/qhckavjubdpau8qfxi7x.png" alt="connect" width="13" height="13" />
         <p className="font-bold text-inherit" style={{ color: "#e51376" }}>NNECT</p>
         </NavbarBrand>
       </NavbarContent>
-      <NavbarContent>
-      <Input
-          classNames={{
-            base: "max-w-full sm:max-w-[20rem] h-10 mx-auto",
-            mainWrapper: "h-full",
-            input: "text-small",
-            inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="Type to search..."
-          size="sm"
-          startContent={<SearchIcon size={15} />}
-          type="search"
-        />
-      </NavbarContent>
+     
 
       <NavbarContent as="div" className="items-center" justify="end">
        

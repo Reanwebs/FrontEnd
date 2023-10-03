@@ -1,8 +1,8 @@
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { Tooltip } from "@material-tailwind/react";
 import { Button } from "@nextui-org/react";
-import { useGetReportedVideosMutation,useBlockVideoMutation } from "../../slices/apiSlice/adminApiSlice";
 import { useEffect,useState } from "react";
+import { useBlockVideoMutation,useGetReportedVideosMutation } from "../../../User/slices/api_slices/videoStreamApiSlice";
 const ReportedVideoTable = ()=>{
   const [videos,setVideos] = useState([])
   const [status,setStatus] = useState(false)
