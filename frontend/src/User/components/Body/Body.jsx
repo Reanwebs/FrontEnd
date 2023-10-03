@@ -7,7 +7,7 @@ const Body = () => {
   
   return (
   <>
-    <div className="overlay-container">
+    <div className="overlay-container w-full">
       <Video />
       <div className="text-overlay">
         <h1 className="scroll-text"> 
@@ -45,7 +45,7 @@ const Body = () => {
         </div>
 
         
-        <div className="why-choose">
+        {/* <div className="why-choose">
             <h2>Why Choose Rean?</h2>
             <ul>
               <li className="feature">
@@ -68,9 +68,6 @@ const Body = () => {
               
               
               <li className="feature">
-                {/* <div className="feature-image">
-                  <img src="background-image-3.jpg" alt="Feature Image 3" />
-                </div> */}
                 <div className="feature-text">
                   <span>🎥 Video Conferencing:</span> Take your conversations to the next level with high-quality, private video conferences. Share moments, ideas, and insights face-to-face from anywhere in the world.
                 </div>
@@ -120,7 +117,7 @@ const Body = () => {
         <p className="get-started-text">Join our vibrant community today and experience a new dimension of online communication. Connect, collaborate, and create memories with REAN CONNECT. Your journey to meaningful connections starts here.</p>
           <button className="sign-up-button">Sign Up Now</button>
           <button className="learn-more-button">Learn More</button>
-        </div>
+        </div> */}
       </div>
 
     </div>
