@@ -69,6 +69,7 @@ const FullScreenVideo = ()=>{
                   setIsStarred(videos.isStarred)
                 }
                 setLoading(false)
+               
           }
           
           } catch (error) {
@@ -79,10 +80,11 @@ const FullScreenVideo = ()=>{
         async function toggleStarHandler(){
           try {
             const data = {
-              starred:videos.isStarred ? videos.isStarred : false,
+              starred:videos.isStarred ? false : true,
               userName:userInfo.userName,
               videoId:videos.VideoId.toString()
             }
+  
              await toggleStar(data).unwrap()
             setIsStarred(!isStarred)
           } catch (error) {
@@ -102,11 +104,12 @@ const FullScreenVideo = ()=>{
       </div>
     </div>:
         <section className="h-screen w-full">
-          {console.log(videos,"videos in full screen")}
+          {console.log(videos,"responsed")}
           <div className="m-4 bg-gray-950 flex flex-col">
             <div className="flex bg-gray-950">
-            <div className="w-4/5 h-[650px]">
-            <video
+            <div className="w-4/5 h-[700px]">
+              <div className="=w-full h-[650px]">
+              <video
               className="z-0 w-full h-full object-cover "
               muted
               loop
@@ -117,17 +120,22 @@ const FullScreenVideo = ()=>{
                 Your browser does not support the video tag.
           
         </video>
+              </div>
+           
         <div className='flex mt-4 justify-end '>
-              <div className='flex m-2'
-              style={{cursor:'pointer'}}
-              onClick={toggleStarHandler}
-              >
+              <div className='flex m-2'>
                   <p>
                     {videos.starred}
                   </p>
+                  <button  
+                   onClick={toggleStarHandler} 
+                  >
                   <svg xmlns="http://www.w3.org/2000/svg" fill={isStarred ? "white" : "none"} viewBox="0 0 24 24" strokeWidth={1.5} stroke={ "white"} className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                   </svg>
+               
+                  </button>
+                 
               </div>
               <div className='flex m-2'>
                   <p>
@@ -138,14 +146,16 @@ const FullScreenVideo = ()=>{
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" fill='black'/>
                   </svg>
               </div>
-              <div className='flex m-2 relative' style={{cursor:'pointer'}} onClick={()=> setShowReport(!showReport)}>
+              <div className='flex m-2 relative'>
             
                   {showReport &&  <Report id={id} setShowReport={setShowReport}/>}
                    
-               
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+               <button onClick={()=> setShowReport(!showReport)} >
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5" />
               </svg>
+               </button>
+             
                
               </div>
             </div>
@@ -161,11 +171,16 @@ const FullScreenVideo = ()=>{
             <div className="flex" >
             <div className="w-3/5 h-[200px] ">
            <div className="flex gap-5 mt-6 ml-4">
-            <Avatar isBordered radius="full" size="md" src={`${CLOUDINARY_FETCH_URL}/${videos.avatarId}`} />
+            <Avatar isBordered radius="full" size="md"
+             src={
+              videos.avatarId 
+              ?`${CLOUDINARY_FETCH_URL}/${videos.avatarId}`
+              : `${CLOUDINARY_FETCH_URL}/ecmoviuvqqedrfymjxad.webp`}/>
             <div className="flex flex-col gap-1 items-start justify-center">
               <h4 className="text-small font-semibold leading-none text-default-600">{videos.userName}</h4>
             </div>
            </div>
+           
            <div className="flex gap-5 mt-6 ml-4">
            <div className="flex flex-col gap-1 items-start justify-center">
            <h4 className="text-small font-semibold leading-none text-default-600">{videos.title}</h4>

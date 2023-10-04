@@ -5,8 +5,9 @@ import {  useParams } from 'react-router-dom';
 import MediaController from "../MediaController/MediaController";
 import {toast} from 'react-toastify'
 import { useNavigate } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector ,useDispatch} from 'react-redux';
 import { APP_ID } from "../../../utils/config/config";
+import { removeConferenceState } from "../../slices/reducers/user_reducers/conferenceReducer";
 
 
 
@@ -24,6 +25,14 @@ const MediaContainer = ()=>{
     const senders = useRef([])
     const [video,setVideo] = useState(true);
     const [audio,setAudio] = useState(true);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+
+    const conferenceInfo = useSelector((state)=> state.conference.conferenceState)
+
+
+   
 
     const token = null;
     const uid = String(Math.floor(Math.random() * 10000));
@@ -49,13 +58,16 @@ const MediaContainer = ()=>{
         },
         audio:true
     }
-   useEffect(()=>{
 
-    init();
-    // return(()=>{
-    //     leaveChannel()
-    // })
-   },[])
+    useEffect(()=>{
+        if(!conferenceInfo){
+            navigate('/home')
+        }else{
+            init();
+        }
+
+    },[])
+  
 
     async function init(){
         try {
@@ -224,6 +236,7 @@ const MediaContainer = ()=>{
           await channel.current.leave();
           localStreamRef.current.srcObject = null
           await client.current.logout()
+          dispatch(removeConferenceState())
           window.location.assign('/home');
         } catch (error) {
             console.log(error);

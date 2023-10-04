@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import "./NewSchedule.css"
-import {Input} from "@nextui-org/react";
+import {Input,Button,Select,SelectItem} from "@nextui-org/react";
 import {Switch, cn} from "@nextui-org/react";
 import Options from '../Options/Options';
-import {timeData,timeZoneData,duration} from '../Options/data'
+import {timeData,duration} from '../Options/data'
 import { useScheduleConferenceMutation } from '../../slices/api_slices/usersConferenceApi';
 import {toast} from 'react-toastify'
+import { useUserGetInterestsMutation } from "../../slices/api_slices/usersApiSlice";
+
 
 const NewSchedule = () => {
 
+  const [interest,setInterest] = useState([])
+
+
   const [sheduleConference] = useScheduleConferenceMutation()
+  const [getInterest] = useUserGetInterestsMutation()
+
+  useEffect(()=>{
+    getInterestHandler()
+  },[])
+
+
 
   const [meetingData, setMeetingData] = useState({
-    type: '',
+    type: 'private',
     title: '',
     description: '',
     interest: '',
@@ -27,7 +39,8 @@ const NewSchedule = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setMeetingData({ ...meetingData, [name]: value });
+    const newValue = type === 'checkbox' ? checked : value;
+    setMeetingData({ ...meetingData, [name]: newValue });
   };
 
   const handleChatInput = (e)=>{
@@ -37,9 +50,19 @@ const NewSchedule = () => {
     })
   }
 
-   const handleSubmit = async (e) => {
+  const getInterestHandler = async ()=>{
     try {
-      e.preventDefault();
+      const res = await getInterest().unwrap();
+      setInterest(res.Interests)
+    } catch (error) {
+      toast.error(error.data.message || error.message)
+      
+    }
+  }
+
+   const handleSubmit = async () => {
+    try {
+     
       const data ={
         title :meetingData.title,
         description:meetingData.description,
@@ -50,13 +73,13 @@ const NewSchedule = () => {
         time: meetingData.date + " " + meetingData.time,
         duration:meetingData.duration.replace("minutes", "").trim()
       }
-      if(meetingData.participantlimit < 2){
+      if(meetingData.participantlimit< 2){
         throw new Error('participant limit must be greater that 1')
       }
       const res = await sheduleConference(data).unwrap()
       toast.success('conference scheduled successfully');
       setMeetingData({
-        type: '',
+        type: 'private',
         title: '',
         description: '',
         interest: '',
@@ -69,37 +92,55 @@ const NewSchedule = () => {
         duration:'',
       })
     } catch (error) {
+      console.log(meetingData);
       toast.error(error?.data?.message || error?.message)
       console.log(error);
       
     }
   }
   return (
-    <div className="schedule-meeting">
+    <div className="flex flex-col items-center m-4">
       <form onSubmit={handleSubmit}>
-        <label className='type-options'>
+        <div className='items-center'>
+        <label className='type-options' hidden>
           <Options label={"type"} placeholder={"Select a type"} data={[{type:"public"},{type:"group"},{type:"private"},{type:"broadcast"}]} handlechange={handleInputChange}/>
         </label>
-
+        <div className="m-4 ">
         <label>
           <Input name='title' isRequired type="string" label="Title" placeholder="Enter an Exciting Conference Title" 
             value={meetingData.title}
             onChange={handleInputChange} 
           />
         </label>
-
+        </div>
+        <div className="m-4 ">
         <label>
          <Input name='description' isRequired type="string" label="Discription" placeholder="Describe your conference" 
             value={meetingData.description}
             onChange={handleInputChange} 
           />
         </label>
-
+        </div>
+        <div className="m-4">
         <label>
-        <Options label={"interest"} placeholder={"Select a interest"} data={[{type:"education"},{type:"programming"},{type:"entertainment"}]} handlechange={handleInputChange}/>
+        <Select
+            isRequired
+            label='interests'
+            placeholder='select an interest'
+            className="w-full"
+            onChange={handleInputChange}
+            name='interest'
+              >
+                {interest.map((value) => (
+                  <SelectItem key={value.interest}  value={value.interest} className="w-fit">
+                    {value.interest}
+                  </SelectItem>
+                ))}
+              </Select>
         </label>
+        </div>
 
-        <label>
+        <label hidden>
           <Switch
               onChange={handleChatInput}
               isSelected={meetingData.chat}
@@ -127,10 +168,10 @@ const NewSchedule = () => {
           </Switch>
         </label>
 
-        <div className='flex'>
+        <div className='flex m-2'>
         <label className='m-2 mb-3'>
           <Input size='md' type="number" name='participantlimit' label="Participant Limit" placeholder="Enter the number of participants" 
-            value={meetingData.limit}
+            value={meetingData.participantlimit}
             onChange={handleInputChange} 
           />
         </label>
@@ -142,16 +183,34 @@ const NewSchedule = () => {
           />
         </label>
         </div>
-
-        <label className='time-dropdown-label'>
+        <div className='flex justify-center m-2'>
+          <div className='w-full'>
+          <label className='m-2 mb-3'>
           <Options label={"time"} placeholder={"Select a time"} data={timeData} handlechange={handleInputChange}/>
-          {/* <Options label={"am_pm"} placeholder={"Select the zone"} data={[{type:'am'},{type:'pm'}]} handlechange={handleInputChange}/> */}
-          {/* <Options label={"timeZone"} placeholder={"Select the time zone"} data={timeZoneData} handlechange={handleInputChange}/> */}
+        </label>
+          </div>
+        <div className='w-full'>
+        <label className='m-2 mb-3'>
           <Options label={"duration"} placeholder={"Select the duration"} data={duration} handlechange={handleInputChange}/>
         </label>
+        </div>
        
-
-        <button className="schedule-submit-button" type="submit">Schedule</button>
+        </div>
+       
+       
+       <div className='flex justify-center'>
+             <Button 
+                type='submit'
+                variant="bordered"
+                color="primary"
+                onClick={handleSubmit}
+                
+                >
+                    Schedule
+                </Button>
+       </div>
+       
+        </div>
       </form>
     </div>
   );

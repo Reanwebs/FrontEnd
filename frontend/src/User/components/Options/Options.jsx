@@ -6,7 +6,7 @@ export default function Options({label,placeholder,data,handlechange}) {
       isRequired
       label={label}
       placeholder={placeholder}
-      className="w-fit"
+      className="w-full"
       onChange={handlechange}
       name={label}
       

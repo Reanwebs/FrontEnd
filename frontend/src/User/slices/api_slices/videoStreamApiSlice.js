@@ -43,7 +43,8 @@ const createApiMutation = (builder,endpoint,url,method)=>{
      toggleStar:createApiMutation(builder,'toggleStar','star','PATCH'),
      reportVideo:createApiMutation(builder,'reportVideo','report-video','PUT'),
      blockVideo:createApiMutation(builder,'blockVideo','block-video','PATCH'),
-     getReportedVideos:createApiMutation(builder,'getReportedVideos','get-reported-videos','GET')
+     getReportedVideos:createApiMutation(builder,'getReportedVideos','get-reported-videos','GET'),
+     getExclusiveVideos:createApiMutation(builder,'getExclusiveVideos','exclusive-content','GET')
     })
   }) 
 

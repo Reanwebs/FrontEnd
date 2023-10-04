@@ -106,7 +106,7 @@ const Profile = ()=>{
    
     return (
      <>
-     <section className="h-screen">
+     <section className="min-h-screen w-full h-full">
         <div className="bg-gray-800 bg-opacity-10 m-12" >
         <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-max mt-12 ">
             <div className="md:flex flex-col justify-center items-center">
@@ -184,11 +184,13 @@ const Profile = ()=>{
             Upload Video
         </Button>
     </div>
-    <div className="">
+    <div className=" flex flex-col justify-evenly  p-10 md:p-12 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
         <Suspense fallback={<HomeSkeleton/>}>
              <RecordedVideos/> 
         </Suspense>
      </div>
+    </div>
     </section>
     </>
     )
