@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { Button ,Select,SelectItem,Input,Textarea,Checkbox} from "@nextui-org/react";
 import { useUserGetInterestsMutation } from "../../slices/api_slices/usersApiSlice";
 import { toast } from "react-toastify";
+import { setConferenceState } from '../../slices/reducers/user_reducers/conferenceReducer';
 
 
 
@@ -20,10 +21,11 @@ const Private = () => {
   });
   const [conferenceID,setConferenceId] = useState('')
 
-  const [startPrivateConference] = useStartPrivateConferenceMutation();
+  const [startPrivateConference,{isLoading}] = useStartPrivateConferenceMutation();
   const navigate = useNavigate()
   const [getInterest] = useUserGetInterestsMutation()
   const [interest,setInterest] = useState([])
+  const dispatch = useDispatch()
 
   useEffect(()=>{
     getInterestHandler()
@@ -63,6 +65,7 @@ const Private = () => {
 
   const joinConference = ()=>{
     if(conferenceID){
+      dispatch(setConferenceState({status:true}))
       navigate(`/media-container/${conferenceID}`)
     }
   }
@@ -146,7 +149,9 @@ const Private = () => {
           />
         </div>
         <div className="m-4 mx-14">
-          <Button className="" type="submit">Start Private Conference</Button>
+          <Button  isLoading={isLoading}
+            variant="bordered"
+            color="primary" type="submit">Start Private Conference</Button>
         </div>
         </div>
       </form>
@@ -167,7 +172,10 @@ const Private = () => {
 
           </div>
           <div className="m-4">
-            <Button onClick={joinConference}>
+            <Button 
+            variant="bordered"
+            color="primary"
+            onClick={joinConference}>
               join conference
             </Button>
           </div>

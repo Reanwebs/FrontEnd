@@ -8,6 +8,8 @@ import { RingLoader } from 'react-spinners';
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 import { Avatar, Button } from "@nextui-org/react";
 import s3 from "../../../utils/s3SetUp/bucket"
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -20,6 +22,7 @@ const ViewVideo = ()=>{
     const [userName] = useState('admin')
     const [blockVideo] = useBlockVideoMutation()
     const [getVideoDetails] = useGetVideoDetailsByIdMutation()
+    const navigate = useNavigate()
 
     useEffect(()=>{
 
@@ -66,6 +69,23 @@ const ViewVideo = ()=>{
         }
       }
 
+      const blockVideoHandler=async ({VideoId})=>{
+        try {
+          const data = {
+            videoId:VideoId,
+            reason:"user report",
+            block:true
+       }
+     
+ 
+        await blockVideo(data).unwrap()
+        toast.success('video blocked successfully')
+        navigate('/admin/report')
+        
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
     return(
         loading ? <div className="w-full flex justify-center h-full">
@@ -95,7 +115,7 @@ const ViewVideo = ()=>{
               <div className="flex justify-center" >
               <div className="w-3/5 h-[200px] ">
              <div className="flex gap-5 mt-6 ml-4 w-full">
-              <Avatar isBordered radius="full" size="md" src={`${CLOUDINARY_FETCH_URL}/${videos.avatarId}`} />
+              <Avatar isBordered radius="full" size="md" src={videos.avatarId ? `${CLOUDINARY_FETCH_URL}/${videos.avatarId}` :undefined } />
               <div className="flex flex-col gap-1 items-start justify-center">
                 <h4 className="text-small font-semibold leading-none text-default-600">wfq{videos.userName}</h4>
               </div>
@@ -107,7 +127,9 @@ const ViewVideo = ()=>{
              <h4 className="text-small font-semibold leading-none text-default-600">wqfdq{videos.description}</h4>
              </div>
              <div className="flex justify-items-end">
-                <Button color="danger" variant="bordered">
+                <Button 
+                onClick={()=>blockVideoHandler(videos)}
+                color="danger" variant="bordered">
                     Block
                 </Button>
              </div>

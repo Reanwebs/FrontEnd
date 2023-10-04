@@ -24,7 +24,10 @@ const CommunityTable = ()=>{
         try {
             const res = await getCommunity().unwrap();
             console.log(res);
-            setCommunity(res.communities)
+            if(res.communities){
+              setCommunity(res.communities)
+            }
+           
             
         } catch (error) {
              console.log(error);
@@ -48,6 +51,7 @@ const CommunityTable = ()=>{
        
       <PageTitle title={'Community Management'}/>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+        {community.length > 0 ?
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
           <thead className="text-xs text-gray-700  uppercase  dark:text-gray-400">
             <tr>
@@ -126,31 +130,12 @@ const CommunityTable = ()=>{
               })}
           </tbody>
         </table>
+        :
+        <h2 className="text-center text-gray-900 dark:text-white text-xl md:text-4xl font-extrabold mb-2">
+        No Communities to show
+     </h2>
+        }
       </div>
-
-      {/* <!-- Previous Button --> */}
-      {/* <div className="flex justify-center mt-10">
-        <button
-          type="button"
-          className="inline-flex items-center px-4 py-2 mr-3 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          onClick={goToPreviousPage}
-          disabled={currentPage === 1}
-        >
-          Previous */}
-          {/* Previous button content */}
-        {/* </button>
-        <button
-          type="button"
-          className="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          onClick={goToNextPage}
-          disabled={
-            currentPage === Math.ceil(userData?.length ?? 0 / itemsPerPage)
-          }
-        >
-          Next */}
-          {/* Next button content */}
-        {/* </button> */}
-      {/* </div> */}
       </div>
     </div>
     </>

@@ -11,9 +11,21 @@ const createApiMutation = (builder,endpoint,url,method)=>{
   })
 }
 
+const createApiQuery = (builder,endpoint,url,method)=>{
+  return builder.mutation({
+    query:(data)=>({
+      url:`${CHAT_URL}/${url}`,
+      method:method,
+      body:data
+    })
+  })
+}
+
+
+
 export const chatApiSlice = apiSlice.injectEndpoints({
   endpoints:(builder)=>({
-   getChat:createApiMutation(builder,'getChat','get-chatlist','POST'),
+   getChat:createApiQuery(builder,'getChat','get-chatlist','POST'),
    createChat:createApiMutation(builder,'createChat','create-chat','POST'),
    getChatHistory:createApiMutation(builder,'getChatHistory','get-chat','POST'),
 
@@ -34,21 +46,21 @@ export const {
 } = chatApiSlice
 
 
-import axios from 'axios';
+// import axios from 'axios';
 
-const API_ENDPOINT = 'chat/get-chatlist';
+// const API_ENDPOINT = 'chat/get-chatlist';
 
-const getChat = async (userAuthCookie) => {
-  try {
-    const response = await axios.post(API_ENDPOINT, {
-      headers: {
-        'Authorization': `Bearer ${userAuthCookie}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+// const getChat = async (userAuthCookie) => {
+//   try {
+//     const response = await axios.post(API_ENDPOINT, {
+//       headers: {
+//         'Authorization': `Bearer ${userAuthCookie}`,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
-export default getChat;
+// export default getChat;
