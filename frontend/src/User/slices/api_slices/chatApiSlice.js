@@ -46,21 +46,4 @@ export const {
 } = chatApiSlice
 
 
-// import axios from 'axios';
 
-// const API_ENDPOINT = 'chat/get-chatlist';
-
-// const getChat = async (userAuthCookie) => {
-//   try {
-//     const response = await axios.post(API_ENDPOINT, {
-//       headers: {
-//         'Authorization': `Bearer ${userAuthCookie}`,
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
-// export default getChat;

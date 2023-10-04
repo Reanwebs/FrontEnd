@@ -1,4 +1,4 @@
-import React, { useState , useEffect, useRef} from 'react';
+import { useState , useEffect, useRef} from 'react';
 import { useSelector } from 'react-redux';
 import "./Chat.css"
 import data from '@emoji-mart/data'
@@ -6,10 +6,12 @@ import Picker from '@emoji-mart/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
 import { useGetGroupMutation, useCreateGroupChatMutation,useGetGroupChatMutation,} from '../../slices/api_slices/chatApiSlice';
+import { useGetUserJoinedCommunityMutation } from '../../slices/api_slices/usersCommunitySlice';
 import { CLOUDINARY_FETCH_URL } from '../../../utils/config/config';
+import { RingLoader } from 'react-spinners';
 const Group = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
-  const userName = userInfo.userName;
+  const [userName] = useState(userInfo.userName)
   const [groups, setGroups] = useState([])
   const [selectedGroup, setSelectedGroup] = useState(null); 
   const [message, setMessage] = useState(''); 
@@ -20,10 +22,29 @@ const Group = () => {
   const [getGroupChat] = useGetGroupChatMutation();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messageHistoryRef = useRef(null);
+  const [joinedCommunities,SetJoinedCommunities] = useState([])
+
+  const [getJoinedCommunities,{isLoading}] = useGetUserJoinedCommunityMutation()
+
+ useEffect(()=>{
+  async function getJoinedCommunitiesHandler(){
+    try {
+      const res = await getJoinedCommunities().unwrap();
+      console.log(res);
+      SetJoinedCommunities(res.community)
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  getJoinedCommunitiesHandler()
+ },[])
   
   useEffect(()=>{
     getGroupHandler()
   },[])
+
+  
 
   const getGroupReq={
     UserID :userName,
@@ -58,7 +79,7 @@ const Group = () => {
       }));
       setChatHistory([]);
       setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
-      scrollToBottom();
+      // scrollToBottom();
     }catch(error){
       console.log(error)
     }
@@ -132,11 +153,20 @@ const Group = () => {
 
 
   return (
+    isLoading ? <div className="w-full flex justify-center h-full">
+    <div className="py-52">
+      <RingLoader color="#1bacbf"/>
+    </div>
+    </div>:
     <div className="chat-container">
         <div className="users-list">  
         <div className='users-list-head'>
           <button className="toggle-button" onClick={toggleGroupList}>Group List</button>
         </div>
+        {joinedCommunities.length < 0 
+        ?
+        <h6 style={{ color: 'grey' }}>No communities to show</h6> 
+        :
         <ul>
           {groups !== null && groups.map((Group, index) => (
             <li
@@ -159,6 +189,7 @@ const Group = () => {
             </li>
           ))}
           </ul>
+          }
         </div>
     
       <div className="chat-box">

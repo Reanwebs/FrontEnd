@@ -15,6 +15,7 @@ const Chat =()=>{
 
     return (
         <>
+        <section className="w-full relative">
           <div className="type-container">
 
           <div
@@ -58,7 +59,7 @@ const Chat =()=>{
           <div className={`chat-body ${activeTab === 'public' ? 'active' : ''}`}>
             {activeTab === 'public' && <Public/>}
           </div>
-
+          </section>
         </>
     );
 }
