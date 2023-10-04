@@ -22,6 +22,9 @@ export default function HomeNavbar({userInfo,logoutHandler,coins}) {
   const [communities,setCommunities] = useState([])
 
   const userName = userInfo.userName;
+
+
+ 
   
 
 
@@ -176,8 +179,10 @@ async function searchCommunityHandler() {
 
 
   return (
+  
     <Navbar className="home-navbar" isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-
+     
+      
       <NavbarContent className="md:hidden" justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
@@ -193,7 +198,7 @@ async function searchCommunityHandler() {
           navigate('/home')
         }}>
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>REAN C</p>
-        <img src="/reanicons.png" alt="connect" width="13" height="13" />
+        <img src="https://res.cloudinary.com/dcv6mx1nk/image/upload/v1696310384/profile/qhckavjubdpau8qfxi7x.png" alt="connect" width="13" height="13" />
         <p className="font-bold text-inherit" style={{ color: "#01c8ef" }}>NNECT</p>
         </NavbarBrand>
         <NavbarItem className="navbar-links">
@@ -245,13 +250,14 @@ async function searchCommunityHandler() {
       <NavbarContent className="hidden md:flex items-center gap-12" as="div" justify="center"> 
       <NavbarItem>
         <Button color="primary" variant="bordered" onClick={()=>{
-          navigate('/stream')
+          // navigate('/stream')
+          setIsModalOpen(!isModalOpen)
         }}>
           Stream Now
         </Button> 
         </NavbarItem>   
         
-        <Button className="wallet-button" style={{ backgroundColor: 'transparent'}}>
+        <Button className="wallet-button" style={{ backgroundColor: 'transparent'}} onClick={()=>navigate('/wallet')}>
           <p>Wallet</p>
           <BsCoin color="#e27b05"/>
           <p>{coins}</p>
@@ -306,6 +312,6 @@ async function searchCommunityHandler() {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
-    </Navbar>
+    </Navbar> 
   );
 }

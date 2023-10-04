@@ -49,6 +49,7 @@ const Groups = () => {
   const getUserJoinedCommunities = async ()=>{
     try {
       const res = await joinedCommunity().unwrap()
+     console.log(res.community);
       if(res.community){
         setJoinedCommunities(res.community)
       }else{

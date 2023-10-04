@@ -18,11 +18,13 @@ import { useNavigate } from "react-router-dom";
 import { useGetUserDetailsMutation } from "../../slices/api_slices/usersApiSlice";
 
 
+
 const Profile = ()=>{
     const [selectedImage, setSelectedImage] = useState(null);
     const userInfo  = useSelector((state) => state.auth.userInfo); 
     const RecordedVideos = lazy(()=> import("../../components/UserFeed/UserFeed"))
     const [loading,setLoading] = useState(false)
+    
 
 
     
@@ -30,7 +32,7 @@ const Profile = ()=>{
 
 
     const [changeAvatar,{isLoading}] = useChangeAvatarMutation()
-    const [deleteAvatar,{isLoading:deleteLoading}]=useDeleteAvatarMutation()
+    const [deleteAvatar]=useDeleteAvatarMutation()
     const [getUserDetails] = useGetUserDetailsMutation()
   
     const dispatch = useDispatch()
@@ -107,7 +109,7 @@ const Profile = ()=>{
      <section className="h-screen">
         <div className="bg-gray-800 bg-opacity-10 m-12" >
         <div className="max-w-md mx-auto  rounded-xl shadow-md overflow-hidden md:max-w-max mt-12 ">
-            <div className="md:flex justify-center items-center">
+            <div className="md:flex flex-col justify-center items-center">
                 <div className="md:shrink-0 relative mt-3">
                 <label className="cursor-pointer">
                     <input
@@ -126,14 +128,13 @@ const Profile = ()=>{
                         />
                 </label>    
                 </div> 
-            </div>
-             <div className="justify-center">
+                <div className="justify-center">
                 {selectedImage &&
                 <>
                 <Button color="#01c8ef" onClick={()=>{
                    addProfileImageHandler()
                 }} variant="flat" style={{ color: "#01c8ef" }}
-                isLoading={ isLoading ? <Spinner /> : false}
+                isLoading={ loading ? <Spinner /> : false}
                 >save</Button>
 
                 <Button color="#db2777" onClick={()=>{
@@ -151,6 +152,8 @@ const Profile = ()=>{
                 >delete</Button>
                  }
                 </div>
+            </div>
+
                 
             <div className="pt-8 flex items-center ">
                 <p className="m-1">User Name:</p>
@@ -177,7 +180,7 @@ const Profile = ()=>{
             </>
             }
         </div>
-        <Button color="primary" variant="bordered" onClick={()=>navigate('/upload')}>
+        <Button className="m-1" color="primary" variant="bordered" onClick={()=>navigate('/upload')}>
             Upload Video
         </Button>
     </div>
@@ -185,7 +188,6 @@ const Profile = ()=>{
         <Suspense fallback={<HomeSkeleton/>}>
              <RecordedVideos/> 
         </Suspense>
-          
      </div>
     </section>
     </>

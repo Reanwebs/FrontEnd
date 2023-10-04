@@ -23,8 +23,6 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         getInterests:createApiMutation(builder,'getInterests','get-interest','GET'),
         getAllCommunities:createApiMutation(builder,'getAllCommunities','get-all-community','GET'),
         manageCommunity:createApiMutation(builder,'manageCommunity','manage-community','POST'),
-
-
     })
 })
 

@@ -17,7 +17,8 @@ const createApiMutation = (builder,endpoint,url,method)=>{
         createWallet:createApiMutation(builder,'createWallet','create-wallet','POST'),
         updateWallet:createApiMutation(builder,'updateWallet','update-wallet','PUT'),
         rewardUser:createApiMutation(builder,'rewardUser','participent-reward','POST'),
-        getWallet:createApiMutation(builder,'getWallet','get-wallet','GET')
+        getWallet:createApiMutation(builder,'getWallet','get-wallet','GET'),
+        getWalletHistory:createApiMutation(builder,'getWalletHistory','user-reward-history',"POST")
     })
   })
 
@@ -25,7 +26,8 @@ const createApiMutation = (builder,endpoint,url,method)=>{
      useCreateWalletMutation,
      useUpdateWalletMutation,
      useRewardUserMutation,
-     useGetWalletMutation
+     useGetWalletMutation,
+     useGetWalletHistoryMutation
   }=
   monetizationApiSlice
 

@@ -9,6 +9,7 @@ import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice"
 import {  useDispatch } from 'react-redux';
 import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 import { Cookies } from "react-cookie";
+import Footer from "../../components/Footer/Footer";
 
 
 
@@ -31,8 +32,10 @@ const UserPrivateRoute  = ()=>{
     },[status])
 
     const vaidateUserStatus = async ()=>{
+        console.log("ok i was called !!!!!!!!out side auth!!!! cookie");
         try {
             if(!authCookie ){
+               console.log("ok i was called in side auth cookie");
                dispatch(removeCredentials());
                setStatus(!status)
                navigate('/')
@@ -74,13 +77,12 @@ const UserPrivateRoute  = ()=>{
         }
 
     return (
-       userInfo 
+       userInfo && authCookie
        ?(
         <>  
         <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} coins={coins} />
-        <div className="h-fit">
         <Outlet />
-        </div>
+        <Footer/>
        
         </>
        )
