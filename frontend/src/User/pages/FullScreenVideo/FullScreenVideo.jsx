@@ -17,6 +17,7 @@ const FullScreenVideo = ()=>{
     const [loading,setLoading] = useState(false)
     const { id } = useParams();
     const userInfo = useSelector((state)=> state.auth.userInfo)
+    const userName = userInfo.userName
     const [isStarred,setIsStarred] = useState(false)
 
     const [getVideoDetails] = useGetVideoDetailsByIdMutation();
@@ -25,7 +26,7 @@ const FullScreenVideo = ()=>{
     useEffect(()=>{
         async function getVideosHandler(){
          try {
-           const res = await getVideoDetails(id).unwrap()
+           const res = await getVideoDetails({id,userName}).unwrap()
            setLoading(true)
           
            setVideos({
@@ -57,7 +58,7 @@ const FullScreenVideo = ()=>{
               accessKeyId: AWS_ACCESS_KEY,
               secretAccessKey:AWS_SECRET_KEY,
             },
-            region: 'ap-south-1', // Set your AWS region
+            region: 'ap-south-1', 
           });
          
           const bucketName = BUCKET_NAME;
@@ -87,7 +88,6 @@ const FullScreenVideo = ()=>{
               userName:userInfo.userName,
               videoId:videos.VideoId.toString()
             }
-            console.log(data,"hhhhhhhhhhhhhhhhh");
              await toggleStar(data).unwrap()
             setIsStarred(!isStarred)
           } catch (error) {

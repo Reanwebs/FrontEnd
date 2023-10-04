@@ -13,12 +13,12 @@ import getChat from '../../slices/api_slices/chatApiSlice';
 const Personal = () => {
   const userAuthCookie = getCookie('user-auth');
   const userInfo = useSelector(state => state.auth.userInfo)
-  const userName = userInfo.userName;
+  const [userName] = useState(userInfo.userName);
   const socket = new WebSocket(`ws://localhost:5053/ws`);
   const [selectedUser, setSelectedUser] = useState({}); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
-  // const [getChat] = useGetChatMutation()
+  const [getChat] = useGetChatMutation()
   const [createChat] = useCreateChatMutation()
   const [getChatHistory] = useGetChatHistoryMutation()
   const [users, setUser] = useState([])
@@ -54,7 +54,7 @@ const Personal = () => {
      try {
       const chatRes = await getChat(userAuthCookie)
       console.log(chatRes,"response");
-      setUser(chatRes)
+      setUser(chatRes.data)
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +115,7 @@ const Personal = () => {
         setChatHistory((prevHistory) => [
             ...prevHistory,
             {
-                user: receivedMessage.sender,
+                user: receivedMessage.user,
                 text: receivedMessage.text,
             },
         ]);
