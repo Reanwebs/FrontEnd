@@ -25,9 +25,9 @@ const Personal = () => {
   const [createChat] = useCreateChatMutation()
   const [getChatHistory] = useGetChatHistoryMutation()
   const [users, setUser] = useState([])
-  const messageHistoryRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading,setLoading] = useState(false)
+  const divRef = useRef()
   
   
 
@@ -51,15 +51,14 @@ const Personal = () => {
     
   },[users])
 
-
-
+  useEffect(() => {
+    divRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory,message]);
 
   
-  const scrollToBottom = () => {
-    if (messageHistoryRef.current) {
-      messageHistoryRef.current.scrollTop = messageHistoryRef.current.scrollHeight;
-    }
-  };
+
+  
+  
   const getChatHandler = async (userAuthCookie)=>{
      try {
       setLoading(true)
@@ -87,7 +86,7 @@ const Personal = () => {
       }));
       setChatHistory([]);
       setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
-      scrollToBottom();
+      
     }catch (error){
       console.log(error)
     }
@@ -104,7 +103,7 @@ const Personal = () => {
     createChatHandler(chatreq)
     getChatHistoryHandler(chatreq)
     setSelectedUser(user);
-    scrollToBottom();
+   
     
   }
 
@@ -132,7 +131,7 @@ const Personal = () => {
             },
         ]);
         // setOnline(true)
-        scrollToBottom();
+        
       }
       
     } else {
@@ -152,7 +151,6 @@ const Personal = () => {
       recipient: selectedUser?.RecipientID, 
     };
 
-    console.log(messageObject,"message object!!!!!!!!!!!!!!!!!!!");
   
     socket.send(JSON.stringify(messageObject));
     
@@ -163,8 +161,6 @@ const Personal = () => {
 
     const updatedUsers = users.filter((user) => user.RecipientID !== selectedUser?.RecipientID);
     setUser([users.find((user) => user.RecipientID === selectedUser?.RecipientID), ...updatedUsers]);
-
-    scrollToBottom();
     setMessage('');
   };
 
@@ -184,6 +180,8 @@ const Personal = () => {
     setMessage(message + emoji.native);
   };
 
+ 
+
 
   return (
     loading ? <div className="w-full flex justify-center h-full">
@@ -191,11 +189,11 @@ const Personal = () => {
       <RingLoader color="#1bacbf"/>
     </div>
     </div> :
-    <div className="chat-container">
+    <div className=" chat-container fixed w-screen pr-28 overflow-hidden">
       
       <div className="users-list" onClick={() =>setShowEmojiPicker(false)}>
-          <div className='users-list-head'>
-          <button className="toggle-button" onClick={toggleUserList}>User List</button>
+          <div className='users-list-head flex items-center justify-center'>
+          <button className="toggle-button " onClick={toggleUserList}>User List</button>
           </div>
    
           <ul className={isUserListOpen ? 'open' : ''}>
@@ -238,14 +236,14 @@ const Personal = () => {
               
             </div>
 
-            <div className="message-history" ref={messageHistoryRef} onClick={() =>setShowEmojiPicker(false)}>
+            <div className="message-history " onClick={() =>setShowEmojiPicker(false)}>
              
-            {chatHistory.map((message, index) => (
-          
-              
+            {chatHistory.map((message, index) => (      
               <div
+                
                 key={index}
-                className={`message-bubble ${message.user === userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
+                ref={divRef}
+                className={`message-bubble ${message.user === userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900 `}
               >
                 {message.text}
               </div>
@@ -275,7 +273,7 @@ const Personal = () => {
           </div>
         )}
       </div>
-    </div>
+    </div>    
   );
 };
 

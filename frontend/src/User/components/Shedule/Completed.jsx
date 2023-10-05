@@ -1,34 +1,60 @@
 
 import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image} from "@nextui-org/react";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
+import { RingLoader } from "react-spinners";
+import { useGetCompletedConferenceMutation } from "../../slices/api_slices/usersConferenceApi";
+import moment from "moment";
 
 const Completed =()=>{
+
+
   const [completedData,setCompletedData] = useState([])
+  const [completedConference,{isLoading}] = useGetCompletedConferenceMutation() 
+
+  useEffect(()=>{
+
+    async function completedConferenceHandler(){
+      try {
+        const res = await completedConference().unwrap();
+        setCompletedData(res.ScheduledConferenc)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    completedConferenceHandler()
+
+  },[])
     return(
+      isLoading ? <div className="w-full flex justify-center h-full">
+      <div className="py-52">
+        <RingLoader color="#1bacbf"/>
+      </div>
+      </div>:
       <div>
       {completedData && completedData.length > 0 ? (
         <div className="scheduled">
           <div className="grid gap-4 grid-cols-4">
-            {completedData.map((data, index) => (
+          {completedData.map((data, index) => (
               <Card className="max-w-[400px]" key={index}>
                 <CardHeader className="flex gap-3">
                   <div className="flex flex-col">
-                    <p className="text-md">{data?.title}</p>
-                    <p className="text-small text-default-500">{data?.description}</p>
+                    <p className="text-md">{data?.Title}</p>
+                    <p className="text-small text-defaudata?.Time lt-500">{data?.Description}</p>
                   </div>
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                  <p>Type : {data?.type}</p>
-                  <p>Interest: {data?.interest}</p>
-                  <p>Partcipant Limit: {data?.participantLimit}</p>
-                  <p>Duration : {`${data?.durations} mins`}</p>
-                  <p>Date : {data?.date}</p>
-                  <p>Time : {data?.time}</p>
+                  <p>Type :Private</p>
+                  <p>Interest: {data?.Interest}</p>
+                  <p>Partcipant Limit: {data?.Participantlimit}</p>
+                  <p>ScheduleID  : {data?.ScheduleID}</p>
+                  <p>Duration : {`${data?.Durations} mins`}</p>
+                  <p>Time : {data?.Time ? moment(data?.Time ).format('MMM Do YYYY') : "invalid date"}</p>
                 </CardBody>
                 <Divider />
                 <CardFooter>
-                  <Link isExternal showAnchorIcon href="https://github.com/nextui-org/nextui">
+                  <Link color="primary" to={`/media-container/${data?.ScheduleID}`}>
                     Start Conference
                   </Link>
                 </CardFooter>

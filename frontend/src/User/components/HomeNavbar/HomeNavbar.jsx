@@ -6,7 +6,7 @@ import "./HomeNavbar.css"
 import React,{useState,useEffect} from "react";
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 import { useSearchUserMutation,useSearchCommunityMutation} from "../../slices/api_slices/usersCommunitySlice";
-import { useCreateChatMutation,useGetGroupMutation } from "../../slices/api_slices/chatApiSlice";
+import { useCreateChatMutation,useCreateGroupChatMutation } from "../../slices/api_slices/chatApiSlice";
 import {BsCoin} from "react-icons/bs"
 
 
@@ -20,8 +20,7 @@ export default function HomeNavbar({userInfo,logoutHandler,coins}) {
 
   const [users,setUsers] = useState([])
   const [communities,setCommunities] = useState([])
-
-  const userName = userInfo.userName;
+  const [userName] = useState(userInfo.userName)
 
 
  
@@ -29,7 +28,7 @@ export default function HomeNavbar({userInfo,logoutHandler,coins}) {
 
 
   const [createChat] = useCreateChatMutation()
-  const [groupChat] =useGetGroupMutation()
+  const [groupChat] = useCreateGroupChatMutation()
   
   const menuItems = [
     "Profile",
@@ -114,12 +113,11 @@ async function searchCommunityHandler() {
   }
   async function createGroupChatHandler(communityId){
     try {
-      const res = await groupChat({UserName:userName,communityId:communityId}).unwrap()
-      console.log(res);
+      console.log(communityId,userName,"community id for ");
+      const res = await groupChat({UserName:userName,GroupID:communityId}).unwrap()
+      console.log(res,"response for group chat");
         setCommunities([])
         navigate('/messages')
-
-        console.log(res);
     } catch (error) {
       console.log(error);
     }
