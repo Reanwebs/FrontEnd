@@ -15,8 +15,8 @@ const Chat =()=>{
 
     return (
         <>
-        <section className="w-full relative">
-          <div className="type-container">
+        <section className="w-full ">
+          <div className="type-container relative">
 
           <div
               className={`flex-item ${activeTab === 'personal' ? 'active' : ''}`}
