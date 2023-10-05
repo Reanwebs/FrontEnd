@@ -5,8 +5,8 @@ import {Card, Skeleton,Button} from "@nextui-org/react";
 
 export default function HomeSkeleton() {
   return (
-    <div className="grid gap-2 grid-cols-4">
-      {[1,2,3,4].map(x=>
+    <div className="grid gap-2 grid-cols-6 justify-between">
+      {[1,2,3,4,5,6].map(x=>
       <div key={x}>
         <Card className="w-[300px] space-y-5 mt-4 ml-2 p-4" radius="2xl" key={x+1} >
           <Skeleton className="rounded-lg">

@@ -107,12 +107,13 @@ const Group = () => {
     }
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { Group: selectedGroup.GroupID, text: message },
+      { Group: selectedGroup.GroupID, text: message},
     ]);
     const messageObject = {
       text: message,
       sender: userName, 
-      recipient: selectedGroup.GroupID, 
+      groupId: selectedGroup.GroupID, 
+      groupName:selectedGroup.GroupName
     };
     socket.send(JSON.stringify(messageObject));
     setMessage('');
