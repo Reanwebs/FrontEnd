@@ -5,9 +5,8 @@ import { useLogoutMutation,useValidateUserStatusMutation } from "../../slices/ap
 import { useGetWalletMutation } from "../../slices/api_slices/userMonetizationApiSlice";
 import {toast} from "react-toastify"
 import { useNavigate ,Navigate, Outlet} from "react-router-dom";
-import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
+import {removeCredentials,setToken } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
-import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 import { Cookies } from "react-cookie";
 import Footer from "../../components/Footer/Footer";
 
@@ -29,6 +28,7 @@ const UserPrivateRoute  = ()=>{
     useEffect(()=>{
         vaidateUserStatus();
         getWalletHandler()
+
     },[status])
 
     const vaidateUserStatus = async ()=>{
@@ -39,6 +39,8 @@ const UserPrivateRoute  = ()=>{
                dispatch(removeCredentials());
                setStatus(!status)
                navigate('/')
+            }else{
+                dispatch(setToken(authCookie))
             }
             if(userInfo){
                 const res = await vaidateUser({email:userInfo.email}).unwrap();

@@ -96,7 +96,8 @@ const StartStream = ()=>{
 
     return (
         <section className="h-screen">
-            <div className="flex flex-col items-center m-12">
+            <div className="flex flex-col items-center  m-12">
+            <div className="items-center justify-center ">
              <div className="m-2 ">
                 <label>Title:</label>
                     <Input
@@ -174,13 +175,16 @@ const StartStream = ()=>{
                             />
                
               </div>
-              <div className="m-2">
+              <div className="m-2 flex justify-center">
                 <Button 
+                variant="bordered"
+                color="primary"
                 onClick={streamHandler}
                 >
                     submit
                 </Button>
 
+              </div>
               </div>
            </div>
         </section>

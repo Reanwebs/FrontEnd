@@ -28,15 +28,18 @@ function RecordedVideos() {
    async function getVideosHandler(){
     try {
       const res = await getUserVideos(userInfo.userName).unwrap()
-      console.log(res.videos);
-      const videosWithUrl = res.videos.map((video) => ({
+     
+      if(res.videos){
+        const videosWithUrl = res.videos.map((video) => ({
         ...video,
         url: '', 
       }));
-      setVideos(videosWithUrl)
-      console.log(videosWithUrl,"with url");
-      setLoading(true);
-      console.log(res);
+        setVideos(videosWithUrl,"user videos")
+        setLoading(true);
+       
+      }
+      
+      
     } catch (error) {
       console.log(error);
     }
@@ -85,18 +88,17 @@ function RecordedVideos() {
 
 
   return (
-    <div className="h-fit">
-      {loading ? <div className="w-full flex justify-center h-full">
+      loading ? <div className="w-full flex justify-center h-full">
     <div className="py-52">
       <RingLoader color="#1bacbf"/>
     </div>
   </div> :
-      <div className="grid grid-cols-4 gap-4">
-        {urlVideos.map((video, index) => (
+   
+        urlVideos.map((video, index) => (
           <div key={index} >
-           <Card isFooterBlurred className="w-[350px] h-[300px] col-span-12 sm:col-span-7 mt-4 ">
+           <Card isFooterBlurred className="w-[350px] h-[300px]  mt-4 ">
           <div className="max-w-[400px] ">
-            <div className="video-container">
+            <div className="video-container rounded overflow-hidden hover:shadow-lg">
               <video poster={`${CLOUDINARY_FETCH_URL}/${video.thumbnailId}`} controls width={400} height={225} autoPlay muted id='videoPlayer'>
                 <source src={video.url} type="video/mp4" />
                 Your browser does not support the video tag.
@@ -136,10 +138,7 @@ function RecordedVideos() {
           </div>
           </Card>
           </div>
-         ))}
-      </div>
-}
-    </div>
+         ))
   );
 }
 

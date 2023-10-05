@@ -1,4 +1,4 @@
-import { Input,Textarea,Select,SelectItem,Image,Button } from "@nextui-org/react"
+import { Input,Textarea,Select,SelectItem,Image,Button ,Checkbox} from "@nextui-org/react"
 import { useState,useEffect } from "react"
 import { useSelector } from "react-redux";
 import { useUserGetInterestsMutation } from "../../slices/api_slices/usersApiSlice";
@@ -22,6 +22,8 @@ const VideoUploadPage = ()=>{
         userName:userInfo.userName,
         avatarId:userInfo.avatarId ? userInfo.avatarId : '',
         thumbnailId:'',
+        exclusive:false,
+        coinToWatch:'',
         videoFile:[]
     })
 
@@ -82,6 +84,8 @@ const VideoUploadPage = ()=>{
             data.append("avatarId",videoData.avatarId)
             data.append("thumbnailId",cloudRes.data['public_id'])
             data.append("interest",videoData.interest)
+            data.append('exclusive',videoData.exclusive)
+            data.append('coinTowatch',videoData.coinToWatch)
             const res = await uploadVideo(data).unwrap()
             console.log(res);
             toast.success("video uploaded successfully")
@@ -98,13 +102,16 @@ const VideoUploadPage = ()=>{
         if(!videoData.title || !videoData.description || !videoData.interest ) throw new Error("please enter all fileds")
         if(!thumbnail) throw new Error("please select a thumbnail")
         if(!selectedVideo) throw new Error("please select a video file")
+        if(videoData.exclusive && !videoData.coinToWatch) throw new Error('please enter the value for your video')
+        if(parseInt(videoData.coinToWatch) < 0) throw new Error('please provide a value greaterthan 1')
     }
     return (
-        <div className="flex flex-col items-center m-12 h-screen">
+        <div className="flex flex-col items-center m-12 ">
             <div className="m-2 ">
                 <h1 className="font-semibold text-2xl ">Upload Video</h1>
             </div>
-             <div className="m-2 ">
+            <div className="items-center justify-center ">
+             <div className="m-2">
                 <label>Title:</label>
                     <Input
                         placeholder='enter a title for your stream'
@@ -158,6 +165,7 @@ const VideoUploadPage = ()=>{
                         ))}
                     </Select>
               </div>
+             
               <div className="m-2">
               <label className="cursor-pointer">
                  select a thumbnail :
@@ -183,7 +191,7 @@ const VideoUploadPage = ()=>{
                     </div>
                
               </div>
-              <div className="m-2">
+              <div className="m-2 ">
               <label className="cursor-pointer ">
                  select a video :
                  </label>  
@@ -209,9 +217,44 @@ const VideoUploadPage = ()=>{
                     </div>
                     }
               </div>
+              <div className="m-4" >
+                    <label>
+                        <Checkbox
+                        type="checkbox"
+                        name="chat"
+                        checked={videoData.exclusive}
+                        onChange={(e)=>{
+                            setVideoData({
+                                ...videoData,
+                                exclusive:e.target.checked
+                            })
+                        }}
+                        />
+                        Exclusive
+                    </label>
+              </div>
+              {videoData.exclusive && 
               <div className="m-2">
+              <label>Coins:</label>
+                  <Input
+                      placeholder='enter a the number of coins'
+                      type="number"
+                      name="coins"
+                      classNames="w-full"
+                      value={videoData.coinToWatch}
+                      onChange={(e)=>{
+                          setVideoData({
+                              ...videoData,
+                              coinToWatch:e.target.value
+                          })
+                      }}
+                  />
+           </div>
+              }
+              
+              <div className="m-2 flex justify-center">
               <Button 
-                className="m-2"
+                className="m-1"
                 onClick={()=>{
                     navigate('/profile')
                 }}
@@ -222,10 +265,11 @@ const VideoUploadPage = ()=>{
                 color="primary"
                 isLoading={isLoading}
                 onClick={uploadDataHandler}
+                className="m-1"
                 >
                     submit
                 </Button>
-
+                </div>
               </div>
            </div>
     )

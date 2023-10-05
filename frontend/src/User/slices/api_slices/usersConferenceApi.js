@@ -33,7 +33,8 @@ export const userConferenceApiSlice = apiSlice.injectEndpoints({
       stopStream:createApiMutation(builder,'stopStream','stop-stream','PATCH'),
       scheduledConference:createApiMutation(builder,'scheduledConference','scheduled-conference','GET'),
       getStreamDataById:createApiGetQuery(builder,'getStreamDataById','get-stream-by-id','GET'),
-      getLiveStreamsData:createApiMutation(builder,' getLiveStreamsData','get-stream','GET')
+      getLiveStreamsData:createApiMutation(builder,' getLiveStreamsData','get-stream','GET'),
+      getCompletedConference:createApiMutation(builder,'getCompletedConference','completed-schedules','GET')
     })
 })
 
@@ -47,5 +48,6 @@ export const {
   useExitStreamMutation,
   useStopStreamMutation,
   useGetStreamDataByIdMutation,
-  useGetLiveStreamsDataMutation
+  useGetLiveStreamsDataMutation,
+  useGetCompletedConferenceMutation
 } = userConferenceApiSlice
