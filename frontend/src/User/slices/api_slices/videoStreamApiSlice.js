@@ -44,7 +44,7 @@ const createApiMutation = (builder,endpoint,url,method)=>{
      reportVideo:createApiMutation(builder,'reportVideo','report-video','PUT'),
      blockVideo:createApiMutation(builder,'blockVideo','block-video','PATCH'),
      getReportedVideos:createApiMutation(builder,'getReportedVideos','get-reported-videos','GET'),
-     getExclusiveVideos:createApiMutation(builder,'getExclusiveVideos','exclusive-content','GET')
+     getExclusiveVideos:createApiMutation(builder,'getExclusiveVideos','exclusive-content','GET'),
     })
   }) 
 
@@ -57,5 +57,6 @@ const createApiMutation = (builder,endpoint,url,method)=>{
     useToggleStarMutation,
     useReportVideoMutation,
     useBlockVideoMutation,
-    useGetReportedVideosMutation
+    useGetReportedVideosMutation,
+    useGetExclusiveVideosMutation
   } = streamApiSlice

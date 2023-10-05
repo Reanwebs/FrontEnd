@@ -4,6 +4,7 @@ import HomeSkeleton from '../../components/ShimmerForHome/HomeSkeleton';
 
 const RoomContainer = lazy(()=> import("../../components/RoomContainer/RoomContainer"))
 const StreamContainer = lazy(()=> import("../../components/StreamedVideos/StreamedVideos"))
+const ExclusiveContainer = lazy(()=> import("../../components/StreamedVideos/ExclusiveVideos"))
 
 
 const Home = ()=>{
@@ -14,6 +15,9 @@ const Home = ()=>{
             </Suspense>
             <Suspense fallback={<HomeSkeleton/>}>
                 <StreamContainer/>
+            </Suspense>
+            <Suspense fallback={<HomeSkeleton/>}>
+                <ExclusiveContainer/>
             </Suspense>
         </div>
        

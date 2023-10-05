@@ -185,11 +185,10 @@ const Profile = ()=>{
         </Button>
     </div>
     <div className=" flex flex-col justify-evenly  p-10 md:p-12 mb-8">
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
         <Suspense fallback={<HomeSkeleton/>}>
-             <RecordedVideos/> 
+             <HomeSkeleton/> 
         </Suspense>
-     </div>
+    
     </div>
     </section>
     </>
