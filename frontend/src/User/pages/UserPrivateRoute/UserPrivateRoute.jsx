@@ -59,9 +59,8 @@ const UserPrivateRoute  = ()=>{
 
     const logoutHandler =async ()=>{
         try {
-              const res = await logOut()
+              await logOut()
             dispatch(removeCredentials())
-             toast.success(res.data.message)
               navigate('/')           
             } catch (err) {
                 toast.error(err.message)

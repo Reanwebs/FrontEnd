@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <BrowserRouter>
         <main className="dark text-foreground bg-[#080219]">
           <App />
-          <ToastContainer/>
+          <ToastContainer position="top-center"/>
         </main>
         </BrowserRouter>
       </GoogleOAuthProvider> 

@@ -36,6 +36,7 @@ const Join = () => {
   };
 
   return (
+    
     <div className='flex flex-col items-center m-4'>
        
     <div className="m-4">

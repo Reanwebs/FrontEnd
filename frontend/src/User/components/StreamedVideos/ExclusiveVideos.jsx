@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import s3 from '../../../utils/s3SetUp/bucket'
 import { BsCoin } from 'react-icons/bs'
 import { Tooltip } from "@material-tailwind/react";
+import { useSelector } from 'react-redux'
 
 
 
@@ -21,6 +22,8 @@ const ExclusiveVideos = ()=>{
     const [videos,setVideos] = useState([])
     const [loading ,setLoading] = useState(true)
     const [urlVideos,setUrlVideos] = useState([])
+    const userInfo = useSelector((state)=> state.auth.userInfo)
+    const [userName] = useState(userInfo.userName)
 
     const [isHovered, setIsHovered] = useState(false);
     const navigate = useNavigate()
@@ -41,7 +44,7 @@ const ExclusiveVideos = ()=>{
 
     async function checkWalletStatusHandler(id){
       try {
-
+        console.log(id);
         const res = await checkWalletStatus({videoId:id}).unwrap();
         console.log(res);
         
@@ -64,7 +67,6 @@ const ExclusiveVideos = ()=>{
         }));
         setVideos(videosWithUrl)
         setLoading(true);
-        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -110,8 +112,11 @@ const ExclusiveVideos = ()=>{
         onMouseEnter={()=>handleMouseEnter(idx)}
         onMouseLeave={handleMouseLeave}
         onClick={()=>{
-          checkWalletStatusHandler(video.videoId)
-          // navigate(`/video/${video.VideoId}`)
+        if(video.userName !== userName){
+          checkWalletStatusHandler(video.VideoId)
+        }else{
+          navigate(`/video/${video.VideoId}`)
+        }    
         }}
         >
           <Tooltip
