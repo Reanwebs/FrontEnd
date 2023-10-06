@@ -95,7 +95,7 @@ function RecordedVideos() {
   </div> :
    
         urlVideos.map((video, index) => (
-          <div key={index} >
+          <div key={index} className='m-4'>
            <Card isFooterBlurred className="w-[350px] h-[300px]  mt-4 ">
           <div className="max-w-[400px] ">
             <div className="video-container rounded overflow-hidden hover:shadow-lg">

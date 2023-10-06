@@ -184,9 +184,9 @@ const Profile = ()=>{
             Upload Video
         </Button>
     </div>
-    <div className=" flex flex-col justify-evenly  p-10 md:p-12 mb-8">
+    <div className=" flex px-8 overflow-y-auto stream_container">
         <Suspense fallback={<HomeSkeleton/>}>
-             <HomeSkeleton/> 
+             <RecordedVideos/> 
         </Suspense>
     
     </div>
