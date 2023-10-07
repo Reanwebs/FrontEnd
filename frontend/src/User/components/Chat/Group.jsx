@@ -30,7 +30,7 @@ const Group = () => {
   useEffect(()=>{
     if(!selectedGroup && groups.length > 0){
       handleGroupClick(groups[0])
-      console.log(groups,"groups data");
+      // console.log(groups,"groups data");
     }
   },[groups])
 
@@ -65,13 +65,16 @@ const Group = () => {
     try{
      const res = await getGroupChat(createChatReq)
       console.log(res)
-      const mappedMessages = res.data.map((message) => ({
+      if(res.data){
+          const mappedMessages = res.data.map((message) => ({
         sender: message.UserName,
         text: message.Text,
       }));
       setChatHistory([]);
-      setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
-      // scrollToBottom();
+      console.log(mappedMessages);
+      setChatHistory(mappedMessages);
+
+      }
     }catch(error){
       console.log(error)
     }
@@ -97,8 +100,10 @@ const Group = () => {
 
   const handleReceivedMessage = (data)=>{
     
-    const message = JSON.parse(data)
-    console.log(message);
+    const res = JSON.parse(data)
+    setChatHistory((prevHistory)=> [...prevHistory,res]);
+    console.log(chatHistory,"whole chat history");
+
   }
 
   const handleSendMessage = () => {
@@ -111,9 +116,9 @@ const Group = () => {
     ]);
     const messageObject = {
       text: message,
-      sender: userName, 
-      groupId: selectedGroup.GroupID, 
-      groupName:selectedGroup.GroupName
+      sender:userName, 
+      GroupID: selectedGroup.GroupID, 
+      GroupName:selectedGroup.GroupName
     };
     socket.send(JSON.stringify(messageObject));
     setMessage('');
@@ -133,7 +138,7 @@ const Group = () => {
     };
     ws.onmessage = (event) => {
       handleReceivedMessage(event.data)
-      console.log(`Received message for group: ${groupName}`, event.data);
+
     };
   };
 
@@ -142,7 +147,7 @@ const Group = () => {
     setIsUserListOpen(!isUserListOpen);
   };
   const insertEmoji = (emoji) => {
-    console.log(emoji,"emoji")
+    // console.log(emoji,"emoji")
     setMessage(message + emoji.native);
   };
   const handleKeyDown = (e) => {
@@ -211,7 +216,7 @@ const Group = () => {
               <div
                 key={index}
                 ref={divRef}
-                className={`message-bubble ${message.sender === userInfo.userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
+                className={`message-bubble ${message.sender === userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
               >
                 {message.text}
               </div>

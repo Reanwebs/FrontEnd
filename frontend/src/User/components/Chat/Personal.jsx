@@ -42,7 +42,7 @@ const Personal = () => {
   },[chatHistory])
 
   useEffect(()=>{
-    console.log(users,"users");
+    // console.log(users,"users");
     if(!selectedUser && users.length > 0){
 
       handleUserClick(users[0])
@@ -117,7 +117,7 @@ const Personal = () => {
    
     if (event.data.startsWith('{')) {
       const receivedMessage = JSON.parse(event.data);
-      console.log(receivedMessage,"recieved message");
+      // console.log(receivedMessage,"recieved message");
       
       if (receivedMessage.type === "onlineStatus") {
         const isOnline = receivedMessage.online;
@@ -176,7 +176,7 @@ const Personal = () => {
   };
 
   const insertEmoji = (emoji) => {
-    console.log(emoji,"emoji")
+    // console.log(emoji,"emoji")
     setMessage(message + emoji.native);
   };
 
