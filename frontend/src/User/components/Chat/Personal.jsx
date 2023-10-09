@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from "react-cookie";
 import { RingLoader } from 'react-spinners';
+import { WS_URL } from '../../../utils/config/config';
 
 
 
@@ -17,7 +18,7 @@ const Personal = () => {
   const authCookie = cookie.get("user-auth")
   const userInfo = useSelector(state => state.auth.userInfo)
   const [userName] = useState(userInfo.userName)
-  const socket = new WebSocket(`ws://localhost:5053/ws`);
+  const socket = new WebSocket(WS_URL);
   const [selectedUser, setSelectedUser] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
@@ -63,7 +64,11 @@ const Personal = () => {
      try {
       setLoading(true)
       const chatRes = await getChat(userAuthCookie)
-      setUser(chatRes.data)
+      if(chatRes.data){
+        setUser(chatRes.data)
+      }
+      setLoading(false)
+     
     } catch (error) {
       console.log(error);
     }
@@ -103,12 +108,7 @@ const Personal = () => {
     createChatHandler(chatreq)
     getChatHistoryHandler(chatreq)
     setSelectedUser(user);
-   
-    
   }
-
-  
-
   const [online, setOnline] = useState(false);
 
   

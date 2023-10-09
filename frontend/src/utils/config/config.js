@@ -5,3 +5,4 @@ export const AWS_ACCESS_KEY = import.meta.env.VITE_AWS_ACCESS_KEY
 export const AWS_SECRET_KEY=import.meta.env.VITE_AWS_SECRET_KEY
 export const BUCKET_NAME =import.meta.env.VITE_BUCKET_NAME
 export const BUCKET_REGION=import.meta.env.VITE_BUCKET_REGION
+export const WS_URL=import.meta.env.VITE_WS_URL

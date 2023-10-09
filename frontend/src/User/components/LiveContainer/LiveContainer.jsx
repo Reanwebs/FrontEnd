@@ -69,6 +69,9 @@ useEffect(()=>{
         init()
         stream()
     }
+    return ()=>{
+        leaveStream()
+    }
 },[])
 
 

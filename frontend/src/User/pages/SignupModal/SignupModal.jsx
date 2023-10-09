@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import {useState,useEffect} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
 import {  numberValidation, emailValidation, passwordValidation, otpValidation,cPasswordValidation} from "../../../utils/validation/useFormValidation";
 import {toast} from 'react-toastify'
@@ -144,7 +144,8 @@ async function signupHandler(){
       }
       const res = await register(data).unwrap()
       console.log(res,"res for signup");
-        await createWallet({userID:res.userId}).unwrap()
+       const response = await createWallet({userID:res.userId}).unwrap()
+       console.log(response);
   
         if(res.reward){
           const wallet = {
@@ -169,6 +170,7 @@ async function signupHandler(){
         referral:''
       })
     } catch (err) {
+      console.log(err,"error in signup");
       toast.error(err?.data?.message || err.error)
     }
   }

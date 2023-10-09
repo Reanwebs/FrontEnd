@@ -1,12 +1,10 @@
 import "./Chat.css"
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 import Group from "../../components/Chat/Group";
 import Personal from "../../components/Chat/Personal";
 import Public from "../../components/Chat/Public";
 
 const Chat =()=>{
-    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('personal'); 
   
     const handleTabClick = (tab) => {

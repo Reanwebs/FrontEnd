@@ -38,4 +38,6 @@ res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
 
 const port =  process.env.PORT
 
-app.listen(port,()=>console.log(`server listening to localhost:${port} `))      
+app.listen(port, () =>
+  console.log(`Server listening on https://localhost:${port}`)
+);

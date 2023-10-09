@@ -40,7 +40,6 @@ function GoogleAuth(){
           <GoogleLogin
             width="352px"
             size='large'
-            // theme="filled_blue"
             logo_alignment="center"
             shape="pill"
             auto_select={false}

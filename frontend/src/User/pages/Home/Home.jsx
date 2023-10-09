@@ -9,7 +9,7 @@ const ExclusiveContainer = lazy(()=> import("../../components/StreamedVideos/Exc
 
 const Home = ()=>{
     return (
-        <div className='h-full  w-full max-w-screen-xl'>
+        <div className='h-screen w-full'>
             <Suspense fallback={<HomeSkeleton/>}>
                 <RoomContainer/>
             </Suspense>
