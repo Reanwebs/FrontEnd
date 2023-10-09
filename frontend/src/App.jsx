@@ -15,6 +15,7 @@ import VideoUploadPage from './User/pages/VideoUploadPage/VideoUpload'
 import FullScreenVideo from './User/pages/FullScreenVideo/FullScreenVideo'
 import CommunityDetail from './User/components/CommunityDetail/CommunityDetail'
 import WalletHistory from './User/pages/WalletHistory/WalletHistory'
+import NotFound  from './User/pages/NotFound'
 
 import AdminLayout from './Admin/pages/AdminLayout'
 import AdminLogin from './Admin/pages/loginPage/AdminLogin'
@@ -29,14 +30,14 @@ import ViewVideo from './Admin/pages/ViewVideo/ViewVideo'
 function App() {
   return (
       <Routes>
-        <Route path='/' element={<Layout/>}>
+        <Route path='/' element={<Layout/>} >
            <Route index={true} element={<Landing/>}/>
            <Route path='' element={<UserPrivateRoute/>}>
              <Route path='home' element={<Home/>}/>
              <Route path='profile' element={<Profile/>}/>
              <Route path='schedule' element={<Schedule/>}/>
              <Route path='conference' element={<Conference/>}/>
-             <Route path='messages'element={<Chat/>}/>
+             <Route path='messages'element={<Chat/>} />
              <Route path='group'element={<Group/>}/>
              <Route path='media-container/:id'element={<MediaContainer/>}/>
              <Route path='stream' element={<StartStream/>}/>
@@ -45,6 +46,9 @@ function App() {
              <Route path='video/:id'element={<FullScreenVideo/>} />
              <Route path='community/:id'element={<CommunityDetail/>} />
              <Route path='wallet'element={<WalletHistory/>} />
+             <Route path='*'element={<NotFound/>} />
+
+             
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>}>
@@ -56,6 +60,7 @@ function App() {
             <Route path='community' element={<CommunityTable/>}/>
             <Route path='report' element={<ReportedVideoTable/>}/>
             <Route path='video/:id'element={<ViewVideo/>} />
+            <Route path='/admin/*'element={<NotFound/>} />
             <Route/>
           </Route>
         </Route>

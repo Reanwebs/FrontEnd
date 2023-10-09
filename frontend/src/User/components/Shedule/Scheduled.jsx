@@ -1,10 +1,12 @@
-import {Card, CardHeader, CardBody, CardFooter, Divider, Image} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Divider,  Button} from "@nextui-org/react";
 import { useState,useEffect } from "react";
 import { useScheduledConferenceMutation } from "../../slices/api_slices/usersConferenceApi";
 import {toast} from 'react-toastify'
-import { Link } from "react-router-dom";
 import moment from "moment"
 import { RingLoader } from "react-spinners";
+import {setConferenceState} from "../../slices/reducers/user_reducers/conferenceReducer"
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -12,6 +14,8 @@ const Scheduled =()=>{
 
   const [scheduledData,setScheduledData] = useState([])
   const [scheduledConference,{isLoading}] = useScheduledConferenceMutation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
 
   useEffect(()=>{
@@ -29,6 +33,13 @@ const Scheduled =()=>{
       toast.error(error?.data?.message || error?.message)
     }
 
+  }
+
+  const joinConference = (id)=>{
+    if(id){
+      dispatch(setConferenceState({status:true}))
+      navigate(`/media-container/${id}`)
+    }
   }
     return(
       isLoading ? <div className="w-full flex justify-center h-full">
@@ -58,10 +69,10 @@ const Scheduled =()=>{
                   <p>Time : {data?.Time ? moment(data?.Time ).format('MMM Do YYYY') : "invalid date"}</p>
                 </CardBody>
                 <Divider />
-                <CardFooter>
-                  <Link color="primary" to={`/media-container/${data?.ScheduleID}`}>
+                <CardFooter className="justify-center">
+                  <Button color="primary" variant="bordered" onClick={()=>joinConference(data?.ScheduleID)}>
                     Start Conference
-                  </Link>
+                  </Button>
                 </CardFooter>
               </Card>
             ))}

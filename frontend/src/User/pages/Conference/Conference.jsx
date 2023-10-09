@@ -13,6 +13,9 @@ const Conference =()=>{
     };
         return (
             <>
+              <section className="h-full">
+          <div className="py-4 px-4 mx-auto max-w-screen-xl lg:py-8">
+             <div className=" flex flex-col justify-evenly p-5 md:p-6 mb-">
               <div className="type-container flex justify-center">
 
               <div
@@ -40,6 +43,9 @@ const Conference =()=>{
               <div className={`conference-body ${activeTab === 'private' ? 'active' : ''}`}>
                 {activeTab === 'private' && <Private/>}
               </div>
+              </div>
+              </div>
+              </section>
             </>
         );
    

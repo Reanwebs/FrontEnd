@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import GoogleAuth from "../../components/GoogleAuth/GoogleAuth";
 
 
+
 export default function LoginModal() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [show ,setShow] = useState(true)

@@ -129,7 +129,8 @@ const Group = () => {
     const messageObject = {
       text: message,
       sender: userName, 
-      recipient: selectedGroup.GroupID, 
+      groupId: selectedGroup.GroupID, 
+      groupName:selectedGroup.GroupName
     };
     socket.send(JSON.stringify(messageObject));
     setMessage('');

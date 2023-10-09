@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Tooltip, Button } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
+import {  Button } from "@material-tailwind/react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import PageTitle from "../PageTitle/PageTitle";
@@ -9,7 +9,7 @@ import Swal from "sweetalert2"
 
 
 const UserTable = () => {
-  const [userData, SetUserData] = useState([{}]);
+  const [userData, setUserData] = useState([{}]);
   const [reStatus,setReStatus] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3);
@@ -23,8 +23,10 @@ useEffect(()=>{
 async function getAllUsers(){
     try {
     const res = await getUsers().unwrap();
-    console.log(res.users);
-    SetUserData(res.users)  
+    if(res.users){
+      setUserData(res.users)  
+    }
+    
     } catch (error) {
         toast.error("error in fetching users")
     }
@@ -150,28 +152,7 @@ async function getAllUsers(){
       </div>
 
       {/* <!-- Previous Button --> */}
-      <div className="flex justify-center mt-10">
-        <button
-          type="button"
-          className="inline-flex items-center px-4 py-2 mr-3 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          onClick={goToPreviousPage}
-          disabled={currentPage === 1}
-        >
-          Previous
-          {/* Previous button content */}
-        </button>
-        <button
-          type="button"
-          className="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          onClick={goToNextPage}
-          disabled={
-            currentPage === Math.ceil(userData?.length ?? 0 / itemsPerPage)
-          }
-        >
-          Next
-          {/* Next button content */}
-        </button>
-      </div>
+     
       </div>
     </div>
     </>
