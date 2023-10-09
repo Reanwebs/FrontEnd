@@ -46,9 +46,9 @@ const Personal = () => {
     if(!selectedUser && users.length > 0){
 
       handleUserClick(users[0])
-      setLoading(false)
+     
     }
-    
+    setLoading(false)
   },[users])
 
   useEffect(() => {
@@ -63,6 +63,7 @@ const Personal = () => {
      try {
       setLoading(true)
       const chatRes = await getChat(userAuthCookie)
+      console.log(chatRes,"response");
       setUser(chatRes.data)
     } catch (error) {
       console.log(error);
@@ -205,7 +206,15 @@ const Personal = () => {
               >
                 <div className="userlist-container " onClick={() =>setShowEmojiPicker(false)}>
                   <div className="user-avatar">
-                    <img src={user?.AvatarID ? `${CLOUDINARY_FETCH_URL}/${user.AvatarID}`: `${CLOUDINARY_FETCH_URL}/ecmoviuvqqedrfymjxad.webp` } alt={`avatar`} />
+                    {user.AvatarID ? (
+                      <img src={`${CLOUDINARY_FETCH_URL}/${user.AvatarID}`} alt={`avatar`} 
+                      onError={(e) => {
+                        e.target.src = 'default-avatar.jpg';
+                      }}
+                      />
+                    ) : (
+                      <img src="default-avatar.jpg" alt="Default Avatar" />
+                    )}
                   </div>
                   <div className="user-info">
                     <span className="user-name">{user.RecipientName}</span>
@@ -227,7 +236,13 @@ const Personal = () => {
           <div className='selected-chat-box'>
             <div className='chat-box-head'>
             <div className="user-avatar">
-                    <img src={selectedUser?.AvatarID ? `${CLOUDINARY_FETCH_URL}/${selectedUser.AvatarID}`: `${CLOUDINARY_FETCH_URL}/ecmoviuvqqedrfymjxad.webp`} alt={`avatar`} />
+            <img
+              src={selectedUser?.AvatarID ? `${CLOUDINARY_FETCH_URL}/${selectedUser.AvatarID}` : 'default-avatar.jpg'}
+              alt={`avatar`}
+              onError={(e) => {
+                e.target.src = 'default-avatar.jpg';
+              }}
+            />
             </div>
             <div>
             {selectedUser?.RecipientName}

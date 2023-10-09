@@ -45,7 +45,9 @@ const Group = () => {
         UserID :userName,
       }
      const groupRes = await getGroup(getGroupReq)
-     setGroups(groupRes.data)
+     if (groupRes.data){
+      setGroups(groupRes.data)
+     }
     }catch(error){
       console.log(error)
     }
@@ -67,10 +69,10 @@ const Group = () => {
       console.log(res)
       const mappedMessages = res.data.map((message) => ({
         sender: message.UserName,
-        text: message.Text,
+        text: message.Text
       }));
-      setChatHistory([]);
-      setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
+      
+      setChatHistory(mappedMessages);
       // scrollToBottom();
     }catch(error){
       console.log(error)
@@ -97,8 +99,23 @@ const Group = () => {
 
   const handleReceivedMessage = (data)=>{
     
-    const message = JSON.parse(data)
-    console.log(message);
+    const resp = JSON.parse(data)
+    if (data.startsWith('{')) {
+      const receivedMessage = JSON.parse(data);
+      console.log(receivedMessage,"recieved message");
+  
+      setChatHistory((prevHistory) => [
+            ...prevHistory,
+            {
+              sender: receivedMessage.sender,
+              text: receivedMessage.text,
+              Group: receivedMessage.recipient
+            },
+      ]);
+      
+    } else {
+      console.log("Received plain text message:", data);
+    }
   }
 
   const handleSendMessage = () => {
@@ -107,7 +124,7 @@ const Group = () => {
     }
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { Group: selectedGroup.GroupID, text: message},
+      {Group: selectedGroup.GroupID, text: message,sender: userName,},
     ]);
     const messageObject = {
       text: message,
@@ -120,7 +137,7 @@ const Group = () => {
   };
 
   const connectWebSocket = (groupName) => {
-    const ws = new WebSocket(`ws://localhost:5053/ws/group?groupName=${groupName}&userName=${userName}`);
+    const ws = new WebSocket(`ws://localhost:5053/ws/group?groupName=${groupName}`);
     setSocket(ws); 
     ws.onopen = () => {
       console.log(`WebSocket connection established for group: ${groupName}`);
@@ -176,7 +193,11 @@ const Group = () => {
             >
               <div className="userlist-container" onClick={() =>setShowEmojiPicker(false)}>
                   <div className="user-avatar">
-                    <img src={Group?.AvaterID ?`${CLOUDINARY_FETCH_URL}/${Group.AvaterID}` : ''} alt={`avatar`} />
+                   {Group.AvatarID ? (
+                      <img src={`${CLOUDINARY_FETCH_URL}/${Group.AvatarID}`} alt={`avatar`} />
+                    ) : (
+                      <img src="default-group-avatar.jpg" alt="Default Avatar" />
+                    )}
                   </div>
                   <div className="user-info">
                     <span className="user-name">{Group.GroupName}</span>
@@ -197,7 +218,13 @@ const Group = () => {
           <div className='selected-chat-box'>
             <div className='chat-box-head'>
             <div className="user-avatar">
-                    <img src={selectedGroup?.AvaterID ? `${CLOUDINARY_FETCH_URL}/${selectedGroup.AvaterID}`:''} alt={`avatar`} />
+              <img 
+              src={selectedGroup?.AvatarID ? `${CLOUDINARY_FETCH_URL}/${selectedGroup.AvatarID}` : 'default-group-avatar.jpg'}
+              alt={`avatar`}
+              onError={(e) => {
+                e.target.src = 'default-group-avatar.jpg';
+              }}
+              />
             </div>
             <div>
             {selectedGroup.GroupName}
@@ -211,24 +238,29 @@ const Group = () => {
               <div
                 key={index}
                 ref={divRef}
-                className={`message-bubble ${message.sender === userInfo.userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
+                className={`message-bubble ${message.sender === userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
               >
-                {message.text}
+              
+                {message.sender !== userName && (<div className="message-user">{message.sender}</div>)}
+                <div className="message-text">{message.text}</div>
               </div>
               
             ))}
             </div>
             <div className="message-input">
                <button className="add-icon-button"onClick={() =>setShowEmojiPicker(!showEmojiPicker)}><FontAwesomeIcon icon={faSmile} /></button>
-               <div className="emoji-picker-container">
-                  {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
-               </div>
+                {selectedGroup.Permission && (
+                  <div className="emoji-picker-container">
+                    {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
+                  </div>
+                )}
                <input className='message-input-field'
                 type="text"
-                placeholder="Type your message..."
+                placeholder={selectedGroup.Permission? "Type your message...": "You can't send messages here."}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
+                disabled={!selectedGroup.Permission}
                />
                <button className="message-send-button"onClick={handleSendMessage}>Send</button>
             </div>           

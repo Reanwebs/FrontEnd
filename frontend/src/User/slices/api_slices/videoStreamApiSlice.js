@@ -30,6 +30,8 @@ const createApiMutation = (builder,endpoint,url,method)=>{
         url: `${STREAM_URL}/${url}`,
         method: 'GET',
         params: `?id=${id}&userName=${userName}`,
+
+        params: `?id=${id}&userName=${userName}`,
       }),
     });
   };
