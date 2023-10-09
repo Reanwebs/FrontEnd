@@ -13,7 +13,7 @@ const CommunityChart = ()=>{
             const getAllCommunities = async ()=>{
                 try {
                     const data = await getCommunities().unwrap()
-                    console.log(data);
+                   
                     if(data){
                         const communityData = data?.communities
                         let Active = 0;

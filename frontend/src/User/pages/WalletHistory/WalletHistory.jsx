@@ -13,6 +13,7 @@ const WalletHistory = ()=>{
     const userInfo = useSelector((state)=>state.auth.userInfo)
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
+    // const [isLoading] = useState(true)
 
 
     const goToPreviousPage = () => {
@@ -44,12 +45,13 @@ const WalletHistory = ()=>{
         getWalletHistory()
     },[])
     return (
-        isLoading ? <div className="w-full flex justify-center h-full">
+      <section className="h-screen">
+        {isLoading ? <div className="w-full flex justify-center h-screen">
         <div className="py-52">
           <RingLoader color="#1bacbf"/>
         </div>
       </div>:
-       <section className="h-full">
+      
           <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
              <div className=" flex flex-col justify-evenly p-10 md:p-12 mb-8">
                 <div className="w-full h-16 rounded-lg bg-slate-900 flex items-center content-center justify-center">
@@ -125,7 +127,7 @@ const WalletHistory = ()=>{
 }
       </div>
          </div>
-        
+}
        </section>
     )
 }

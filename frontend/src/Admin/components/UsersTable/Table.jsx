@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Tooltip, Button } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
+import {  Button } from "@material-tailwind/react";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import PageTitle from "../PageTitle/PageTitle";
@@ -9,7 +9,7 @@ import Swal from "sweetalert2"
 
 
 const UserTable = () => {
-  const [userData, SetUserData] = useState([{}]);
+  const [userData, setUserData] = useState([{}]);
   const [reStatus,setReStatus] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3);
@@ -23,8 +23,10 @@ useEffect(()=>{
 async function getAllUsers(){
     try {
     const res = await getUsers().unwrap();
-    console.log(res.users);
-    SetUserData(res.users)  
+    if(res.users){
+      setUserData(res.users)  
+    }
+    
     } catch (error) {
         toast.error("error in fetching users")
     }
