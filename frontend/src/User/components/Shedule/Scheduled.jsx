@@ -1,14 +1,21 @@
-import {Card, CardHeader, CardBody, CardFooter, Divider, Image} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Divider,  Button} from "@nextui-org/react";
 import { useState,useEffect } from "react";
 import { useScheduledConferenceMutation } from "../../slices/api_slices/usersConferenceApi";
 import {toast} from 'react-toastify'
-import { Link } from "react-router-dom";
+import moment from "moment"
+import { RingLoader } from "react-spinners";
+import {setConferenceState} from "../../slices/reducers/user_reducers/conferenceReducer"
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 
 const Scheduled =()=>{
 
   const [scheduledData,setScheduledData] = useState([])
-  const [scheduledConference] = useScheduledConferenceMutation()
+  const [scheduledConference,{isLoading}] = useScheduledConferenceMutation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
 
   useEffect(()=>{
@@ -18,7 +25,7 @@ const Scheduled =()=>{
   async function scheduledDataHandler(){
     try {
       const data = await scheduledConference().unwrap();
-      console.log(data,"oooooooooooooooooooo");
+      
       setScheduledData(data.ScheduledConference)
       console.log(scheduledData);
     } catch (error) {
@@ -27,7 +34,19 @@ const Scheduled =()=>{
     }
 
   }
+
+  const joinConference = (id)=>{
+    if(id){
+      dispatch(setConferenceState({status:true}))
+      navigate(`/media-container/${id}`)
+    }
+  }
     return(
+      isLoading ? <div className="w-full flex justify-center h-full">
+      <div className="py-52">
+        <RingLoader color="#1bacbf"/>
+      </div>
+    </div>:
       <div>
       {scheduledData && scheduledData.length > 0 ? (
         <div className="scheduled">
@@ -37,25 +56,23 @@ const Scheduled =()=>{
                 <CardHeader className="flex gap-3">
                   <div className="flex flex-col">
                     <p className="text-md">{data?.Title}</p>
-                    <p className="text-small text-default-500">{data?.Description}</p>
+                    <p className="text-small text-defaudata?.Time lt-500">{data?.Description}</p>
                   </div>
                 </CardHeader>
                 <Divider />
                 <CardBody>
                   <p>Type :Private</p>
                   <p>Interest: {data?.Interest}</p>
-                  <p>Partcipant Limit: {data?.ParticipantLimit}</p>
+                  <p>Partcipant Limit: {data?.Participantlimit}</p>
                   <p>ScheduleID  : {data?.ScheduleID}</p>
-                  <p>Chat : {data?.Chat}</p>
                   <p>Duration : {`${data?.Durations} mins`}</p>
-                  <p>Date : {data?.date}</p>
-                  <p>Time : {data?.Time}</p>
+                  <p>Time : {data?.Time ? moment(data?.Time ).format('MMM Do YYYY') : "invalid date"}</p>
                 </CardBody>
                 <Divider />
-                <CardFooter>
-                  <Link color="primary" to={`/media-container/${data?.ScheduleID}`}>
+                <CardFooter className="justify-center">
+                  <Button color="primary" variant="bordered" onClick={()=>joinConference(data?.ScheduleID)}>
                     Start Conference
-                  </Link>
+                  </Button>
                 </CardFooter>
               </Card>
             ))}

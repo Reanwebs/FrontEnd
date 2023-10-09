@@ -1,4 +1,4 @@
-import React, { useState , useEffect, useRef} from 'react';
+import { useState , useEffect, useRef} from 'react';
 import { useSelector } from 'react-redux';
 import "./Chat.css"
 import data from '@emoji-mart/data'
@@ -7,32 +7,47 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
 import { useGetGroupMutation, useCreateGroupChatMutation,useGetGroupChatMutation,} from '../../slices/api_slices/chatApiSlice';
 import { CLOUDINARY_FETCH_URL } from '../../../utils/config/config';
+import { RingLoader } from 'react-spinners';
 const Group = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
-  const userName = userInfo.userName;
+  const [userName] = useState(userInfo.userName)
   const [groups, setGroups] = useState([])
   const [selectedGroup, setSelectedGroup] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
   const [socket, setSocket] = useState(null); 
-  const [getGroup] = useGetGroupMutation();
+  const [getGroup,{isLoading}] = useGetGroupMutation();
   const [createGroupChat] = useCreateGroupChatMutation();
   const [getGroupChat] = useGetGroupChatMutation();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const messageHistoryRef = useRef(null);
+  const divRef = useRef()
+ 
   
   useEffect(()=>{
     getGroupHandler()
   },[])
 
-  const getGroupReq={
-    UserID :userName,
-  }
+  useEffect(()=>{
+    if(!selectedGroup && groups.length > 0){
+      handleGroupClick(groups[0])
+      console.log(groups,"groups data");
+    }
+  },[groups])
+
+  useEffect(() => {
+    divRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory,message]);
+
+  
   const getGroupHandler = async ()=>{
     try{
+      const getGroupReq={
+        UserID :userName,
+      }
      const groupRes = await getGroup(getGroupReq)
-     console.log(groupRes)
-     setGroups(groupRes.data)
+     if (groupRes.data){
+      setGroups(groupRes.data)
+     }
     }catch(error){
       console.log(error)
     }
@@ -54,17 +69,17 @@ const Group = () => {
       console.log(res)
       const mappedMessages = res.data.map((message) => ({
         sender: message.UserName,
-        text: message.Text,
+        text: message.Text
       }));
-      setChatHistory([]);
-      setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
-      scrollToBottom();
+      
+      setChatHistory(mappedMessages);
+      // scrollToBottom();
     }catch(error){
       console.log(error)
     }
   }
 
-  const handleGroupClick = (Group) => {
+  function  handleGroupClick(Group){
     const getChatReq={
       UserID  :userName,
       GroupID :Group.GroupID
@@ -80,7 +95,28 @@ const Group = () => {
     getGroupChatHandler(getChatReq)
     setSelectedGroup(Group);
     connectWebSocket(Group.GroupID);
-  };
+  }
+
+  const handleReceivedMessage = (data)=>{
+    
+    const resp = JSON.parse(data)
+    if (data.startsWith('{')) {
+      const receivedMessage = JSON.parse(data);
+      console.log(receivedMessage,"recieved message");
+  
+      setChatHistory((prevHistory) => [
+            ...prevHistory,
+            {
+              sender: receivedMessage.sender,
+              text: receivedMessage.text,
+              Group: receivedMessage.recipient
+            },
+      ]);
+      
+    } else {
+      console.log("Received plain text message:", data);
+    }
+  }
 
   const handleSendMessage = () => {
     if (message.trim() === '') {
@@ -88,19 +124,20 @@ const Group = () => {
     }
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { Group: selectedGroup.GroupID, text: message },
+      {Group: selectedGroup.GroupID, text: message,sender: userName,},
     ]);
     const messageObject = {
       text: message,
       sender: userName, 
-      recipient: selectedGroup.GroupID, 
+      groupId: selectedGroup.GroupID, 
+      groupName:selectedGroup.GroupName
     };
     socket.send(JSON.stringify(messageObject));
     setMessage('');
   };
 
   const connectWebSocket = (groupName) => {
-    const ws = new WebSocket(`ws://localhost:5053/ws/group?groupName=${groupName}&userName=${userName}`);
+    const ws = new WebSocket(`ws://localhost:5053/ws/group?groupName=${groupName}`);
     setSocket(ws); 
     ws.onopen = () => {
       console.log(`WebSocket connection established for group: ${groupName}`);
@@ -112,6 +149,7 @@ const Group = () => {
       console.error(`WebSocket error for group: ${groupName}`, error);
     };
     ws.onmessage = (event) => {
+      handleReceivedMessage(event.data)
       console.log(`Received message for group: ${groupName}`, event.data);
     };
   };
@@ -132,11 +170,20 @@ const Group = () => {
 
 
   return (
-    <div className="chat-container">
+    isLoading ? <div className="w-full flex justify-center h-full">
+    <div className="py-52">
+      <RingLoader color="#1bacbf"/>
+    </div>
+    </div>:
+    <div className="chat-container fixed w-screen pr-28 overflow-hidden">
         <div className="users-list">  
-        <div className='users-list-head'>
-          <button className="toggle-button" onClick={toggleGroupList}>Group List</button>
+        <div className='users-list-head flex items-center justify-center'>
+          <button className="toggle-button text-center" onClick={toggleGroupList}>Group List</button>
         </div>
+        {groups.length < 0 
+        ?
+        <h6 style={{ color: 'grey' }}>No communities to show</h6> 
+        :
         <ul>
           {groups !== null && groups.map((Group, index) => (
             <li
@@ -146,10 +193,14 @@ const Group = () => {
             >
               <div className="userlist-container" onClick={() =>setShowEmojiPicker(false)}>
                   <div className="user-avatar">
-                    <img src={Group?.AvatarID && `${CLOUDINARY_FETCH_URL}/${Group.AvatarID}`} alt={`avatar`} />
+                   {Group.AvatarID ? (
+                      <img src={`${CLOUDINARY_FETCH_URL}/${Group.AvatarID}`} alt={`avatar`} />
+                    ) : (
+                      <img src="default-group-avatar.jpg" alt="Default Avatar" />
+                    )}
                   </div>
                   <div className="user-info">
-                    <span className="user-name">{Group.GroupID}</span>
+                    <span className="user-name">{Group.GroupName}</span>
                     <span className="last-seen">{Group.lastSeen}</span>
                     {Group.unseenMessages > 0 && (
                     <span className="unseen-messages">{Group.unseenMessages} New</span>
@@ -159,6 +210,7 @@ const Group = () => {
             </li>
           ))}
           </ul>
+          }
         </div>
     
       <div className="chat-box">
@@ -166,43 +218,55 @@ const Group = () => {
           <div className='selected-chat-box'>
             <div className='chat-box-head'>
             <div className="user-avatar">
-                    <img src={selectedGroup?.AvatarID && `${CLOUDINARY_FETCH_URL}/${selectedGroup.AvatarID}`} alt={`avatar`} />
+              <img 
+              src={selectedGroup?.AvatarID ? `${CLOUDINARY_FETCH_URL}/${selectedGroup.AvatarID}` : 'default-group-avatar.jpg'}
+              alt={`avatar`}
+              onError={(e) => {
+                e.target.src = 'default-group-avatar.jpg';
+              }}
+              />
             </div>
             <div>
-            {selectedGroup.GroupID}
+            {selectedGroup.GroupName}
             <h6 style={{ color: 'grey' }}>group chat</h6>
             </div>              
             </div>
 
-            <div className="message-history" ref={messageHistoryRef} onClick={() =>setShowEmojiPicker(false)}>
+            <div className="message-history"  onClick={() =>setShowEmojiPicker(false)}>
             {chatHistory.map((message, index) => (
               
               <div
                 key={index}
-                className={`message-bubble ${message.sender === userInfo.userName ? 'sent-bubble' : 'received-bubble'}`}
+                ref={divRef}
+                className={`message-bubble ${message.sender === userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
               >
-                {message.text}
+              
+                {message.sender !== userName && (<div className="message-user">{message.sender}</div>)}
+                <div className="message-text">{message.text}</div>
               </div>
               
             ))}
             </div>
             <div className="message-input">
                <button className="add-icon-button"onClick={() =>setShowEmojiPicker(!showEmojiPicker)}><FontAwesomeIcon icon={faSmile} /></button>
-               <div className="emoji-picker-container">
-                  {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
-               </div>
+                {selectedGroup.Permission && (
+                  <div className="emoji-picker-container">
+                    {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
+                  </div>
+                )}
                <input className='message-input-field'
                 type="text"
-                placeholder="Type your message..."
+                placeholder={selectedGroup.Permission? "Type your message...": "You can't send messages here."}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
+                disabled={!selectedGroup.Permission}
                />
                <button className="message-send-button"onClick={handleSendMessage}>Send</button>
             </div>           
           </div>
         ) : (
-          <div className="no-Group-selected">
+          <div className="no-Group-selected flex items-center justify-center">
             <p>Select a Group to start a chat.</p>
           </div>
         )}

@@ -7,9 +7,9 @@ import {toast} from "react-toastify"
 import { useNavigate ,Navigate, Outlet} from "react-router-dom";
 import {removeCredentials } from "../../slices/reducers/user_reducers/authSlice";
 import {  useDispatch } from 'react-redux';
-import HomeSkeleton from "../../components/ShimmerForHome/HomeSkeleton";
 import { Cookies } from "react-cookie";
 import Footer from "../../components/Footer/Footer";
+import {setToken,removeToken} from "../../../utils/apiSlice/authReducer"
 
 
 
@@ -29,16 +29,18 @@ const UserPrivateRoute  = ()=>{
     useEffect(()=>{
         vaidateUserStatus();
         getWalletHandler()
+
     },[status])
 
     const vaidateUserStatus = async ()=>{
-        console.log("ok i was called !!!!!!!!out side auth!!!! cookie");
         try {
             if(!authCookie ){
-               console.log("ok i was called in side auth cookie");
                dispatch(removeCredentials());
+               dispatch(removeToken())
                setStatus(!status)
                navigate('/')
+            }else{
+                dispatch(setToken(authCookie))
             }
             if(userInfo){
                 const res = await vaidateUser({email:userInfo.email}).unwrap();
@@ -57,9 +59,8 @@ const UserPrivateRoute  = ()=>{
 
     const logoutHandler =async ()=>{
         try {
-              const res = await logOut()
+              await logOut()
             dispatch(removeCredentials())
-             toast.success(res.data.message)
               navigate('/')           
             } catch (err) {
                 toast.error(err.message)

@@ -95,8 +95,14 @@ const StartStream = ()=>{
 
 
     return (
-        <section className="h-screen">
-            <div className="flex flex-col items-center m-12">
+        <section className="h-full">
+          <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
+             <div className=" flex flex-col justify-evenly p-10 md:p-12 mb-8">
+             <h2 className="text-center text-gray-900 dark:text-white text-xl md:text-4xl font-extrabold mb-2">
+            Go Live With <span className="text-blue-800">Reanconnect </span>
+          </h2>
+            <div className="flex flex-col items-center  m-12">
+            <div className="items-center justify-center ">
              <div className="m-2 ">
                 <label>Title:</label>
                     <Input
@@ -174,14 +180,19 @@ const StartStream = ()=>{
                             />
                
               </div>
-              <div className="m-2">
+              <div className="m-2 flex justify-center">
                 <Button 
+                variant="bordered"
+                color="primary"
                 onClick={streamHandler}
                 >
                     submit
                 </Button>
 
               </div>
+              </div>
+           </div>
+           </div>
            </div>
         </section>
     )

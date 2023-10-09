@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 // import "./Conference.css";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
 import {toast} from 'react-toastify'
 import { Input ,Button} from '@nextui-org/react';
+import { setConferenceState } from '../../slices/reducers/user_reducers/conferenceReducer';
 
 import { useJoinPrivateConferenceMutation } from '../../slices/api_slices/usersConferenceApi';
 
@@ -12,11 +14,7 @@ const Join = () => {
   const [joinConference] = useJoinPrivateConferenceMutation()
   
   const navigate = useNavigate()
-
- 
-
-
-
+  const dispatch = useDispatch()
 
   const handleInputChange = (e) => {
     setConferenceId(e.target.value);
@@ -26,8 +24,7 @@ const Join = () => {
    try {
     const res = await joinConference({conferenceID:conferenceId}).unwrap();
     console.log(res);
-    console.log('Joining conference with ID:', conferenceId);
-    console.log(res);
+    dispatch(setConferenceState({status:true}))
     navigate(`/media-container/${conferenceId}`)
     
    } catch (error) {
@@ -39,7 +36,9 @@ const Join = () => {
   };
 
   return (
+    
     <div className='flex flex-col items-center m-4'>
+       
     <div className="m-4">
       <p>Enter the Conference ID to join:</p>
       <Input className='m-2' name='description' isRequired type="text"  placeholder="Conference ID"
@@ -48,7 +47,8 @@ const Join = () => {
           />
     </div>
     <div className='m-4'>
-       <Button  onClick={handleJoinConference}>
+       <Button variant="bordered"
+            color="primary" onClick={handleJoinConference}>
            join conference
    </Button>
     </div>

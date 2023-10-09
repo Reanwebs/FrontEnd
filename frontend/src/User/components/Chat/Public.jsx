@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import  { useState, useEffect,useRef } from 'react';
 import { useSelector } from 'react-redux';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -80,7 +80,7 @@ const Public = () => {
         {chatHistory.map((message, index) => (
         <div
           key={index}
-          className={`message-bubble ${message.user === userInfo.userName ? 'sent-bubble' : 'received-bubble'}`}
+          className={`message-bubble ${message.user === userInfo.userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
         > 
           {message.user !== userInfo.userName && (<div className="message-user">{message.user}</div>)}
           <div className="message-text">{message.text}</div>

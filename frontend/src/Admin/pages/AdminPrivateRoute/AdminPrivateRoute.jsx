@@ -9,6 +9,7 @@ import { useState ,useEffect} from 'react';
 import Sidebar from "../../components/SideBar/SideBar";
 import './AdminPrivateRoute.scss';
 import { Cookies } from "react-cookie";
+import { setToken,removeToken } from "../../../utils/apiSlice/authReducer";
 
 
 const AdminHome = ()=>{
@@ -19,7 +20,7 @@ const AdminHome = ()=>{
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [collapsed, setCollapsed] = useState(false);
-  const [image, setImage] = useState(false);
+  const [image] = useState(false);
   const [toggled, setToggled] = useState(false);
 
   const handleCollapsedChange = () => {
@@ -34,7 +35,10 @@ const AdminHome = ()=>{
   useEffect(()=>{
     if(!adminAuth){
       dispatch(removeCredentials())
+      dispatch(removeToken())
       navigate('/admin')
+    }else{
+      dispatch(setToken(adminAuth))
     }
   },[])
 
@@ -43,6 +47,7 @@ const AdminHome = ()=>{
             const res = await logout()
             console.log(res);
             dispatch(removeCredentials())
+            dispatch(removeToken())
             navigate('/admin')            
         } catch (error) {
             toast.error(error?.data?.message)
