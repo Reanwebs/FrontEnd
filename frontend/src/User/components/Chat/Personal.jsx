@@ -17,12 +17,10 @@ const Personal = () => {
   const authCookie = cookie.get("user-auth")
   const userInfo = useSelector(state => state.auth.userInfo)
   const [userName] = useState(userInfo.userName)
-  const [userName] = useState(userInfo.userName);
   const socket = new WebSocket(`ws://localhost:5053/ws`);
   const [selectedUser, setSelectedUser] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
-  const [getChat] = useGetChatMutation()
   const [getChat] = useGetChatMutation()
   const [createChat] = useCreateChatMutation()
   const [getChatHistory] = useGetChatHistoryMutation()
@@ -48,9 +46,9 @@ const Personal = () => {
     if(!selectedUser && users.length > 0){
 
       handleUserClick(users[0])
-      setLoading(false)
+     
     }
-    
+    setLoading(false)
   },[users])
 
   useEffect(() => {
@@ -129,7 +127,6 @@ const Personal = () => {
         setChatHistory((prevHistory) => [
             ...prevHistory,
             {
-                user: receivedMessage.user,
                 user: receivedMessage.user,
                 text: receivedMessage.text,
             },
