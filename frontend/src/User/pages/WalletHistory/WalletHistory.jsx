@@ -13,7 +13,6 @@ const WalletHistory = ()=>{
     const userInfo = useSelector((state)=>state.auth.userInfo)
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
-    // const [isLoading] = useState(true)
 
 
     const goToPreviousPage = () => {
@@ -29,13 +28,13 @@ const WalletHistory = ()=>{
         async function getWalletHistory(){
             try {
                 const res = await walletHistory({sort:""}).unwrap()
+               
                 if(res.Coins){
                   setWallet(res.Coins)
                 }
                 if(res.Result){
                   setWalletData(res.Result)
                 }
-                console.log(res.Result);
                 
             } catch (error) {
                 console.log(error);
@@ -72,28 +71,30 @@ const WalletHistory = ()=>{
                      </div>
                 </div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center justify-center">
             {walletData?.slice(
                 (currentPage -1 )* itemsPerPage,
                   currentPage * itemsPerPage
               )
               .map((x,idx)=>
-            <div className="w-3/5 h-12 rounded-lg bg-slate-900 flex items-center content-center justify-center m-1" key={idx}>
+            <div className="w-3/5 h-12 text-center rounded-lg bg-slate-900 flex items-center content-center justify-center m-1" key={idx}>
               
-              <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 pb-4" >
+              <table className="text-center w-full text-sm text-left text-gray-500 dark:text-gray-400 pb-4" >
               <tbody>
-              <tr className="hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="text-center hover:bg-gray-50 dark:hover:bg-gray-600">
                    <th
                      scope="row"
-                     className="px-6 py-4 font-bold text-m text-gray-900 whitespace-nowrap dark:text-white"
+                     className="text-center px-6 py-4 font-bold text-m text-gray-900 whitespace-nowrap dark:text-white"
                    >
                    
                    </th>
-                    <td className="px-6 py-4">
-                     {moment(x?.time?.seconds).format('MMM Do YYYY')}
+                    <td className="text-center px-6 py-4">
+                     {moment.unix(x?.time?.seconds).add(x?.time?.nanos / 1e6, 'milliseconds').format('MMM Do YYYY')}
                    </td>
-                   <td className="px-6 py-4">{x.TransactionType}</td>
-                   <td className="px-6 py-4">{x.CoinCount}coins</td>
+                   
+                   <td className="text-center px-6 py-4">{x.RewardReason}</td>
+                   <td className=" text-center px-6 py-4">{x.TransactionType}</td>
+                   <td className="text-center px-6 py-4">{x.RewardReason === "referral" ? "10" :x.CoinCount} coins</td>
                  </tr>
               </tbody>
          </table>

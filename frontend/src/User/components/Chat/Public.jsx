@@ -4,6 +4,7 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
+import { WS_URL } from '../../../utils/config/config';
 const Public = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
   const userName = userInfo.userName;
@@ -11,11 +12,18 @@ const Public = () => {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const socket = new WebSocket(`ws://localhost:5053/ws/public`);
+  const socket = useRef(null)
 
   useEffect(()=>{
-    socket.addEventListener('message', handleReceivedMessage);
-  },[chatHistory])
+
+    socket.current = new WebSocket(`${WS_URL}/public`)
+
+    socket.current.addEventListener('message', handleReceivedMessage);
+    return ()=> {
+      socket.current.close()
+    }
+
+  },[message])
 
   const handleReceivedMessage = (event) => {
     if (event.data.startsWith('{')) {
@@ -43,7 +51,7 @@ const Public = () => {
       user: userName,
       text: message, 
     };
-    socket.send(JSON.stringify(messageObject));
+    socket.current.send(JSON.stringify(messageObject));
     setChatHistory((prevHistory) => [
       ...prevHistory,
       { user:userInfo.userName, text: message },
@@ -74,7 +82,9 @@ const Public = () => {
         <div className="emoji-picker-container-public">
           {showEmojiPicker && <Picker data={data} onEmojiSelect={insertEmoji} />}
         </div>
-        <p>Let's Chat to the world</p>
+        <h2 className="pt-3 text-center text-gray-900 dark:text-white text-xl md:text-4xl font-extrabold mb-2">
+            Lets Chat With <span className="text-blue-800">World</span>
+          </h2>
       </div>
       <div className="public-chat-box" onClick={() =>setShowEmojiPicker(false)} ref={messageHistoryRef}>
         {chatHistory.map((message, index) => (

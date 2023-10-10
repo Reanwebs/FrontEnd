@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSmile } from '@fortawesome/free-solid-svg-icons';
 import { Cookies } from "react-cookie";
 import { RingLoader } from 'react-spinners';
-import { WS_URL } from '../../../utils/config/config';
+import { WS_URL ,WS_URL_PRO,MODE} from '../../../utils/config/config';
 
 
 
@@ -18,7 +18,8 @@ const Personal = () => {
   const authCookie = cookie.get("user-auth")
   const userInfo = useSelector(state => state.auth.userInfo)
   const [userName] = useState(userInfo.userName)
-  const socket = new WebSocket(WS_URL);
+  const socket = useRef(null)
+
   const [selectedUser, setSelectedUser] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
@@ -36,14 +37,22 @@ const Personal = () => {
     getChatHandler(authCookie)
   },[])
 
+  useEffect(()=>{
+      socket.current = new WebSocket(WS_URL)
+
+      socket.current.addEventListener('message', handleReceivedMessage);
+      return ()=> {
+        socket.current.close()
+      }
+  },[message])
 
   
+  
   useEffect(()=>{
-    socket.addEventListener('message', handleReceivedMessage);
-  },[chatHistory])
+    
+  },[])
 
   useEffect(()=>{
-    console.log(users,"users");
     if(!selectedUser && users.length > 0){
 
       handleUserClick(users[0])
@@ -114,7 +123,7 @@ const Personal = () => {
   
 
   const handleReceivedMessage = (event) => {
-   
+  
     if (event.data.startsWith('{')) {
       const receivedMessage = JSON.parse(event.data);
       console.log(receivedMessage,"recieved message");
@@ -130,7 +139,7 @@ const Personal = () => {
                 text: receivedMessage.text,
             },
         ]);
-        // setOnline(true)
+        setOnline(true)
         
       }
       
@@ -152,7 +161,7 @@ const Personal = () => {
     };
 
   
-    socket.send(JSON.stringify(messageObject));
+    socket.current.send(JSON.stringify(messageObject));
     
     setChatHistory((prevHistory) => [
       ...prevHistory,

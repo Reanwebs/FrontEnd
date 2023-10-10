@@ -30,7 +30,7 @@ import ViewVideo from './Admin/pages/ViewVideo/ViewVideo'
 function App() {
   return (
       <Routes>
-        <Route path='/' element={<Layout/>} >
+        <Route path='/' element={<Layout/>} errorElement={<NotFound/>}>
            <Route index={true} element={<Landing/>}/>
            <Route path='' element={<UserPrivateRoute/>}>
              <Route path='home' element={<Home/>}/>
@@ -51,7 +51,7 @@ function App() {
              
            </Route>
         </Route>
-        <Route path='/admin' element={<AdminLayout/>}>
+        <Route path='/admin' element={<AdminLayout/>} errorElement={<NotFound/>}>
           <Route index={true} element={<AdminLogin/>}/>
           <Route path='' element={<AdminHome/>}>
             <Route path='home' element={<Dashboard/>}/>

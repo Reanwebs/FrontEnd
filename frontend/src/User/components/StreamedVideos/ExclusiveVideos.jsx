@@ -13,6 +13,7 @@ import s3 from '../../../utils/s3SetUp/bucket'
 import { BsCoin } from 'react-icons/bs'
 import { Tooltip } from "@material-tailwind/react";
 import { useSelector } from 'react-redux'
+import {toast} from "react-toastify"
 
 
 
@@ -42,14 +43,16 @@ const ExclusiveVideos = ()=>{
     const [checkWalletStatus,{isLoading}] = useCheckUserWalletStatusMutation()
 
 
-    async function checkWalletStatusHandler(id){
+    async function checkWalletStatusHandler({VideoId,coin_for_watch,userName}){
       try {
-        console.log(id);
-        const res = await checkWalletStatus({videoId:id}).unwrap();
-        console.log(res);
-        
+        console.log(VideoId);
+        const res = await checkWalletStatus({videoId:VideoId}).unwrap();
+        if(res.Result === "true"){
+          toast.success(`${coin_for_watch} deducted from your wallet`)
+        }
       } catch (error) {
         console.log(error);
+        toast.error("No enough coins to watch")
       }
     }
     
@@ -87,7 +90,7 @@ const ExclusiveVideos = ()=>{
         );
         setUrlVideos(videosWithSignedUrls);
         setLoading(false); 
-        console.log(urlVideos,"exclusive videos url videos");
+       
         
         } catch (error) {
           console.log(error);
@@ -113,7 +116,7 @@ const ExclusiveVideos = ()=>{
         onMouseLeave={handleMouseLeave}
         onClick={()=>{
         if(video.userName !== userName){
-          checkWalletStatusHandler(video.VideoId)
+          checkWalletStatusHandler(video)
         }else{
           navigate(`/video/${video.VideoId}`)
         }    
@@ -132,10 +135,12 @@ const ExclusiveVideos = ()=>{
           }}
           >
         <Card  className="w-[350px] h-[300px] col-span-12 sm:col-span-7">
+          
         <video
           className={`z-0 object-fit ${isHovered === idx ? 'hovered' : ''}`}
           poster={`${CLOUDINARY_FETCH_URL}/${video.thumbnailId}`}
         >
+         
           <source src={video.url} type="video/mp4" />
                 Your browser does not support the video tag.
           

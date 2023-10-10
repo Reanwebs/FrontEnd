@@ -8,6 +8,7 @@ import { faSmile } from '@fortawesome/free-solid-svg-icons';
 import { useGetGroupMutation, useCreateGroupChatMutation,useGetGroupChatMutation,} from '../../slices/api_slices/chatApiSlice';
 import { CLOUDINARY_FETCH_URL } from '../../../utils/config/config';
 import { RingLoader } from 'react-spinners';
+import { WS_URL } from '../../../utils/config/config';
 const Group = () => {
   const userInfo = useSelector(state => state.auth.userInfo)
   const [userName] = useState(userInfo.userName)
@@ -15,7 +16,8 @@ const Group = () => {
   const [selectedGroup, setSelectedGroup] = useState(null); 
   const [message, setMessage] = useState(''); 
   const [chatHistory, setChatHistory] = useState([]); 
-  const [socket, setSocket] = useState(null); 
+  // const [socket, setSocket] = useState(null); 
+  const ws = useRef(null)
   const [getGroup,{isLoading}] = useGetGroupMutation();
   const [createGroupChat] = useCreateGroupChatMutation();
   const [getGroupChat] = useGetGroupChatMutation();
@@ -34,6 +36,30 @@ const Group = () => {
     }
   },[groups])
 
+  useEffect(()=>{
+
+  },[])
+
+
+
+  const connectWebSocket = (groupName) => {
+    ws.current = new WebSocket(`${WS_URL}/group?groupName=${groupName}&userName=${userName}`);
+ 
+    ws.current.onopen = () => {
+      console.log(`WebSocket connection established for group: ${groupName}`);
+    };
+    ws.current.onclose = () => {
+      console.log(`WebSocket connection closed for group: ${groupName}`);
+    };
+    ws.current.onerror = (error) => {
+      console.error(`WebSocket error for group: ${groupName}`, error);
+    };
+    ws.current.onmessage = (event) => {
+      handleReceivedMessage(event.data)
+      console.log(`Received message for group: ${groupName}`, event.data);
+    };
+  };
+
   useEffect(() => {
     divRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatHistory,message]);
@@ -45,7 +71,10 @@ const Group = () => {
         UserID :userName,
       }
      const groupRes = await getGroup(getGroupReq)
-     setGroups(groupRes.data)
+     if(groupRes.data){
+      setGroups(groupRes.data)
+     }
+     
     }catch(error){
       console.log(error)
     }
@@ -64,11 +93,12 @@ const Group = () => {
   const getGroupChatHandler = async(createChatReq)=>{
     try{
      const res = await getGroupChat(createChatReq)
-      console.log(res)
+      console.log(res,"response of it")
       const mappedMessages = res.data.map((message) => ({
         sender: message.UserName,
         text: message.Text,
       }));
+      console.log(mappedMessages,"mapped messages");
       setChatHistory([]);
       setChatHistory((prevHistory) => [...prevHistory, ...mappedMessages]);
       // scrollToBottom();
@@ -98,7 +128,10 @@ const Group = () => {
   const handleReceivedMessage = (data)=>{
     
     const message = JSON.parse(data)
-    console.log(message);
+    setChatHistory((prevHistory) => [
+      ...prevHistory,
+      { sender: message.sender, text: message.text},
+    ]);
   }
 
   const handleSendMessage = () => {
@@ -107,7 +140,7 @@ const Group = () => {
     }
     setChatHistory((prevHistory) => [
       ...prevHistory,
-      { Group: selectedGroup.GroupID, text: message},
+      { sender: userName, text: message},
     ]);
     const messageObject = {
       text: message,
@@ -115,27 +148,11 @@ const Group = () => {
       groupId: selectedGroup.GroupID, 
       groupName:selectedGroup.GroupName
     };
-    socket.send(JSON.stringify(messageObject));
+     ws.current.send(JSON.stringify(messageObject));
     setMessage('');
   };
 
-  const connectWebSocket = (groupName) => {
-    const ws = new WebSocket(`ws://localhost:5053/ws/group?groupName=${groupName}&userName=${userName}`);
-    setSocket(ws); 
-    ws.onopen = () => {
-      console.log(`WebSocket connection established for group: ${groupName}`);
-    };
-    ws.onclose = () => {
-      console.log(`WebSocket connection closed for group: ${groupName}`);
-    };
-    ws.onerror = (error) => {
-      console.error(`WebSocket error for group: ${groupName}`, error);
-    };
-    ws.onmessage = (event) => {
-      handleReceivedMessage(event.data)
-      console.log(`Received message for group: ${groupName}`, event.data);
-    };
-  };
+ 
 
   const [isUserListOpen, setIsUserListOpen] = useState(false);
   const toggleGroupList = () => {
@@ -209,13 +226,14 @@ const Group = () => {
             {chatHistory.map((message, index) => (
               
               <div
-                key={index}
-                ref={divRef}
-                className={`message-bubble ${message.sender === userInfo.userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
-              >
-                {message.text}
-              </div>
-              
+              key={index}
+                 ref={divRef}
+              className={`message-bubble ${message?.sender === userName ? 'sent-bubble' : 'received-bubble'} bg-slate-900`}
+            > 
+              {message?.sender !== userName && (<div className="message-user">{message?.sender}</div>)}
+              <div className="message-text">{message?.text}</div>
+            </div>
+
             ))}
             </div>
             <div className="message-input">

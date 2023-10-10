@@ -40,13 +40,16 @@ const StreamedVideos = ()=>{
     async function getStreamsDataHandler(){
       try {
         const res = await getStreams().unwrap()
-        const videosWithUrl = res.videos.map((video) => ({
-          ...video,
-          url: '', // Initialize the 'url' field
-        }));
-        setVideos(videosWithUrl)
-        setLoading(true);
-        console.log(res);
+        if(res.videos){
+          const videosWithUrl = res.videos.map((video) => ({
+            ...video,
+            url: '', // Initialize the 'url' field
+          }));
+          setVideos(videosWithUrl)
+          setLoading(true);
+          console.log(res);
+        }
+       
       } catch (error) {
         console.log(error);
       }

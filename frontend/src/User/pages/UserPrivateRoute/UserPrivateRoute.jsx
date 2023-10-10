@@ -10,6 +10,7 @@ import {  useDispatch } from 'react-redux';
 import { Cookies } from "react-cookie";
 import Footer from "../../components/Footer/Footer";
 import {setToken,removeToken} from "../../../utils/apiSlice/authReducer"
+import { useLocation } from "react-router-dom";
 
 
 
@@ -24,13 +25,17 @@ const UserPrivateRoute  = ()=>{
     const [getWallet] = useGetWalletMutation()
     const [status,setStatus] = useState(false)
     const [coins,setCoins] = useState('')
+    const location = useLocation()
 
 
     useEffect(()=>{
         vaidateUserStatus();
         getWalletHandler()
 
-    },[status])
+    },[status,location])
+
+
+    
 
     const vaidateUserStatus = async ()=>{
         try {

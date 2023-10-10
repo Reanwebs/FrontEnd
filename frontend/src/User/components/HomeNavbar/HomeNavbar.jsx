@@ -7,6 +7,7 @@ import React,{useState,useEffect} from "react";
 import { CLOUDINARY_FETCH_URL } from "../../../utils/config/config";
 import { useSearchUserMutation,useSearchCommunityMutation} from "../../slices/api_slices/usersCommunitySlice";
 import { useCreateChatMutation,useCreateGroupChatMutation } from "../../slices/api_slices/chatApiSlice";
+import { useGetWalletMutation } from "../../slices/api_slices/userMonetizationApiSlice";
 import {BsCoin} from "react-icons/bs"
 
 
@@ -22,8 +23,10 @@ export default function HomeNavbar({userInfo,logoutHandler,coins}) {
   const [communities,setCommunities] = useState([])
   const [userName] = useState(userInfo.userName)
 
+  
 
  
+
   
 
 
@@ -63,7 +66,6 @@ async function searchUserHandler() {
   
     try {
       const res = await searchUser(trimmedSearchValue).unwrap();
-      console.log(res, "search user response");
       if (res.users) {
         setUsers(res.users);
       } else {
