@@ -47,8 +47,6 @@ function App() {
              <Route path='community/:id'element={<CommunityDetail/>} />
              <Route path='wallet'element={<WalletHistory/>} />
              <Route path='*'element={<NotFound/>} />
-
-             
            </Route>
         </Route>
         <Route path='/admin' element={<AdminLayout/>} errorElement={<NotFound/>}>

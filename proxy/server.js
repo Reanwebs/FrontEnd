@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, '/frontend/dist')));
 app.use( 
     "/api", 
     createProxyMiddleware({ 
-        target:`http://localhost:${process.env.API_PORT}`,
+        target:`https://localhost:${process.env.API_PORT}`,
         changeOrigin: true, 
          
     }) 
