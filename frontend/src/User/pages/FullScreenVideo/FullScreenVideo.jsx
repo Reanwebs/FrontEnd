@@ -12,6 +12,8 @@ import Report from "./ReportMenu";
 import s3 from "../../../utils/s3SetUp/bucket";
 import {Card,CardFooter,Image} from "@nextui-org/react"
 import { BsCoin } from "react-icons/bs";
+import { useLocation } from "react-router-dom";
+
 
 
 const FullScreenVideo = ()=>{
@@ -28,6 +30,8 @@ const FullScreenVideo = ()=>{
     const [urlSuggestions,setUrlSuggestions] = useState([])
     const [isHovered, setIsHovered] = useState(-1);
     const navigate = useNavigate()
+    const location = useLocation()
+
 
 
     const [getVideoDetails] = useGetVideoDetailsByIdMutation();
@@ -38,7 +42,7 @@ const FullScreenVideo = ()=>{
         async function getVideosHandler(){
          try {
            const res = await getVideoDetails({id,userName}).unwrap()
-           console.log(res,"responseeeeeeeeeeeeeeeeeeeeeeeeee");
+           
 
            setLoading(true)
            if(res.Suggestions){
@@ -63,7 +67,7 @@ const FullScreenVideo = ()=>{
         }
         getVideosHandler()
         
-      },[])
+      },[location])
 
       useEffect(()=>{
         init()
