@@ -11,6 +11,8 @@ import { Cookies } from "react-cookie";
 import Footer from "../../components/Footer/Footer";
 import {setToken,removeToken} from "../../../utils/apiSlice/authReducer"
 import { useLocation } from "react-router-dom";
+import Error from "../../../utils/Error";
+import NotFound from "../NotFound";
 
 
 
@@ -87,7 +89,9 @@ const UserPrivateRoute  = ()=>{
        ?(
         <>  
         <HomeNavbar userInfo={userInfo} logoutHandler={logoutHandler} isLoading={isLoading} coins={coins} />
+        <Error fallback={<NotFound/>}>
         <Outlet />
+        </Error>
         <Footer/>
        
         </>
