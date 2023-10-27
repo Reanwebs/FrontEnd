@@ -29,6 +29,13 @@ app.use(
          
     }) 
 );
+app.use(
+    'wss://70off.online/ws',
+    createProxyMiddleware({
+        target:'ws://localhost:5053/ws',
+        ws:true
+    })
+)
 
 app.get('*', (req, res) =>
 res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
